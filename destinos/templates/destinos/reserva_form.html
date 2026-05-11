@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Nueva Reserva - Tours Asia{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1 style="margin-bottom: 2rem; text-align: center;">
+        <i class="fas fa-calendar-check" style="color: var(--primary);"></i>
+        {% if object %}Editar{% else %}Nueva{% endif %} Reserva
+    </h1>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+            <div class="alert alert-error">
+                <strong>Errores:</strong>
+                <ul>
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="form-error">
+                        {% for error in field.errors %}
+                            <p><i class="fas fa-exclamation-circle"></i> {{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        
+        <div class="form-actions">
+            <button type="submit" class="btn" style="flex: 2; justify-content: center;">
+                <i class="fas fa-check"></i> {% if object %}Actualizar{% else %}Confirmar{% endif %} Reserva
+            </button>
+            <a href="{% url 'reserva-list' %}" class="btn btn-outline" style="flex: 1; justify-content: center;">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

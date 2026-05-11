@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tours Asia | Explore the Exotic{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'destinos/css/main.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <a href="{% url 'home' %}" class="brand">TOURS ASIA</a>
+            <nav>
+                <a href="{% url 'destino-list' %}">Destinos</a>
+                <a href="{% url 'tour-list' %}">Tours</a>
+                <a href="{% url 'reserva-list' %}">Reservas</a>
+                {% if user.is_authenticated %}
+                    <div class="user-menu">
+                        <span class="user-name"><i class="fas fa-user-circle"></i> {{ user.username }}</span>
+                        <a href="{% url 'destino-create' %}" class="btn" style="padding: 0.5rem 1rem;">Nuevo Destino</a>
+                        <a href="{% url 'tour-create' %}" class="btn" style="padding: 0.5rem 1rem;">Nuevo Tour</a>
+                        <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline" style="padding: 0.5rem 1rem; border-color: #fff; color: #fff;">
+                                <i class="fas fa-sign-out-alt"></i> Salir
+                            </button>
+                        </form>
+                    </div>
+                {% else %}
+                    <a href="/admin/login/" class="btn btn-outline" style="border-color: var(--accent); color: var(--accent);">
+                        <i class="fas fa-sign-in-alt"></i> Admin Login
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    {% block hero %}{% endblock %}
+
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" style="padding: 1rem; margin-bottom: 2rem; border-radius: 12px; {% if message.tags == 'success' %}background: #dcfce7; color: #166534;{% else %}background: #fee2e2; color: #991b1b;{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Tours Asia. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>

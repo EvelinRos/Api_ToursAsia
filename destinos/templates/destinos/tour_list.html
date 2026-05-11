@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Tours Disponibles - Tours Asia{% endblock %}
+
+{% block hero %}
+<div class="hero" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+    <div>
+        <h1>Aventuras Inolvidables</h1>
+        <p>Encuentra el tour perfecto diseñado a tu medida</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Nuestros Tours</h2>
+    {% if user.is_authenticated %}
+    <a href="{% url 'tour-create' %}" class="btn">
+        <i class="fas fa-plus"></i> Nuevo Tour
+    </a>
+    {% endif %}
+</div>
+
+{% if object_list %}
+    <div class="card-grid">
+        {% for tour in object_list %}
+        <div class="card">
+            {% if tour.photo %}
+                <img src="{{ tour.photo.url }}" alt="{{ tour.name }}" class="card-img">
+            {% else %}
+                <div class="card-img-placeholder">
+                    <i class="fas fa-route fa-3x" style="color: #ccc;"></i>
+                </div>
+            {% endif %}
+            <div class="card-body">
+                <div class="card-title-row">
+                    <h3 style="margin: 0;">{{ tour.name }}</h3>
+                    <span class="badge" style="background: var(--accent); color: var(--dark);">${{ tour.price }}</span>
+                </div>
+                <p class="card-meta">
+                    <i class="fas fa-map-marker-alt" style="color: var(--primary);"></i> {{ tour.destino.name }}, {{ tour.destino.country }}
+                </p>
+                <div class="card-meta" style="display: flex; gap: 15px;">
+                    <span><i class="far fa-clock"></i> {{ tour.duration }} días</span>
+                    <span><i class="fas fa-users"></i> Grupos pequeños</span>
+                </div>
+                <div class="card-actions">
+                    <a href="{% url 'tour-detail' tour.pk %}" class="btn btn-outline" style="flex: 1; justify-content: center;">Ver Detalle</a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'tour-update' tour.pk %}" class="btn" style="background: var(--secondary);">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'tour-delete' tour.pk %}" class="btn btn-danger">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state">
+        <i class="fas fa-suitcase-rolling fa-4x" style="color: #eee; margin-bottom: 1rem;"></i>
+        <p style="color: #999;">Aún no hay tours registrados.</p>
+    </div>
+{% endif %}
+{% endblock %}

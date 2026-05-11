@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Destinos Turísticos - Tours Asia{% endblock %}
+
+{% block hero %}
+<div class="hero" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+    <div>
+        <h1>Explora Asia</h1>
+        <p>Destinos exóticos y aventuras inolvidables</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Nuestros Destinos</h2>
+    {% if user.is_authenticated %}
+    <a href="{% url 'destino-create' %}" class="btn">
+        <i class="fas fa-plus"></i> Nuevo Destino
+    </a>
+    {% endif %}
+</div>
+
+{% if object_list %}
+    <div class="card-grid">
+        {% for destino in object_list %}
+        <div class="card">
+            {% if destino.cover %}
+                <img src="{{ destino.cover.url }}" alt="{{ destino.name }}" class="card-img">
+            {% else %}
+                <div class="card-img-placeholder">
+                    <i class="fas fa-image fa-3x" style="color: #ccc;"></i>
+                </div>
+            {% endif %}
+            <div class="card-body">
+                <div class="card-title-row">
+                    <h3 style="margin: 0;">{{ destino.name }}</h3>
+                    <span class="badge" style="background: #e3f2fd; color: #1976d2;">{{ destino.country }}</span>
+                </div>
+                <p class="card-meta">{{ destino.description|truncatechars:100 }}</p>
+                <div class="card-actions">
+                    <a href="{% url 'destino-detail' destino.pk %}" class="btn btn-outline" style="flex: 1; justify-content: center;">Ver Detalles</a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'destino-update' destino.pk %}" class="btn" style="background: var(--secondary);">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'destino-delete' destino.pk %}" class="btn btn-danger">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state">
+        <i class="fas fa-map-marker-alt fa-4x" style="color: #eee; margin-bottom: 1rem;"></i>
+        <p style="color: #999;">Aún no hay destinos registrados.</p>
+    </div>
+{% endif %}
+{% endblock %}
