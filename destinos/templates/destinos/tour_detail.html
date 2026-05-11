@@ -47,19 +47,19 @@
             </div>
             
             <div class="sidebar-actions">
-                <a href="{% url 'reserva-create' %}?tour={{ object.pk }}" class="btn" style="width: 100%; justify-content: center; font-size: 1.1rem; padding: 1.2rem;">
+                <a href="{% url 'destinos:reserva-create' %}?tour={{ object.pk }}" class="btn" style="width: 100%; justify-content: center; font-size: 1.1rem; padding: 1.2rem;">
                     Reservar Ahora
                 </a>
                 {% if user.is_authenticated %}
                 <hr style="border: 0; border-top: 1px solid #eee; margin: 1.5rem 0;">
-                <a href="{% url 'tour-update' object.pk %}" class="btn" style="width: 100%; justify-content: center; background: var(--secondary);">
+                <a href="{% url 'destinos:tour-update' object.pk %}" class="btn" style="width: 100%; justify-content: center; background: var(--secondary);">
                     <i class="fas fa-edit"></i> Editar Tour
                 </a>
-                <a href="{% url 'tour-delete' object.pk %}" class="btn btn-danger" style="width: 100%; justify-content: center;">
+                <a href="{% url 'destinos:tour-delete' object.pk %}" class="btn btn-danger" style="width: 100%; justify-content: center;">
                     <i class="fas fa-trash"></i> Eliminar Tour
                 </a>
                 {% endif %}
-                <a href="{% url 'tour-list' %}" class="btn btn-outline" style="width: 100%; justify-content: center; margin-top: 10px;">
+                <a href="{% url 'destinos:tour-list' %}" class="btn btn-outline" style="width: 100%; justify-content: center; margin-top: 10px;">
                     <i class="fas fa-arrow-left"></i> Volver a la lista
                 </a>
             </div>

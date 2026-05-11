@@ -15,7 +15,7 @@
 <div class="page-header">
     <h2>Nuestros Tours</h2>
     {% if user.is_authenticated %}
-    <a href="{% url 'tour-create' %}" class="btn">
+    <a href="{% url 'destinos:tour-create' %}" class="btn">
         <i class="fas fa-plus"></i> Nuevo Tour
     </a>
     {% endif %}
@@ -45,12 +45,12 @@
                     <span><i class="fas fa-users"></i> Grupos pequeños</span>
                 </div>
                 <div class="card-actions">
-                    <a href="{% url 'tour-detail' tour.pk %}" class="btn btn-outline" style="flex: 1; justify-content: center;">Ver Detalle</a>
+                    <a href="{% url 'destinos:tour-detail' tour.pk %}" class="btn btn-outline" style="flex: 1; justify-content: center;">Ver Detalle</a>
                     {% if user.is_authenticated %}
-                    <a href="{% url 'tour-update' tour.pk %}" class="btn" style="background: var(--secondary);">
+                    <a href="{% url 'destinos:tour-update' tour.pk %}" class="btn" style="background: var(--secondary);">
                         <i class="fas fa-edit"></i>
                     </a>
-                    <a href="{% url 'tour-delete' tour.pk %}" class="btn btn-danger">
+                    <a href="{% url 'destinos:tour-delete' tour.pk %}" class="btn btn-danger">
                         <i class="fas fa-trash"></i>
                     </a>
                     {% endif %}

@@ -15,7 +15,7 @@
 <div class="page-header">
     <h2>Nuestros Destinos</h2>
     {% if user.is_authenticated %}
-    <a href="{% url 'destino-create' %}" class="btn">
+    <a href="{% url 'destinos:destino-create' %}" class="btn">
         <i class="fas fa-plus"></i> Nuevo Destino
     </a>
     {% endif %}
@@ -39,12 +39,12 @@
                 </div>
                 <p class="card-meta">{{ destino.description|truncatechars:100 }}</p>
                 <div class="card-actions">
-                    <a href="{% url 'destino-detail' destino.pk %}" class="btn btn-outline" style="flex: 1; justify-content: center;">Ver Detalles</a>
+                    <a href="{% url 'destinos:destino-detail' destino.pk %}" class="btn btn-outline" style="flex: 1; justify-content: center;">Ver Detalles</a>
                     {% if user.is_authenticated %}
-                    <a href="{% url 'destino-update' destino.pk %}" class="btn" style="background: var(--secondary);">
+                    <a href="{% url 'destinos:destino-update' destino.pk %}" class="btn" style="background: var(--secondary);">
                         <i class="fas fa-edit"></i>
                     </a>
-                    <a href="{% url 'destino-delete' destino.pk %}" class="btn btn-danger">
+                    <a href="{% url 'destinos:destino-delete' destino.pk %}" class="btn btn-danger">
                         <i class="fas fa-trash"></i>
                     </a>
                     {% endif %}

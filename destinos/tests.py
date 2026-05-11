@@ -54,13 +54,13 @@ class ToursAsiaTestCase(TestCase):
 
     def test_api_destinos_lista(self):
         """4. GET /api/destinos/ devuelve status 200."""
-        url = reverse('api-destino-list')
+        url = reverse('destino-list')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_api_tour_detalle_anidado(self):
         """5. GET /api/tours/{id}/ devuelve el campo destino como objeto (no como entero)."""
-        url = reverse('api-tour-detail', kwargs={'pk': self.tour.pk})
+        url = reverse('tour-detail', kwargs={'pk': self.tour.pk})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # Verificamos que destino sea un diccionario (objeto) y no un entero (ID)

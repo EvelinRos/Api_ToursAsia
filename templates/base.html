@@ -16,17 +16,17 @@
 <body>
     <header>
         <div class="nav-container">
-            <a href="{% url 'home' %}" class="brand">TOURS ASIA</a>
+            <a href="{% url 'destinos:home' %}" class="brand">TOURS ASIA</a>
             <nav>
-                <a href="{% url 'destino-list' %}">Destinos</a>
-                <a href="{% url 'tour-list' %}">Tours</a>
-                <a href="{% url 'reserva-list' %}">Reservas</a>
+                <a href="{% url 'destinos:destino-list' %}">Destinos</a>
+                <a href="{% url 'destinos:tour-list' %}">Tours</a>
+                <a href="{% url 'destinos:reserva-list' %}">Reservas</a>
                 {% if user.is_authenticated %}
                     <div class="user-menu">
                         <span class="user-name"><i class="fas fa-user-circle"></i> {{ user.username }}</span>
-                        <a href="{% url 'destino-create' %}" class="btn" style="padding: 0.5rem 1rem;">Nuevo Destino</a>
-                        <a href="{% url 'tour-create' %}" class="btn" style="padding: 0.5rem 1rem;">Nuevo Tour</a>
-                        <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                        <a href="{% url 'destinos:destino-create' %}" class="btn" style="padding: 0.5rem 1rem;">Nuevo Destino</a>
+                        <a href="{% url 'destinos:tour-create' %}" class="btn" style="padding: 0.5rem 1rem;">Nuevo Tour</a>
+                        <form action="{% url 'destinos:logout' %}" method="post" style="display: inline;">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-outline" style="padding: 0.5rem 1rem; border-color: #fff; color: #fff;">
                                 <i class="fas fa-sign-out-alt"></i> Salir

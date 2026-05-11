@@ -7,9 +7,9 @@ from destinos.views import DestinoViewSet, TourViewSet, ReservaViewSet
 
 # API Router configuration
 router = DefaultRouter()
-router.register(r'destinos', DestinoViewSet, basename='api-destino')
-router.register(r'tours', TourViewSet, basename='api-tour')
-router.register(r'reservas', ReservaViewSet, basename='api-reserva')
+router.register(r'destinos', DestinoViewSet, basename='destino')
+router.register(r'tours', TourViewSet, basename='tour')
+router.register(r'reservas', ReservaViewSet, basename='reserva')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -43,10 +43,10 @@
                     </td>
                     {% if user.is_authenticated %}
                     <td class="card-actions">
-                        <a href="{% url 'reserva-update' reserva.pk %}" class="btn" style="background: var(--secondary); padding: 0.5rem 0.8rem;">
+                        <a href="{% url 'destinos:reserva-update' reserva.pk %}" class="btn" style="background: var(--secondary); padding: 0.5rem 0.8rem;">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <a href="{% url 'reserva-delete' reserva.pk %}" class="btn btn-danger" style="padding: 0.5rem 0.8rem;">
+                        <a href="{% url 'destinos:reserva-delete' reserva.pk %}" class="btn btn-danger" style="padding: 0.5rem 0.8rem;">
                             <i class="fas fa-trash"></i>
                         </a>
                     </td>

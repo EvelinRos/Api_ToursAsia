@@ -41,18 +41,18 @@ class DestinoDetailView(DetailView):
 class DestinoCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Destino
     form_class = DestinoForm
-    success_url = reverse_lazy('destino-list')
+    success_url = reverse_lazy('destinos:destino-list')
     success_message = "El destino %(name)s fue creado exitosamente."
 
 class DestinoUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Destino
     form_class = DestinoForm
-    success_url = reverse_lazy('destino-list')
+    success_url = reverse_lazy('destinos:destino-list')
     success_message = "El destino %(name)s fue actualizado exitosamente."
 
 class DestinoDeleteView(LoginRequiredMixin, DeleteView):
     model = Destino
-    success_url = reverse_lazy('destino-list')
+    success_url = reverse_lazy('destinos:destino-list')
 
     def delete(self, request, *args, **kwargs):
         obj = self.get_object()
@@ -68,18 +68,18 @@ class TourDetailView(DetailView):
 class TourCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Tour
     form_class = TourForm
-    success_url = reverse_lazy('tour-list')
+    success_url = reverse_lazy('destinos:tour-list')
     success_message = "El tour %(name)s fue creado exitosamente."
 
 class TourUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Tour
     form_class = TourForm
-    success_url = reverse_lazy('tour-list')
+    success_url = reverse_lazy('destinos:tour-list')
     success_message = "El tour %(name)s fue actualizado exitosamente."
 
 class TourDeleteView(LoginRequiredMixin, DeleteView):
     model = Tour
-    success_url = reverse_lazy('tour-list')
+    success_url = reverse_lazy('destinos:tour-list')
 
     def delete(self, request, *args, **kwargs):
         obj = self.get_object()
@@ -92,7 +92,7 @@ class ReservaListView(ListView):
 class ReservaCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Reserva
     form_class = ReservaForm
-    success_url = reverse_lazy('reserva-list')
+    success_url = reverse_lazy('destinos:reserva-list')
     success_message = "¡Reserva realizada con éxito!"
 
     def get_initial(self):
@@ -105,12 +105,12 @@ class ReservaCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 class ReservaUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Reserva
     form_class = ReservaForm
-    success_url = reverse_lazy('reserva-list')
+    success_url = reverse_lazy('destinos:reserva-list')
     success_message = "Reserva actualizada con éxito."
 
 class ReservaDeleteView(LoginRequiredMixin, DeleteView):
     model = Reserva
-    success_url = reverse_lazy('reserva-list')
+    success_url = reverse_lazy('destinos:reserva-list')
 
     def delete(self, request, *args, **kwargs):
         obj = self.get_object()
