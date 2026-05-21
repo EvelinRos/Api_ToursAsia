@@ -1,65 +1,88 @@
 {% extends 'base.html' %}
 
-{% block title %}Reservas - Tours Asia{% endblock %}
+{% block title %}Gestión de Reservas - Tours Asia{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <h2>Gestión de Reservas</h2>
-</div>
+<div style="margin-top: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+        <div>
+            <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Mis Reservas</h1>
+            <p style="color: var(--text-muted);">Administra y visualiza el estado de todas las reservas registradas.</p>
+        </div>
+        {% if user.is_authenticated %}
+            <a href="{% url 'destinos:reserva-create' %}" class="btn">
+                <i class="fas fa-plus"></i> Nueva Reserva
+            </a>
+        {% endif %}
+    </div>
 
-{% if object_list %}
-    <div class="card" style="padding: 1.5rem; overflow-x: auto;">
-        <table class="reserva-table">
-            <thead>
-                <tr>
-                    <th>Cliente</th>
-                    <th>Tour</th>
-                    <th>Fecha Viaje</th>
-                    <th>Total</th>
-                    <th>Estado</th>
-                    {% if user.is_authenticated %}
-                    <th>Acciones</th>
-                    {% endif %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for reserva in object_list %}
-                <tr>
-                    <td>
-                        <div style="font-weight: 600;">{{ reserva.customer_name }}</div>
-                        <div class="card-meta" style="margin: 0;">{{ reserva.customer_email }}</div>
-                    </td>
-                    <td>{{ reserva.tour.name }}</td>
-                    <td>{{ reserva.date }}</td>
-                    <td>${{ reserva.tour.price|floatformat:2 }} × {{ reserva.people_count }}</td>
-                    <td>
-                        {% if reserva.status == 'confirmada' %}
-                            <span class="badge status-confirmada">Confirmada</span>
-                        {% elif reserva.status == 'cancelada' %}
-                            <span class="badge status-cancelada">Cancelada</span>
-                        {% else %}
-                            <span class="badge status-pendiente">Pendiente</span>
+    {% if object_list %}
+        <div class="reserva-card">
+            <table class="reserva-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tour / Destino</th>
+                        <th>Cliente</th>
+                        <th>Fecha Viaje</th>
+                        <th>Pax</th>
+                        <th>Estado</th>
+                        {% if user.is_authenticated %}
+                        <th style="text-align: right;">Acciones</th>
                         {% endif %}
-                    </td>
-                    {% if user.is_authenticated %}
-                    <td class="card-actions">
-                        <a href="{% url 'destinos:reserva-update' reserva.pk %}" class="btn" style="background: var(--secondary); padding: 0.5rem 0.8rem;">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a href="{% url 'destinos:reserva-delete' reserva.pk %}" class="btn btn-danger" style="padding: 0.5rem 0.8rem;">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </td>
-                    {% endif %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-{% else %}
-    <div class="empty-state">
-        <i class="fas fa-calendar-times fa-4x" style="color: #eee; margin-bottom: 1rem;"></i>
-        <p style="color: #999;">No hay reservas registradas.</p>
-    </div>
-{% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reserva in object_list %}
+                    <tr>
+                        <td style="font-weight: 700; color: var(--text-muted);">#{{ reserva.pk }}</td>
+                        <td>
+                            <div style="font-weight: 700; color: var(--dark);">{{ reserva.tour.name }}</div>
+                            <div style="font-size: 0.85rem; color: var(--primary);">{{ reserva.tour.destino.name }}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600;">{{ reserva.customer_name }}</div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted);">{{ reserva.customer_email }}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600;">{{ reserva.date|date:"d M, Y" }}</div>
+                        </td>
+                        <td>
+                            <span style="background: #eee; padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 700;">{{ reserva.people_count }}</span>
+                        </td>
+                        <td>
+                            {% if reserva.status == 'confirmada' %}
+                                <span class="badge status-confirmada"><i class="fas fa-check-circle"></i> Confirmada</span>
+                            {% elif reserva.status == 'cancelada' %}
+                                <span class="badge status-cancelada"><i class="fas fa-times-circle"></i> Cancelada</span>
+                            {% else %}
+                                <span class="badge status-pendiente"><i class="fas fa-clock"></i> Pendiente</span>
+                            {% endif %}
+                        </td>
+                        {% if user.is_authenticated %}
+                        <td style="text-align: right;">
+                            <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                                <a href="{% url 'destinos:reserva-update' reserva.pk %}" class="btn btn-outline" style="padding: 0.5rem 0.8rem; border-color: #ddd; color: var(--text);">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'destinos:reserva-delete' reserva.pk %}" class="btn btn-outline" style="padding: 0.5rem 0.8rem; border-color: #ffcccc; color: #ED1C24;">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 5rem; background: white; border-radius: var(--radius); box-shadow: var(--shadow);">
+            <i class="fas fa-calendar-times fa-4x" style="color: #eee; margin-bottom: 1.5rem;"></i>
+            <h3>No hay reservas registradas</h3>
+            <p style="color: var(--text-muted);">Comienza explorando nuestros tours y vive una experiencia única.</p>
+            <a href="{% url 'destinos:tour-list' %}" class="btn" style="margin-top: 1.5rem;">Ver Tours disponibles</a>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

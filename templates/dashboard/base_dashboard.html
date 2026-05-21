@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin - Tours Asia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'destinos/css/main.css' %}">
+    <style>
+        .table { width: 100%; border-collapse: collapse; background: white; box-shadow: var(--shadow-sm); border-radius: var(--radius-sm); overflow: hidden; }
+        .table th, .table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--gray-200); }
+        .table th { background: var(--gray-100); font-weight: 600; color: var(--gray-500); }
+        .table tr:hover { background: rgba(0,0,0,0.02); }
+        .action-btn { background: none; border: none; cursor: pointer; color: var(--gray-500); margin-right: 10px; font-size: 16px; transition: color 0.2s; }
+        .action-btn:hover { color: var(--primary); }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="dashboard-layout">
+    <div class="sidebar">
+        <h2 style="font-family:var(--font-serif); color:var(--primary); margin-bottom:5px;">TOURS ASIA</h2>
+        <div style="font-size:12px; color:var(--gray-500); margin-bottom:30px;">Panel Admin</div>
+        
+        <div style="margin-bottom:30px; padding-bottom:30px; border-bottom:1px solid rgba(255,255,255,0.1);">
+            <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"><i class="fas fa-chart-pie" style="width:25px;"></i> Dashboard</a>
+            <a href="{% url 'dashboard-destinos' %}" class="{% if 'destino' in request.resolver_match.url_name %}active{% endif %}"><i class="fas fa-globe-asia" style="width:25px;"></i> Destinos</a>
+            <a href="{% url 'dashboard-tours' %}" class="{% if 'tour' in request.resolver_match.url_name and 'dashboard' in request.resolver_match.url_name %}active{% endif %}"><i class="fas fa-map-marked-alt" style="width:25px;"></i> Tours</a>
+            <a href="{% url 'dashboard-reservas' %}" class="{% if 'reserva' in request.resolver_match.url_name and 'dashboard' in request.resolver_match.url_name %}active{% endif %}"><i class="fas fa-calendar-check" style="width:25px;"></i> Reservas</a>
+            <a href="{% url 'dashboard-usuarios' %}" class="{% if 'usuario' in request.resolver_match.url_name %}active{% endif %}"><i class="fas fa-users" style="width:25px;"></i> Usuarios</a>
+        </div>
+        
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+            <div style="width:35px; height:35px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; color:white;">
+                {{ user.first_name|first|default:"A" }}
+            </div>
+            <div>
+                <div style="font-weight:600; font-size:14px;">{{ user.first_name }} {{ user.last_name }}</div>
+                <div style="font-size:12px; color:var(--gray-500);">Administrador</div>
+            </div>
+        </div>
+        
+        <form action="{% url 'admin-logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" style="background:none; border:none; color:var(--gray-500); cursor:pointer; font-size:14px; text-align:left; width:100%; padding:10px 0;"><i class="fas fa-sign-out-alt" style="width:25px;"></i> Cerrar sesión</button>
+        </form>
+    </div>
+    
+    <div class="main-content">
+        <!-- Mensajes de Django -->
+        <div style="display:none;">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="django-message" data-message="{{ message }}" data-type="{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'success' %}success{% else %}info{% endif %}"></div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        {% block dashboard_content %}{% endblock %}
+    </div>
+</div>
+
+<script src="{% static 'destinos/js/toast.js' %}"></script>
+<script src="{% static 'destinos/js/dashboard.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

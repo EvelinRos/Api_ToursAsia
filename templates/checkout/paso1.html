@@ -1,0 +1,26 @@
+{% extends 'checkout/base_checkout.html' %}
+
+{% block checkout_content %}
+<h2 style="font-size:28px; margin-bottom:10px;">Detalles de la experiencia</h2>
+<p style="color:var(--gray-500); margin-bottom:30px;">Por favor completa la información requerida para tu actividad.</p>
+
+<div class="card" style="padding:30px; margin-bottom:30px;">
+    <form method="post" action="{% url 'checkout-paso1' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label style="font-weight:600; font-size:18px; margin-bottom:15px;">Selecciona el idioma de la experiencia *</label>
+            <select name="idioma" class="form-control" required style="max-width:300px;">
+                <option value="Español" {% if checkout.idioma == 'Español' %}selected{% endif %}>Español</option>
+                <option value="English" {% if checkout.idioma == 'English' %}selected{% endif %}>English</option>
+                <option value="Português" {% if checkout.idioma == 'Português' %}selected{% endif %}>Português</option>
+                <option value="日本語" {% if checkout.idioma == '日本語' %}selected{% endif %}>日本語</option>
+                <option value="中文" {% if checkout.idioma == '中文' %}selected{% endif %}>中文</option>
+            </select>
+        </div>
+        
+        <div style="margin-top:40px; display:flex; justify-content:flex-end;">
+            <button type="submit" class="btn-primary" style="padding:15px 40px; font-size:16px;">Siguiente: Datos de contacto</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

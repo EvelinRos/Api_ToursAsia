@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Iniciar Sesión - Tours Asia{% endblock %}
+
+{% block content %}
+<div class="form-container" style="max-width: 500px;">
+    <div style="text-align: center; margin-bottom: 2.5rem;">
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Bienvenido de nuevo</h1>
+        <p style="color: var(--text-muted);">Accede a tus reservas y gestiona tus viajes</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+            <div style="background: #FFE6E6; color: #ED1C24; padding: 1rem; border-radius: 12px; margin-bottom: 2rem;">
+                {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+            </div>
+        {% endif %}
+
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <p style="color: #ED1C24; font-size: 0.8rem; margin-top: 0.5rem;">{{ field.errors.0 }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn" style="width: 100%; justify-content: center; padding: 1.2rem; font-size: 1.1rem; margin-top: 1rem;">
+            Iniciar sesión
+        </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid #eee;">
+        <p style="color: var(--text-muted);">¿No tienes una cuenta? <a href="{% url 'cliente-registro' %}" style="color: var(--primary); font-weight: 700; text-decoration: none;">Regístrate aquí</a></p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get('email');
+    if (email) {
+        const emailInput = document.querySelector('input[name="username"]');
+        if (emailInput) emailInput.value = email;
+    }
+</script>
+{% endblock %}

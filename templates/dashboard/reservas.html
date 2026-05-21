@@ -1,0 +1,92 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block dashboard_content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+    <div>
+        <h1 style="margin:0; font-size:28px;">Reservas</h1>
+        <div style="color:var(--gray-500); font-size:14px;">Gestionar reservas de los clientes</div>
+    </div>
+</div>
+
+<div class="card" style="padding:0;">
+    <div style="padding:20px; border-bottom:1px solid var(--gray-200); display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
+        <form method="get" style="display:flex; gap:15px; width:100%; flex-wrap:wrap;">
+            <input type="text" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="Buscar por cliente o ID..." style="max-width:250px;">
+            
+            <select name="estado" class="form-control" style="max-width:150px;">
+                <option value="">Todos los estados</option>
+                <option value="pendiente" {% if request.GET.estado == 'pendiente' %}selected{% endif %}>Pendiente</option>
+                <option value="confirmada" {% if request.GET.estado == 'confirmada' %}selected{% endif %}>Confirmada</option>
+                <option value="cancelada" {% if request.GET.estado == 'cancelada' %}selected{% endif %}>Cancelada</option>
+            </select>
+            
+            <button type="submit" class="btn-primary" style="padding:10px 20px;">Filtrar</button>
+            {% if request.GET.q or request.GET.estado %}
+            <a href="{% url 'dashboard-reservas' %}" class="btn-outline-teal" style="padding:10px 20px;">Limpiar</a>
+            {% endif %}
+        </form>
+    </div>
+    
+    <div style="overflow-x:auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha Reserva</th>
+                    <th>Cliente</th>
+                    <th>Tour</th>
+                    <th>Fecha Tour</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reserva in reservas %}
+                <tr>
+                    <td>#{{ reserva.pk|stringformat:"04d" }}</td>
+                    <td>{{ reserva.created_at|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <div style="font-weight:600;">{{ reserva.customer_name }}</div>
+                        <div style="font-size:12px; color:var(--gray-500);">{{ reserva.customer_email }}</div>
+                    </td>
+                    <td style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="{{ reserva.tour.name }}">{{ reserva.tour.name }}</td>
+                    <td>{{ reserva.date|date:"d/m/Y" }}<br><span style="font-size:12px; color:var(--gray-500);">{{ reserva.time_slot }}</span></td>
+                    <td style="font-weight:600;">USD {{ reserva.total_amount }}</td>
+                    <td>
+                        <select class="form-control" style="padding:5px 10px; height:auto; font-size:13px; width:130px; 
+                            {% if reserva.status == 'pendiente' %}background:var(--warning);color:white;border:none;
+                            {% elif reserva.status == 'confirmada' %}background:var(--success);color:white;border:none;
+                            {% else %}background:var(--gray-500);color:white;border:none;{% endif %}"
+                            onchange="actualizarEstadoReserva(this, {{ reserva.pk }})">
+                            <option value="pendiente" {% if reserva.status == 'pendiente' %}selected{% endif %}>⏳ Pendiente</option>
+                            <option value="confirmada" {% if reserva.status == 'confirmada' %}selected{% endif %}>✅ Confirmada</option>
+                            <option value="cancelada" {% if reserva.status == 'cancelada' %}selected{% endif %}>❌ Cancelada</option>
+                        </select>
+                    </td>
+                    <td>
+                        <a href="{% url 'dashboard-reserva-detalle' reserva.pk %}" class="action-btn" title="Ver detalles"><i class="fas fa-eye"></i></a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" style="text-align:center; padding:30px; color:var(--gray-500);">No se encontraron reservas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Paginación simplificada -->
+    {% if is_paginated %}
+    <div style="padding:20px; border-top:1px solid var(--gray-200); display:flex; justify-content:flex-end; gap:10px;">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.estado %}&estado={{ request.GET.estado }}{% endif %}" class="btn-outline-teal" style="padding:5px 15px;">Anterior</a>
+        {% endif %}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.estado %}&estado={{ request.GET.estado }}{% endif %}" class="btn-outline-teal" style="padding:5px 15px;">Siguiente</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block dashboard_content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+    <div>
+        <h1 style="margin:0; font-size:28px;">{% if object %}Editar Tour{% else %}Nuevo Tour{% endif %}</h1>
+        <div style="color:var(--gray-500); font-size:14px;">{% if object %}{{ object.name }}{% else %}Añadir un nuevo tour a la plataforma{% endif %}</div>
+    </div>
+    <a href="{% url 'dashboard-tours' %}" class="btn-outline-teal" style="padding:10px 15px;"><i class="fas fa-arrow-left"></i> Volver</a>
+</div>
+
+<div class="card" style="padding:30px;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        
+        <div style="margin-top:30px; display:flex; justify-content:flex-end;">
+            <button type="submit" class="btn-primary" style="padding:10px 30px;">Guardar Tour</button>
+        </div>
+    </form>
+</div>
+<style>
+    form p { margin-bottom: 20px; }
+    form label { display: block; font-weight: 600; margin-bottom: 8px; }
+    form input[type="text"], form input[type="url"], form input[type="number"], form textarea, form select { 
+        width: 100%; padding: 10px; border: 1px solid var(--gray-200); border-radius: var(--radius-sm); font-family: inherit;
+    }
+    form textarea { height: 100px; }
+    form .helptext { display: block; font-size: 12px; color: var(--gray-500); margin-top: 5px; }
+</style>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Reserva Confirmada - Tours Asia{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 60px 20px; display:flex; justify-content:center; align-items:center; min-height:80vh;">
+    <div class="card" style="width: 100%; max-width: 600px; padding:40px; text-align:center;">
+        
+        <div style="width:80px; height:80px; background:var(--success); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:40px; margin:0 auto 20px;">
+            <i class="fas fa-check"></i>
+        </div>
+        
+        <h1 style="font-size:32px; margin-bottom:10px;">¡Reserva solicitada con éxito!</h1>
+        <p style="color:var(--gray-500); font-size:18px; margin-bottom:30px;">Tu número de reserva es: <strong style="color:var(--dark);">#{{ reserva.pk|stringformat:"06d" }}</strong></p>
+        
+        <div style="border:1px solid var(--gray-200); border-radius:var(--radius-sm); padding:20px; text-align:left; margin-bottom:30px;">
+            <div style="display:flex; gap:20px; margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid var(--gray-200);">
+                {% if reserva.tour.photo %}
+                <img src="{{ reserva.tour.photo.url }}" alt="Tour" style="width:100px; height:100px; object-fit:cover; border-radius:var(--radius-sm);">
+                {% else %}
+                <img src="{{ reserva.tour.photo_url }}" alt="Tour" style="width:100px; height:100px; object-fit:cover; border-radius:var(--radius-sm);">
+                {% endif %}
+                <div>
+                    <h3 style="margin-bottom:10px; font-size:18px;">{{ reserva.tour.name }}</h3>
+                    <div style="color:var(--gray-500); font-size:14px; margin-bottom:5px;"><i class="far fa-calendar-alt" style="width:20px;"></i> {{ reserva.date }}</div>
+                    <div style="color:var(--gray-500); font-size:14px; margin-bottom:5px;"><i class="far fa-clock" style="width:20px;"></i> {{ reserva.time_slot }}</div>
+                    <div style="color:var(--gray-500); font-size:14px;"><i class="fas fa-users" style="width:20px;"></i> {{ reserva.total_participants }} personas</div>
+                </div>
+            </div>
+            
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-weight:600;">
+                <span>Total pagado:</span>
+                <span style="color:var(--primary); font-size:18px;">USD {{ reserva.total_amount }}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; color:var(--gray-500); font-size:14px;">
+                <span>Método de pago:</span>
+                <span style="text-transform:capitalize;">{{ reserva.payment_method }}</span>
+            </div>
+        </div>
+        
+        <div style="background:var(--teal-light); color:var(--teal-dark); padding:20px; border-radius:var(--radius-sm); margin-bottom:40px;">
+            <p style="margin-bottom:10px; font-weight:600;">📧 Hemos enviado la confirmación a</p>
+            <p style="margin-bottom:20px; font-size:18px;">{{ reserva.customer_email }}</p>
+            
+            <div style="display:flex; align-items:center; justify-content:center; gap:10px;">
+                <span style="background:var(--warning); color:white; padding:5px 10px; border-radius:var(--radius-full); font-size:12px; font-weight:bold;">
+                    ⏳ PENDIENTE
+                </span>
+                <span>Recibirás un email cuando sea confirmada.</span>
+            </div>
+        </div>
+        
+        <div style="display:flex; justify-content:center; gap:20px;">
+            <a href="{% url 'mis-reservas' %}" class="btn-outline-teal">Ver mis reservas</a>
+            <a href="{% url 'home' %}" class="btn-primary">Volver al inicio</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

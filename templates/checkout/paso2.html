@@ -1,0 +1,72 @@
+{% extends 'checkout/base_checkout.html' %}
+
+{% block checkout_content %}
+<h2 style="font-size:28px; margin-bottom:10px;">Datos de facturación y contacto</h2>
+<p style="color:var(--gray-500); margin-bottom:30px;">Utilizaremos esta información para enviarte la confirmación de tu reserva.</p>
+
+<div class="card" style="padding:30px; margin-bottom:30px;">
+    <form method="post" action="{% url 'checkout-paso2' %}">
+        {% csrf_token %}
+        
+        <h3 style="font-size:18px; margin-bottom:20px; padding-bottom:10px; border-bottom:1px solid var(--gray-200);">Datos del titular de la reserva</h3>
+        
+        <div class="grid-2">
+            <div class="form-group">
+                <label>Nombre *</label>
+                <input type="text" name="first_name" class="form-control" value="{{ checkout.nombre|default:'' }}" required>
+            </div>
+            <div class="form-group">
+                <label>Apellido *</label>
+                <input type="text" name="last_name" class="form-control" value="{{ checkout.apellido|default:'' }}" required>
+            </div>
+        </div>
+        
+        <div class="form-group" style="margin-bottom:10px;">
+            <label>Correo electrónico *</label>
+            <input type="email" name="email" class="form-control" value="{{ checkout.email|default:'' }}" required>
+        </div>
+        <div style="font-size:13px; color:var(--gray-500); margin-bottom:20px;">
+            ⓘ La reserva se asociará a este correo y enviaremos aquí tus vouchers.
+        </div>
+        
+        <div class="grid-2">
+            <div class="form-group">
+                <label>Teléfono *</label>
+                <div style="display:flex;">
+                    <select class="form-control" style="width:30%; border-right:none; border-top-right-radius:0; border-bottom-right-radius:0;">
+                        <option value="+57">+57 (CO)</option>
+                        <option value="+52">+52 (MX)</option>
+                        <option value="+54">+54 (AR)</option>
+                        <option value="+34">+34 (ES)</option>
+                        <option value="+56">+56 (CL)</option>
+                        <option value="+51">+51 (PE)</option>
+                    </select>
+                    <input type="text" name="phone" class="form-control" style="width:70%; border-top-left-radius:0; border-bottom-left-radius:0;" value="{{ checkout.telefono|default:'' }}" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>País *</label>
+                <select name="country" class="form-control" required>
+                    <option value="">Selecciona un país</option>
+                    <option value="Colombia" {% if checkout.pais == 'Colombia' %}selected{% endif %}>Colombia</option>
+                    <option value="México" {% if checkout.pais == 'México' %}selected{% endif %}>México</option>
+                    <option value="Argentina" {% if checkout.pais == 'Argentina' %}selected{% endif %}>Argentina</option>
+                    <option value="España" {% if checkout.pais == 'España' %}selected{% endif %}>España</option>
+                    <option value="Chile" {% if checkout.pais == 'Chile' %}selected{% endif %}>Chile</option>
+                    <option value="Perú" {% if checkout.pais == 'Perú' %}selected{% endif %}>Perú</option>
+                </select>
+            </div>
+        </div>
+        
+        <div style="margin-top:20px; display:flex; align-items:center; gap:10px;">
+            <input type="checkbox" id="news" checked>
+            <label for="news" style="margin:0; font-weight:400; color:var(--gray-500);">Acepto recibir correos con ofertas y novedades de Tours Asia</label>
+        </div>
+        
+        <div style="margin-top:40px; display:flex; justify-content:space-between; align-items:center;">
+            <a href="{% url 'checkout-paso1' %}" style="color:var(--gray-500);"><i class="fas fa-arrow-left"></i> Volver</a>
+            <button type="submit" class="btn-primary" style="padding:15px 40px; font-size:16px;">Siguiente: Pago seguro</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

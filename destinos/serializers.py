@@ -3,21 +3,17 @@ from django.utils import timezone
 from .models import Destino, Tour, Reserva
 
 class DestinoSerializer(serializers.ModelSerializer):
-    """Simple serializer for destinations."""
     class Meta:
         model = Destino
         fields = '__all__'
 
 class TourReadSerializer(serializers.ModelSerializer):
-    """Read-only serializer for Tours with nested Destino."""
     destino = DestinoSerializer(read_only=True)
-
     class Meta:
         model = Tour
         fields = '__all__'
 
 class TourWriteSerializer(serializers.ModelSerializer):
-    """Write serializer for Tours with Destino ID."""
     class Meta:
         model = Tour
         fields = '__all__'
@@ -33,15 +29,12 @@ class TourWriteSerializer(serializers.ModelSerializer):
         return value
 
 class ReservaReadSerializer(serializers.ModelSerializer):
-    """Read-only serializer for Reservas with nested Tour."""
     tour = TourReadSerializer(read_only=True)
-
     class Meta:
         model = Reserva
         fields = '__all__'
 
 class ReservaWriteSerializer(serializers.ModelSerializer):
-    """Write serializer for Reservas with Tour ID."""
     class Meta:
         model = Reserva
         fields = '__all__'
@@ -51,7 +44,7 @@ class ReservaWriteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("La fecha no puede ser en el pasado.")
         return value
 
-    def validate_people_count(self, value):
+    def validate_adults(self, value):
         if value < 1:
-            raise serializers.ValidationError("Debe haber al menos 1 persona.")
+            raise serializers.ValidationError("Debe haber al menos 1 adulto.")
         return value

@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Reservas - Tours Asia{% endblock %}
+
+{% block content %}
+<section class="hero" style="height:30vh; background-image: linear-gradient(rgba(0,0,0,0.6), rgba(255,87,34,0.3)), url('https://images.unsplash.com/photo-1540959733332-eab4deabeeaf');">
+    <div class="hero-content">
+        <h1>Mis Reservas</h1>
+    </div>
+</section>
+
+<div class="container" style="padding: 60px 20px; min-height:60vh;">
+    
+    {% if not user.is_authenticated and not searched_email %}
+    <div class="card" style="max-width:500px; margin:0 auto; padding:40px;">
+        <h2 class="text-center" style="margin-bottom:10px;">Consulta tu reserva</h2>
+        <p class="text-center" style="color:var(--gray-500); margin-bottom:30px;">Ingresa el correo con el que realizaste la reserva:</p>
+        
+        <form method="get">
+            <div class="form-group" style="display:flex; gap:10px;">
+                <input type="email" name="email" class="form-control" placeholder="tu@correo.com" required>
+                <button type="submit" class="btn-primary" style="white-space:nowrap;">Buscar mis reservas</button>
+            </div>
+        </form>
+    </div>
+    {% else %}
+    
+    <div style="margin-bottom:30px; border-bottom:1px solid var(--gray-200); padding-bottom:15px; display:flex; gap:20px;">
+        <span class="tab-link active" data-target="all" style="font-weight:600; cursor:pointer; color:var(--primary);">Todas</span>
+        <span class="tab-link" data-target="pendiente" style="font-weight:600; cursor:pointer; color:var(--gray-500);">Pendientes</span>
+        <span class="tab-link" data-target="confirmada" style="font-weight:600; cursor:pointer; color:var(--gray-500);">Confirmadas</span>
+        <span class="tab-link" data-target="cancelada" style="font-weight:600; cursor:pointer; color:var(--gray-500);">Canceladas</span>
+    </div>
+
+    <div class="reservas-list" style="display:flex; flex-direction:column; gap:20px;">
+        {% for reserva in reservas %}
+        <div class="card reserva-item" data-status="{{ reserva.status }}" style="display:flex; flex-direction:row; padding:20px; gap:20px; align-items:center;">
+            <div style="width:120px; height:120px; border-radius:var(--radius-sm); overflow:hidden; flex-shrink:0;">
+                <img src="{{ reserva.tour.image_src }}" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+            
+            <div style="flex:1;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+                    <h3 style="margin:0; font-size:20px;">{{ reserva.tour.name }}</h3>
+                    
+                    {% if reserva.status == 'pendiente' %}
+                    <span class="badge" style="background:var(--warning); color:white;">⏳ Pendiente</span>
+                    {% elif reserva.status == 'confirmada' %}
+                    <span class="badge" style="background:var(--success); color:white;">✅ Confirmada</span>
+                    {% else %}
+                    <span class="badge" style="background:var(--gray-500); color:white;">❌ Cancelada</span>
+                    {% endif %}
+                </div>
+                
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; color:var(--gray-500); font-size:14px; margin-bottom:15px;">
+                    <div><i class="far fa-calendar-alt" style="width:20px;"></i> {{ reserva.date }}</div>
+                    <div><i class="fas fa-users" style="width:20px;"></i> {{ reserva.total_participants }} personas</div>
+                    <div><i class="far fa-clock" style="width:20px;"></i> {{ reserva.time_slot }}</div>
+                    <div style="color:var(--dark); font-weight:600;"><i class="fas fa-money-bill-wave" style="width:20px; color:var(--gray-500);"></i> USD {{ reserva.total_amount }}</div>
+                </div>
+                
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="font-size:12px; color:var(--gray-500);">
+                        Reserva #{{ reserva.pk|stringformat:"06d" }} · Creada el {{ reserva.created_at|date:"d/m/Y" }}
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        {% if reserva.status == 'pendiente' %}
+                        <button class="btn-outline-teal" style="padding:6px 15px; border-color:var(--danger); color:var(--danger);" onclick="cancelarReserva({{ reserva.pk }})">Cancelar reserva</button>
+                        {% endif %}
+                        <a href="#" class="btn-primary" style="padding:6px 15px;">Ver detalles</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="card" style="padding:50px; text-align:center;">
+            <i class="far fa-calendar-times" style="font-size:48px; color:var(--gray-200); margin-bottom:20px;"></i>
+            <h3 style="margin-bottom:10px;">No se encontraron reservas</h3>
+            {% if searched_email %}
+            <p style="color:var(--gray-500);">No hay reservas asociadas al correo <strong>{{ searched_email }}</strong>.</p>
+            <a href="{% url 'mis-reservas' %}" class="btn-outline-teal" style="display:inline-block; margin-top:20px; width:auto; padding:10px 20px;">Buscar otro correo</a>
+            {% else %}
+            <p style="color:var(--gray-500);">Aún no tienes reservas con nosotros.</p>
+            <a href="{% url 'tour-list' %}" class="btn-primary" style="display:inline-block; margin-top:20px;">Explorar Tours</a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const tabs = document.querySelectorAll('.tab-link');
+        const items = document.querySelectorAll('.reserva-item');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => {
+                    t.classList.remove('active');
+                    t.style.color = 'var(--gray-500)';
+                });
+                tab.classList.add('active');
+                tab.style.color = 'var(--primary)';
+                
+                const target = tab.dataset.target;
+                
+                items.forEach(item => {
+                    if(target === 'all' || item.dataset.status === target) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+    
+    function cancelarReserva(id) {
+        if(confirm('¿Estás seguro que deseas cancelar esta reserva? Esta acción no se puede deshacer.')) {
+            fetch('/api/actualizar-estado-reserva/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({id: id, estado: 'cancelada'})
+            })
+            .then(r => r.json())
+            .then(data => {
+                if(data.success) {
+                    window.location.reload();
+                } else {
+                    showToast('Hubo un error al cancelar la reserva.', 'error');
+                }
+            });
+        }
+    }
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+{% endblock %}

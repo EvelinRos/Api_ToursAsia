@@ -1,76 +1,65 @@
 {% extends 'base.html' %}
 
-{% block title %}Detalle del Destino - {{ object.name }}{% endblock %}
+{% block title %}{{ object.name }} - Tours Asia{% endblock %}
 
 {% block hero %}
-<div class="hero" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{% if object.cover %}{{ object.cover.url }}{% else %}https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80{% endif %}');">
-    <div>
-        <span class="badge" style="background: var(--accent); color: var(--dark); margin-bottom: 1rem;">{{ object.country }}</span>
+<div class="hero" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('{% if object.cover %}{{ object.cover.url }}{% else %}https://images.unsplash.com/photo-1464817739973-0128fe72a1b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80{% endif %}');">
+    <div class="hero-content">
         <h1>{{ object.name }}</h1>
+        <p><i class="fas fa-globe-asia"></i> {{ object.country }}</p>
     </div>
 </div>
 {% endblock %}
 
 {% block content %}
-<div class="detail-grid">
-    <div>
-        <div class="detail-card">
-            <h2 style="margin-bottom: 1.5rem;"><i class="fas fa-info-circle" style="color: var(--primary);"></i> Sobre este destino</h2>
-            <p style="font-size: 1.1rem; color: #444; line-height: 1.8;">{{ object.description }}</p>
-            
-            <div class="detail-stats">
-                <div>
-                    <small style="text-transform: uppercase; color: #999; font-weight: 700;">País</small>
-                    <p style="font-weight: 600;">{{ object.country }}</p>
-                </div>
-                <div>
-                    <small style="text-transform: uppercase; color: #999; font-weight: 700;">Publicado</small>
-                    <p style="font-weight: 600;">{{ object.pub_date }}</p>
-                </div>
-            </div>
-        </div>
+<div style="margin-top: 4rem;">
+    <div class="content-section">
+        <h2>Sobre {{ object.name }}</h2>
+        <p style="font-size: 1.2rem; line-height: 1.8; color: var(--text);">{{ object.description }}</p>
+    </div>
 
-        <h2 style="margin-bottom: 2rem;"><i class="fas fa-route" style="color: var(--primary);"></i> Tours en {{ object.name }}</h2>
+    <div style="margin: 4rem 0 2rem;">
+        <h2 style="font-size: 2rem; margin-bottom: 2rem;">Tours disponibles en {{ object.name }}</h2>
+        
         {% if tours %}
-            <div class="card-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="card-grid">
                 {% for tour in tours %}
                 <div class="card">
+                    <div class="card-img-container">
+                        {% if tour.photo %}
+                            <img src="{{ tour.photo.url }}" alt="{{ tour.name }}" class="card-img">
+                        {% else %}
+                            <img src="https://images.unsplash.com/photo-1528127269322-539801943592?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img">
+                        {% endif %}
+                        <div class="card-badge">${{ tour.price|floatformat:0 }} USD</div>
+                    </div>
                     <div class="card-body">
-                        <h3 style="margin-bottom: 0.5rem;">{{ tour.name }}</h3>
-                        <div class="card-title-row">
-                            <span class="badge" style="background: var(--accent); color: var(--dark);">${{ tour.price }}</span>
-                            <span class="card-meta" style="margin: 0;"><i class="far fa-clock"></i> {{ tour.duration }} días</span>
+                        <h3 class="card-title">{{ tour.name }}</h3>
+                        <div class="card-meta">
+                            <span><i class="far fa-clock"></i> {{ tour.duration }} días</span>
                         </div>
-                        <a href="{% url 'destinos:tour-detail' tour.pk %}" class="btn btn-outline" style="width: 100%; justify-content: center;">Ver Detalles</a>
+                        <a href="{% url 'destinos:tour-detail' tour.pk %}" class="btn" style="margin-top: 1rem; width: 100%; justify-content: center;">Ver detalles</a>
                     </div>
                 </div>
                 {% endfor %}
             </div>
         {% else %}
-            <div class="empty-state">
-                No hay tours disponibles para este destino actualmente.
+            <div style="text-align: center; padding: 3rem; background: white; border-radius: var(--radius); border: 2px dashed #eee;">
+                <p style="color: var(--text-muted);">Aún no hay tours específicos para este destino.</p>
+                <a href="{% url 'destinos:tour-list' %}" style="color: var(--primary); font-weight: 700; text-decoration: none;">Ver todos los tours disponibles →</a>
             </div>
         {% endif %}
     </div>
 
-    <aside>
-        <div class="sidebar-card">
-            <h3 style="margin-bottom: 1.5rem;">Acciones</h3>
-            <div class="sidebar-actions">
-                {% if user.is_authenticated %}
-                <a href="{% url 'destinos:destino-update' object.pk %}" class="btn" style="width: 100%; justify-content: center; background: var(--secondary);">
-                    <i class="fas fa-edit"></i> Editar Destino
-                </a>
-                <a href="{% url 'destinos:destino-delete' object.pk %}" class="btn btn-danger" style="width: 100%; justify-content: center;">
-                    <i class="fas fa-trash"></i> Eliminar Destino
-                </a>
-                <hr style="border: 0; border-top: 1px solid #eee; margin: 1rem 0;">
-                {% endif %}
-                <a href="{% url 'destinos:destino-list' %}" class="btn btn-outline" style="width: 100%; justify-content: center;">
-                    <i class="fas fa-arrow-left"></i> Volver a la lista
-                </a>
-            </div>
-        </div>
-    </aside>
+    <div style="margin-top: 3rem; display: flex; gap: 1rem;">
+        <a href="{% url 'destinos:destino-list' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Volver a destinos
+        </a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'destinos:destino-update' object.pk %}" class="btn" style="background: var(--secondary); border: none;">
+                <i class="fas fa-edit"></i> Editar Destino
+            </a>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

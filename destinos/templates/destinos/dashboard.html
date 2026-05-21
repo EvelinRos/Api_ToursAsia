@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Admin - Tours Asia{% endblock %}
+
+{% block content %}
+<div style="margin-top: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+        <h1 style="font-size: 2.5rem;">Dashboard de Administración</h1>
+        <div style="display: flex; gap: 1rem;">
+            <a href="{% url 'destinos:destino-create' %}" class="btn btn-outline" style="background: white; border-color: #ddd; color: var(--dark);">+ Nuevo Destino</a>
+            <a href="{% url 'destinos:tour-create' %}" class="btn" style="background: var(--dark);">+ Nuevo Tour</a>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-bottom: 4rem;">
+        <div class="card" style="padding: 2rem; text-align: center; border-left: 5px solid var(--primary);">
+            <p style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">Reservas Totales</p>
+            <h2 style="font-size: 2.5rem; color: var(--dark);">{{ total_reservas }}</h2>
+        </div>
+        <div class="card" style="padding: 2rem; text-align: center; border-left: 5px solid #4CAF50;">
+            <p style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">Ingresos Totales</p>
+            <h2 style="font-size: 2rem; color: var(--dark);">USD {{ ingresos_totales|floatformat:2 }}</h2>
+        </div>
+        <div class="card" style="padding: 2rem; text-align: center; border-left: 5px solid #2196F3;">
+            <p style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">Tours Activos</p>
+            <h2 style="font-size: 2.5rem; color: var(--dark);">{{ tours_activos }}</h2>
+        </div>
+        <div class="card" style="padding: 2rem; text-align: center; border-left: 5px solid #FF9800;">
+            <p style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">Pendientes</p>
+            <h2 style="font-size: 2.5rem; color: var(--dark);">{{ pendientes }}</h2>
+        </div>
+    </div>
+
+    <div class="content-section" style="padding: 2rem;">
+        <h3 style="margin-bottom: 2rem;">Últimas Reservas</h3>
+        <table class="reserva-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tour</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reserva in ultimas_reservas %}
+                <tr>
+                    <td>#{{ reserva.pk|stringformat:"05d" }}</td>
+                    <td style="font-weight: 700;">{{ reserva.tour.name }}</td>
+                    <td>
+                        <div>{{ reserva.customer_name }} {{ reserva.customer_lastname }}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">{{ reserva.customer_email }}</div>
+                    </td>
+                    <td>{{ reserva.date }}</td>
+                    <td style="font-weight: 700; color: var(--primary);">USD {{ reserva.total_amount }}</td>
+                    <td>
+                        {% if reserva.status == 'confirmada' %}
+                            <span class="badge status-confirmada">Confirmada</span>
+                        {% elif reserva.status == 'cancelada' %}
+                            <span class="badge status-cancelada">Cancelada</span>
+                        {% else %}
+                            <span class="badge status-pendiente">Pendiente</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="#" style="color: var(--primary); text-decoration: none; font-weight: 700;">Gestionar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

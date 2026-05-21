@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Crea tu cuenta - Tours Asia{% endblock %}
+
+{% block content %}
+<div class="form-container" style="max-width: 600px;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Únete a Tours Asia</h1>
+        <p style="color: var(--text-muted);">Crea tu cuenta y empieza a explorar el mundo</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div class="form-group">
+                <label>Nombre</label>
+                {{ form.first_name }}
+                {{ form.first_name.errors }}
+            </div>
+            <div class="form-group">
+                <label>Apellido</label>
+                {{ form.last_name }}
+                {{ form.last_name.errors }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Correo electrónico</label>
+            {{ form.email }}
+            {{ form.email.errors }}
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div class="form-group">
+                <label>Teléfono</label>
+                {{ form.phone }}
+                {{ form.phone.errors }}
+            </div>
+            <div class="form-group">
+                <label>País</label>
+                {{ form.country }}
+                {{ form.country.errors }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Contraseña</label>
+            {{ form.password }}
+            {{ form.password.errors }}
+        </div>
+
+        <div class="form-group">
+            <label>Confirmar contraseña</label>
+            {{ form.password_confirm }}
+        </div>
+
+        <button type="submit" class="btn" style="width: 100%; justify-content: center; padding: 1.2rem; font-size: 1.1rem; margin-top: 1rem;">
+            Registrarse ahora
+        </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid #eee;">
+        <p style="color: var(--text-muted);">¿Ya tienes una cuenta? <a href="{% url 'cliente-login' %}" style="color: var(--primary); font-weight: 700; text-decoration: none;">Inicia sesión</a></p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get('email');
+    if (email) {
+        const emailInput = document.querySelector('input[name="email"]');
+        if (emailInput) emailInput.value = email;
+    }
+</script>
+{% endblock %}

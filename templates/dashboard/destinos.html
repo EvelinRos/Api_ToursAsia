@@ -1,0 +1,52 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block dashboard_content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+    <div>
+        <h1 style="margin:0; font-size:28px;">Destinos</h1>
+        <div style="color:var(--gray-500); font-size:14px;">Administrar los destinos disponibles en la plataforma</div>
+    </div>
+    <a href="{% url 'dashboard-destino-create' %}" class="btn-primary" style="padding:10px 15px;"><i class="fas fa-plus"></i> Nuevo Destino</a>
+</div>
+
+<div class="card" style="padding:0;">
+    <div style="padding:20px; border-bottom:1px solid var(--gray-200); display:flex; justify-content:space-between; align-items:center;">
+        <input type="text" class="form-control" placeholder="Buscar destino..." onkeyup="buscarEnTabla(this)" style="max-width:300px;">
+    </div>
+    <div style="overflow-x:auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Nombre</th>
+                    <th>País</th>
+                    <th>Tours</th>
+                    <th>Fecha Alta</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for destino in destinos %}
+                <tr>
+                    <td>
+                        <img src="{{ destino.image_src }}" alt="{{ destino.name }}" style="width:50px; height:50px; object-fit:cover; border-radius:var(--radius-sm);">
+                    </td>
+                    <td style="font-weight:600;">{{ destino.name }}</td>
+                    <td>{{ destino.country }}</td>
+                    <td>{{ destino.tours.count }}</td>
+                    <td>{{ destino.pub_date|date:"d/m/Y" }}</td>
+                    <td>
+                        <a href="{% url 'dashboard-destino-update' destino.pk %}" class="action-btn" title="Editar"><i class="fas fa-pencil-alt"></i></a>
+                        <button class="action-btn" style="color:var(--danger);" onclick="confirmarEliminar('{% url 'dashboard-destino-delete' destino.pk %}', '¿Eliminar destino {{ destino.name|escapejs }}?')" title="Eliminar"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align:center; padding:30px; color:var(--gray-500);">No hay destinos registrados.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

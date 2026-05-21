@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block title %}Tours - Tours Asia{% endblock %}
+
+{% block content %}
+<section class="hero" style="height:30vh; background-image: linear-gradient(rgba(0,0,0,0.6), rgba(255,87,34,0.3)), url('https://images.unsplash.com/photo-1526392060635-9d6019884377');">
+    <div class="hero-content">
+        <h1>Encuentra tu próximo tour</h1>
+    </div>
+</section>
+
+<div class="container" style="padding: 40px 20px;">
+    <div style="display:grid; grid-template-columns: 25% 75%; gap:40px;">
+        <!-- Sidebar Filtros -->
+        <div class="sidebar-filtros" style="background:var(--white); padding:25px; border-radius:var(--radius); box-shadow:var(--shadow-sm); height:fit-content; position:sticky; top:100px;">
+            <h3 style="font-size:18px; margin-bottom:15px; padding-bottom:10px; border-bottom:1px solid var(--gray-200);">FILTRAR POR</h3>
+            
+            <form method="get" action="{% url 'tour-list' %}">
+                <div class="form-group" style="margin-bottom:20px;">
+                    <label style="font-weight:600; font-size:14px; color:var(--gray-500);">Destino</label>
+                    <select name="destino" class="form-control" style="padding:8px 12px;">
+                        <option value="">Todos los destinos ▾</option>
+                        {% for d in destinos %}
+                            <option value="{{ d.pk }}" {% if request.GET.destino == d.pk|stringformat:"s" %}selected{% endif %}>{{ d.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group" style="margin-bottom:20px;">
+                    <label style="font-weight:600; font-size:14px; color:var(--gray-500);">Precio Máximo (USD)</label>
+                    <input type="range" name="precio_max" min="0" max="5000" value="{{ request.GET.precio_max|default:'5000' }}" style="width:100%;" oninput="document.getElementById('precio_max_val').textContent = this.value">
+                    <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--gray-500); margin-top:5px;">
+                        <span>$0</span>
+                        <span>Max: $<span id="precio_max_val">{{ request.GET.precio_max|default:'5000' }}</span></span>
+                    </div>
+                </div>
+                
+                <div class="form-group" style="margin-bottom:20px;">
+                    <label style="font-weight:600; font-size:14px; color:var(--gray-500); margin-bottom:10px;">Duración</label>
+                    <div style="margin-bottom:8px;">
+                        <label style="font-weight:400; display:flex; align-items:center; gap:8px;">
+                            <input type="checkbox" name="duracion" value="1-3" {% if '1-3' in request.GET.duracion %}checked{% endif %}> 1-3 días
+                        </label>
+                    </div>
+                    <div style="margin-bottom:8px;">
+                        <label style="font-weight:400; display:flex; align-items:center; gap:8px;">
+                            <input type="checkbox" name="duracion" value="4-7" {% if '4-7' in request.GET.duracion %}checked{% endif %}> 4-7 días
+                        </label>
+                    </div>
+                    <div style="margin-bottom:8px;">
+                        <label style="font-weight:400; display:flex; align-items:center; gap:8px;">
+                            <input type="checkbox" name="duracion" value="8-14" {% if '8-14' in request.GET.duracion %}checked{% endif %}> 8-14 días
+                        </label>
+                    </div>
+                    <div>
+                        <label style="font-weight:400; display:flex; align-items:center; gap:8px;">
+                            <input type="checkbox" name="duracion" value="+15" {% if '+15' in request.GET.duracion %}checked{% endif %}> +15 días
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group" style="margin-bottom:25px;">
+                    <label style="font-weight:600; font-size:14px; color:var(--gray-500); margin-bottom:10px;">Ordenar por</label>
+                    <div style="margin-bottom:8px;">
+                        <label style="font-weight:400; display:flex; align-items:center; gap:8px;">
+                            <input type="radio" name="orden" value="popular" {% if request.GET.orden == 'popular' or not request.GET.orden %}checked{% endif %}> Más populares
+                        </label>
+                    </div>
+                    <div style="margin-bottom:8px;">
+                        <label style="font-weight:400; display:flex; align-items:center; gap:8px;">
+                            <input type="radio" name="orden" value="precio_asc" {% if request.GET.orden == 'precio_asc' %}checked{% endif %}> Precio: menor a mayor
+                        </label>
+                    </div>
+                    <div style="margin-bottom:8px;">
+                        <label style="font-weight:400; display:flex; align-items:center; gap:8px;">
+                            <input type="radio" name="orden" value="precio_desc" {% if request.GET.orden == 'precio_desc' %}checked{% endif %}> Precio: mayor a menor
+                        </label>
+                    </div>
+                    <div>
+                        <label style="font-weight:400; display:flex; align-items:center; gap:8px;">
+                            <input type="radio" name="orden" value="reciente" {% if request.GET.orden == 'reciente' %}checked{% endif %}> Más recientes
+                        </label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-primary" style="width:100%; margin-bottom:10px; padding:10px;">Aplicar filtros</button>
+                <a href="{% url 'tour-list' %}" class="btn-outline-teal" style="padding:10px;">Limpiar</a>
+            </form>
+        </div>
+        
+        <!-- Resultados -->
+        <div>
+            <div style="margin-bottom:20px; color:var(--gray-500);">
+                <strong>{{ page_obj.paginator.count }}</strong> tours encontrados
+            </div>
+            
+            <div style="display:flex; flex-direction:column; gap:25px;">
+                {% for tour in tours %}
+                <div class="card" style="display:flex; flex-direction:row; height:auto; overflow:hidden;">
+                    <div style="width:280px; position:relative; flex-shrink:0;">
+                        <img src="{{ tour.image_src }}" alt="{{ tour.name }}" style="width:100%; height:100%; object-fit:cover; position:absolute; inset:0;">
+                        {% if tour.is_popular %}
+                        <span class="badge badge-popular" style="position:absolute; top:15px; left:15px;">MÁS POPULAR</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div style="padding:25px; flex:1; display:flex; flex-direction:column;">
+                        <h3 style="margin:0 0 10px; font-size:22px;">{{ tour.name }}</h3>
+                        <div style="color:var(--warning); margin-bottom:15px; font-size:14px; font-weight:600;">
+                            <i class="fa-solid fa-star" style="color: #FFB300;"></i> {{ tour.rating }} <span style="color:var(--gray-500); font-weight:400;">({{ tour.reviews_count }} reseñas)</span>
+                        </div>
+                        
+                        <div style="color:var(--gray-500); margin-bottom:20px; font-size:15px; flex:1;">
+                            <div style="margin-bottom:5px;"><i class="fa-solid fa-location-dot" style="width:20px; text-align:center;"></i> {{ tour.destino.name }}, {{ tour.destino.country }}</div>
+                            <div style="margin-bottom:5px;"><i class="fa-regular fa-clock" style="width:20px; text-align:center;"></i> {{ tour.duration }} días</div>
+                            <div><i class="fa-solid fa-circle-check" style="width:20px; text-align:center; color:var(--success);"></i> Cancelación gratuita</div>
+                        </div>
+                        
+                        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                            <div>
+                                <div style="font-size:13px; color:var(--gray-500);">Desde</div>
+                                <div style="font-size:24px; font-weight:800; color:var(--primary);">USD {{ tour.price }}</div>
+                            </div>
+                            <div style="display:flex; gap:10px;">
+                                <a href="{% url 'tour-detail' tour.pk %}" class="btn-outline-teal" style="padding:10px 20px;">Ver detalles</a>
+                                <a href="{% url 'tour-detail' tour.pk %}" class="btn-primary" style="padding:10px 20px;">Reservar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="card" style="padding:50px; text-align:center;">
+                    <i class="fas fa-search" style="font-size:48px; color:var(--gray-200); margin-bottom:20px;"></i>
+                    <h3 style="margin-bottom:10px;">No encontramos tours</h3>
+                    <p style="color:var(--gray-500);">Prueba ajustando los filtros o buscando otro destino.</p>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Paginación -->
+            {% if is_paginated %}
+            <div style="display:flex; justify-content:center; gap:10px; margin-top:40px;">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}" class="btn-outline-teal" style="width:auto; padding:8px 15px;">Anterior</a>
+                {% endif %}
+                
+                <span class="btn-primary" style="padding:8px 15px;">{{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+                
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}" class="btn-outline-teal" style="width:auto; padding:8px 15px;">Siguiente</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<style>
+@media (max-width: 900px) {
+    .container > div { grid-template-columns: 1fr !important; }
+    .sidebar-filtros { position: static !important; }
+    .card[style*="flex-direction:row"] { flex-direction: column !important; }
+    .card[style*="flex-direction:row"] > div:first-child { width: 100% !important; height: 200px !important; }
+}
+</style>
+{% endblock %}

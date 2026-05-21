@@ -1,0 +1,126 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block dashboard_content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+    <div>
+        <h1 style="margin:0; font-size:28px;">Reserva #{{ reserva.pk|stringformat:"04d" }}</h1>
+        <div style="color:var(--gray-500); font-size:14px;">Creada el {{ reserva.created_at|date:"d/m/Y H:i" }}</div>
+    </div>
+    <div style="display:flex; gap:10px;">
+        <a href="{% url 'dashboard-reservas' %}" class="btn-outline-teal" style="padding:10px 15px;"><i class="fas fa-arrow-left"></i> Volver</a>
+    </div>
+</div>
+
+<div class="grid-65-35">
+    <div>
+        <div class="card" style="padding:30px; margin-bottom:30px;">
+            <h3 style="margin-bottom:20px; font-size:18px; border-bottom:1px solid var(--gray-200); padding-bottom:10px;">Detalles del Cliente</h3>
+            <div class="grid-2" style="margin-bottom:20px;">
+                <div>
+                    <div style="color:var(--gray-500); font-size:13px; margin-bottom:5px;">Nombre Completo</div>
+                    <div style="font-weight:600;">{{ reserva.customer_name }} {{ reserva.customer_lastname }}</div>
+                </div>
+                <div>
+                    <div style="color:var(--gray-500); font-size:13px; margin-bottom:5px;">Email</div>
+                    <div style="font-weight:600;">{{ reserva.customer_email }}</div>
+                </div>
+                <div>
+                    <div style="color:var(--gray-500); font-size:13px; margin-bottom:5px;">Teléfono</div>
+                    <div style="font-weight:600;">{{ reserva.customer_phone }}</div>
+                </div>
+                <div>
+                    <div style="color:var(--gray-500); font-size:13px; margin-bottom:5px;">País</div>
+                    <div style="font-weight:600;">{{ reserva.customer_country }}</div>
+                </div>
+            </div>
+            
+            {% if reserva.user %}
+            <div style="background:var(--teal-light); padding:15px; border-radius:var(--radius-sm); display:flex; align-items:center; gap:10px;">
+                <i class="fas fa-user-check" style="color:var(--teal-dark);"></i>
+                <span style="color:var(--teal-dark); font-size:14px;">Reserva asociada a un usuario registrado.</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="card" style="padding:30px;">
+            <h3 style="margin-bottom:20px; font-size:18px; border-bottom:1px solid var(--gray-200); padding-bottom:10px;">Detalles de la Experiencia</h3>
+            
+            <div style="display:flex; gap:20px; margin-bottom:30px;">
+                <img src="{{ reserva.tour.image_src }}" style="width:120px; height:120px; object-fit:cover; border-radius:var(--radius-sm);">
+                <div>
+                    <h4 style="margin:0 0 10px; font-size:20px;">{{ reserva.tour.name }}</h4>
+                    <div style="color:var(--gray-500); margin-bottom:5px;"><i class="fas fa-map-marker-alt"></i> {{ reserva.tour.destino.name }}, {{ reserva.tour.destino.country }}</div>
+                    <div style="color:var(--gray-500);"><i class="fas fa-language"></i> Idioma: {{ reserva.language }}</div>
+                </div>
+            </div>
+            
+            <div class="grid-3" style="gap:20px;">
+                <div style="background:var(--gray-100); padding:15px; border-radius:var(--radius-sm); text-align:center;">
+                    <i class="far fa-calendar-alt" style="color:var(--primary); font-size:24px; margin-bottom:10px;"></i>
+                    <div style="font-weight:600;">{{ reserva.date|date:"d/m/Y" }}</div>
+                </div>
+                <div style="background:var(--gray-100); padding:15px; border-radius:var(--radius-sm); text-align:center;">
+                    <i class="far fa-clock" style="color:var(--primary); font-size:24px; margin-bottom:10px;"></i>
+                    <div style="font-weight:600;">{{ reserva.time_slot }}</div>
+                </div>
+                <div style="background:var(--gray-100); padding:15px; border-radius:var(--radius-sm); text-align:center;">
+                    <i class="fas fa-users" style="color:var(--primary); font-size:24px; margin-bottom:10px;"></i>
+                    <div style="font-weight:600;">{{ reserva.total_participants }} Participantes</div>
+                    <div style="font-size:12px; color:var(--gray-500);">{{ reserva.adults }} Ads, {{ reserva.children }} Niños</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div>
+        <div class="card" style="padding:30px; margin-bottom:30px;">
+            <h3 style="margin-bottom:20px; font-size:18px; border-bottom:1px solid var(--gray-200); padding-bottom:10px;">Estado de la Reserva</h3>
+            
+            <form method="post" action="{% url 'dashboard-reserva-actualizar-estado' %}">
+                {% csrf_token %}
+                <input type="hidden" name="reserva_id" value="{{ reserva.pk }}">
+                <div class="form-group">
+                    <label>Actualizar estado</label>
+                    <select name="estado" class="form-control" style="margin-bottom:15px;">
+                        <option value="pendiente" {% if reserva.status == 'pendiente' %}selected{% endif %}>⏳ Pendiente</option>
+                        <option value="confirmada" {% if reserva.status == 'confirmada' %}selected{% endif %}>✅ Confirmada</option>
+                        <option value="cancelada" {% if reserva.status == 'cancelada' %}selected{% endif %}>❌ Cancelada</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%;">Guardar cambios</button>
+            </form>
+        </div>
+
+        <div class="card" style="padding:30px;">
+            <h3 style="margin-bottom:20px; font-size:18px; border-bottom:1px solid var(--gray-200); padding-bottom:10px;">Resumen de Pago</h3>
+            
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px; color:var(--gray-500);">
+                <span>Subtotal</span>
+                <span>USD {{ reserva.total_amount|add:"-3" }}</span> <!-- Cálculo simple para display -->
+            </div>
+            
+            {% if reserva.discount_code %}
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px; color:var(--success);">
+                <span>Descuento ({{ reserva.discount_code }})</span>
+                <span>Aplicado</span>
+            </div>
+            {% endif %}
+            
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px; color:var(--gray-500);">
+                <span>Tarifa de servicio</span>
+                <span>USD 3.00</span>
+            </div>
+            
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-size:20px; font-weight:800; color:var(--dark); border-top:1px solid var(--gray-200); padding-top:15px;">
+                <span>Total pagado</span>
+                <span>USD {{ reserva.total_amount }}</span>
+            </div>
+            
+            <div style="display:flex; justify-content:space-between; font-size:14px; color:var(--gray-500);">
+                <span>Método de pago:</span>
+                <span style="text-transform:capitalize; font-weight:600; color:var(--dark);">{{ reserva.payment_method }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

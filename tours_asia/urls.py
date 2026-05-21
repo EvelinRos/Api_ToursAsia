@@ -16,6 +16,7 @@ urlpatterns = [
     # API endpoints
     path('api/', include(router.urls)),
     # Web views
+    path('', include('usuarios.urls')),
     path('', include('destinos.urls')),
 ]
 

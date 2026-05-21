@@ -3,60 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Tours Asia | Explore the Exotic{% endblock %}</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
+    <title>{% block title %}Tours Asia{% endblock %}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.11.0/css/flag-icons.min.css">
     {% load static %}
     <link rel="stylesheet" href="{% static 'destinos/css/main.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <header>
-        <div class="nav-container">
-            <a href="{% url 'destinos:home' %}" class="brand">TOURS ASIA</a>
-            <nav>
-                <a href="{% url 'destinos:destino-list' %}">Destinos</a>
-                <a href="{% url 'destinos:tour-list' %}">Tours</a>
-                <a href="{% url 'destinos:reserva-list' %}">Reservas</a>
+    {% block navbar %}
+    <nav class="navbar">
+        <div class="container">
+            <a href="{% url 'home' %}" class="navbar-brand">TOURS ASIA</a>
+            <div class="navbar-nav">
+                <a href="{% url 'destino-list' %}" class="nav-link">Destinos</a>
+                <a href="{% url 'tour-list' %}" class="nav-link">Tours</a>
+                <a href="{% url 'mis-reservas' %}" class="nav-link">Consultar Reserva</a>
                 {% if user.is_authenticated %}
-                    <div class="user-menu">
-                        <span class="user-name"><i class="fas fa-user-circle"></i> {{ user.username }}</span>
-                        <a href="{% url 'destinos:destino-create' %}" class="btn" style="padding: 0.5rem 1rem;">Nuevo Destino</a>
-                        <a href="{% url 'destinos:tour-create' %}" class="btn" style="padding: 0.5rem 1rem;">Nuevo Tour</a>
-                        <form action="{% url 'destinos:logout' %}" method="post" style="display: inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-outline" style="padding: 0.5rem 1rem; border-color: #fff; color: #fff;">
-                                <i class="fas fa-sign-out-alt"></i> Salir
-                            </button>
-                        </form>
-                    </div>
+                    {% if user.is_staff %}
+                        <a href="{% url 'dashboard' %}" class="btn-primary">Panel Admin</a>
+                    {% else %}
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <span style="font-weight:600;"><i class="fas fa-user-circle"></i> {{ user.first_name }}</span>
+                            <form action="{% url 'cliente-logout' %}" method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-outline-teal" style="padding: 6px 12px; font-size:14px;">Salir</button>
+                            </form>
+                        </div>
+                    {% endif %}
                 {% else %}
-                    <a href="/admin/login/" class="btn btn-outline" style="border-color: var(--accent); color: var(--accent);">
-                        <i class="fas fa-sign-in-alt"></i> Admin Login
-                    </a>
+                    <a href="{% url 'cliente-login' %}" class="btn-primary">Iniciar sesión</a>
                 {% endif %}
-            </nav>
+            </div>
         </div>
-    </header>
+    </nav>
+    {% endblock %}
 
-    {% block hero %}{% endblock %}
-
-    <div class="container">
+    <!-- Mensajes de Django a Toasts -->
+    <div style="display:none;">
         {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}" style="padding: 1rem; margin-bottom: 2rem; border-radius: 12px; {% if message.tags == 'success' %}background: #dcfce7; color: #166534;{% else %}background: #fee2e2; color: #991b1b;{% endif %}">
-                    {{ message }}
-                </div>
+                <div class="django-message" data-message="{{ message }}" data-type="{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'success' %}success{% else %}info{% endif %}"></div>
             {% endfor %}
         {% endif %}
-        {% block content %}{% endblock %}
     </div>
 
-    <footer>
-        <p>&copy; 2026 Tours Asia. Todos los derechos reservados.</p>
+    {% block content %}
+    {% endblock %}
+
+    {% block footer %}
+    <footer class="footer">
+        <div class="container grid-4">
+            <div>
+                <h3 style="color:var(--primary)">TOURS ASIA</h3>
+                <p style="color:var(--gray-200)">Descubre la magia de Asia con expertos locales.</p>
+                <div style="margin-top:15px; font-size:24px;">
+                    <a href="#" style="color:white; margin-right:15px;"><i class="fab fa-instagram"></i></a>
+                    <a href="#" style="color:white; margin-right:15px;"><i class="fab fa-facebook"></i></a>
+                    <a href="#" style="color:white; margin-right:15px;"><i class="fab fa-youtube"></i></a>
+                    <a href="#" style="color:white;"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4 style="color:white">Destinos</h4>
+                <a href="#">Japón</a>
+                <a href="#">China</a>
+                <a href="#">Tailandia</a>
+                <a href="#">Indonesia / Bali</a>
+                <a href="#">Vietnam</a>
+            </div>
+            <div class="footer-links">
+                <h4 style="color:white">Información</h4>
+                <a href="#">Quiénes somos</a>
+                <a href="#">Cómo funciona</a>
+                <a href="#">Términos y condiciones</a>
+                <a href="#">Política de privacidad</a>
+                <a href="#">Preguntas frecuentes</a>
+            </div>
+            <div>
+                <h4 style="color:white">Contacto</h4>
+                <p style="color:var(--gray-200); margin-bottom:10px;"><i class="fas fa-envelope"></i> hola@toursasia.com</p>
+                <p style="color:var(--gray-200); margin-bottom:10px;"><i class="fas fa-phone"></i> +57 300 000 0000</p>
+                <p style="color:var(--gray-200); margin-bottom:10px;"><i class="fas fa-map-marker-alt"></i> Bogotá, Colombia</p>
+                <p style="color:var(--gray-200);"><i class="fas fa-clock"></i> Lun-Vie 8am-6pm</p>
+            </div>
+        </div>
     </footer>
+    {% endblock %}
+
+    <script src="{% static 'destinos/js/toast.js' %}"></script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

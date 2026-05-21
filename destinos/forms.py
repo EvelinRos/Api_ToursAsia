@@ -39,10 +39,17 @@ class TourForm(forms.ModelForm):
 class ReservaForm(forms.ModelForm):
     class Meta:
         model = Reserva
-        fields = ['tour', 'customer_name', 'customer_email', 'date', 'people_count', 'notes', 'status']
+        fields = [
+            'tour', 'date', 'time_slot', 'adults', 'children', 'language',
+            'customer_name', 'customer_lastname', 'customer_email', 
+            'customer_phone', 'customer_country', 'payment_method',
+            'notes', 'status'
+        ]
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
-            'customer_name': forms.TextInput(attrs={'placeholder': 'Tu nombre completo'}),
+            'time_slot': forms.TextInput(attrs={'readonly': 'readonly'}),
+            'customer_name': forms.TextInput(attrs={'placeholder': 'Nombre'}),
+            'customer_lastname': forms.TextInput(attrs={'placeholder': 'Apellido'}),
             'customer_email': forms.EmailInput(attrs={'placeholder': 'tu@email.com'}),
             'notes': forms.Textarea(attrs={'placeholder': 'Alguna observación...', 'rows': 3}),
         }
@@ -50,12 +57,12 @@ class ReservaForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         date = cleaned_data.get('date')
-        people_count = cleaned_data.get('people_count')
+        adults = cleaned_data.get('adults')
         
         if date and date < timezone.now().date():
             self.add_error('date', 'La fecha no puede ser en el pasado.')
             
-        if people_count is not None and people_count < 1:
-            self.add_error('people_count', 'Debe haber al menos 1 persona.')
+        if adults is not None and adults < 1:
+            self.add_error('adults', 'Debe haber al menos 1 adulto.')
             
         return cleaned_data

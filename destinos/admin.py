@@ -16,7 +16,7 @@ class TourAdmin(admin.ModelAdmin):
 
 @admin.register(Reserva)
 class ReservaAdmin(admin.ModelAdmin):
-    list_display        = ['id', 'customer_name', 'tour', 'date', 'people_count', 'status', 'created_at']
+    list_display        = ['id', 'customer_name', 'tour', 'date', 'adults', 'children', 'status', 'created_at']
     search_fields       = ['customer_name', 'customer_email']
     list_filter         = ['status', 'tour']
     list_select_related = ['tour']

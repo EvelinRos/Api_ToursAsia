@@ -1,0 +1,56 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block dashboard_content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+    <div>
+        <h1 style="margin:0; font-size:28px;">Tours</h1>
+        <div style="color:var(--gray-500); font-size:14px;">Administrar los tours y experiencias</div>
+    </div>
+    <a href="{% url 'dashboard-tour-create' %}" class="btn-primary" style="padding:10px 15px;"><i class="fas fa-plus"></i> Nuevo Tour</a>
+</div>
+
+<div class="card" style="padding:0;">
+    <div style="padding:20px; border-bottom:1px solid var(--gray-200); display:flex; justify-content:space-between; align-items:center;">
+        <input type="text" class="form-control" placeholder="Buscar tour..." onkeyup="buscarEnTabla(this)" style="max-width:300px;">
+    </div>
+    <div style="overflow-x:auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Destino</th>
+                    <th>Precio</th>
+                    <th>Popular</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tour in tours %}
+                <tr>
+                    <td>#{{ tour.pk|stringformat:"03d" }}</td>
+                    <td style="font-weight:600; max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="{{ tour.name }}">{{ tour.name }}</td>
+                    <td>{{ tour.destino.name }}</td>
+                    <td>USD {{ tour.price }}</td>
+                    <td>
+                        <button class="badge {% if tour.is_popular %}badge-popular{% else %}badge-country{% endif %}" 
+                                style="border:none; cursor:pointer;" 
+                                onclick="togglePopularTour(this, {{ tour.pk }})">
+                            {% if tour.is_popular %}Popular{% else %}Normal{% endif %}
+                        </button>
+                    </td>
+                    <td>
+                        <a href="{% url 'dashboard-tour-update' tour.pk %}" class="action-btn" title="Editar"><i class="fas fa-pencil-alt"></i></a>
+                        <button class="action-btn" style="color:var(--danger);" onclick="confirmarEliminar('{% url 'dashboard-tour-delete' tour.pk %}', '¿Eliminar tour {{ tour.name|escapejs }}?')" title="Eliminar"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align:center; padding:30px; color:var(--gray-500);">No hay tours registrados.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

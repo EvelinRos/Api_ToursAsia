@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     # Local
+    'usuarios',
     'destinos',
 ]
 
@@ -101,7 +102,10 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Fix: Added LOGIN_URL for CRUD protection
-LOGIN_URL = '/admin/login/'
+AUTH_USER_MODEL = 'usuarios.Usuario'
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
