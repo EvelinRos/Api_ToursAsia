@@ -1,0 +1,214 @@
+<app-navbar />
+
+<div class="checkout-wrap">
+  <!-- Barra de progreso -->
+  <div class="top-bar">🔒 Pago seguro</div>
+  <div class="steps-bar">
+    <div class="step" [class.active]="paso() >= 1" [class.done]="paso() > 1">
+      <span class="step-num">{{ paso() > 1 ? '✓' : '1' }}</span> Selección
+    </div>
+    <span class="step-sep">›</span>
+    <div class="step" [class.active]="paso() >= 2" [class.done]="paso() > 2">
+      <span class="step-num">{{ paso() > 2 ? '✓' : '2' }}</span> Datos personales
+    </div>
+    <span class="step-sep">›</span>
+    <div class="step" [class.active]="paso() >= 3">
+      <span class="step-num">3</span> Confirmación
+    </div>
+  </div>
+
+  @if (tour(); as t) {
+    <div class="checkout-body">
+      <div class="checkout-main">
+        <!-- PASO 1: Fecha, hora y personas -->
+        @if (paso() === 1) {
+          <div class="card">
+            <h3 class="card-title">Selecciona fecha y hora</h3>
+            <div class="form-group">
+              <label>Fecha</label>
+              <input type="date" [(ngModel)]="seleccion.fecha" [min]="hoy()" class="input" />
+            </div>
+            <div class="form-group">
+              <label>Horario</label>
+              <select [(ngModel)]="seleccion.hora" class="input">
+                <option value="">Selecciona un horario</option>
+                @for (slot of t.time_slots; track slot) {
+                  <option [value]="slot">{{ slot }}</option>
+                }
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Idioma</label>
+              <select [(ngModel)]="seleccion.idioma" class="input">
+                <option>Español</option>
+                <option>English</option>
+                <option>Português</option>
+              </select>
+            </div>
+
+            <div class="personas-section">
+              <h4>Participantes</h4>
+              @for (
+                tipo of [
+                  { key: 'adultos', label: 'Adultos' },
+                  { key: 'ninos', label: 'Niños' },
+                  { key: 'bebes', label: 'Bebés' },
+                ];
+                track tipo.key
+              ) {
+                <div class="persona-row">
+                  <span>{{ tipo.label }}</span>
+                  <div class="counter">
+                    <button class="cnt-btn" (click)="cambiar(tipo.key as any, -1)">−</button>
+                    <span class="cnt-val">{{ seleccion[tipo.key as keyof typeof seleccion] }}</span>
+                    <button class="cnt-btn" (click)="cambiar(tipo.key as any, 1)">+</button>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <button class="btn-primary" (click)="irPaso2()">Continuar</button>
+          </div>
+        }
+
+        <!-- PASO 2: Datos personales -->
+        @if (paso() === 2) {
+          <div class="card">
+            <h3 class="card-title">Datos de la reserva</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Nombre</label>
+                <input
+                  type="text"
+                  [(ngModel)]="datosPersonales.nombre"
+                  class="input"
+                  placeholder="Nombre"
+                />
+              </div>
+              <div class="form-group">
+                <label>Apellidos</label>
+                <input
+                  type="text"
+                  [(ngModel)]="datosPersonales.apellido"
+                  class="input"
+                  placeholder="Apellidos"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Correo electrónico</label>
+              <input
+                type="email"
+                [(ngModel)]="datosPersonales.email"
+                class="input"
+                placeholder="tu@correo.com"
+              />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>País</label>
+                <input type="text" [(ngModel)]="datosPersonales.pais" class="input" />
+              </div>
+              <div class="form-group">
+                <label>Teléfono</label>
+                <input
+                  type="tel"
+                  [(ngModel)]="datosPersonales.telefono"
+                  class="input"
+                  placeholder="+57 300..."
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>
+                <input type="checkbox" [(ngModel)]="datosPersonales.aceptaTerminos" />
+                Acepto los términos y condiciones
+              </label>
+            </div>
+            <div class="bottom-actions">
+              <button class="btn-secondary" (click)="paso.set(1)">← Volver</button>
+              <button class="btn-primary" (click)="irPaso3()">Continuar →</button>
+            </div>
+          </div>
+        }
+
+        <!-- PASO 3: Resumen y confirmación -->
+        @if (paso() === 3) {
+          <div class="card">
+            <h3 class="card-title">Confirma tu reserva</h3>
+            <div class="resumen-item">
+              <span>Tour</span><strong>{{ t.name }}</strong>
+            </div>
+            <div class="resumen-item">
+              <span>Fecha</span><strong>{{ seleccion.fecha }}</strong>
+            </div>
+            <div class="resumen-item">
+              <span>Horario</span><strong>{{ seleccion.hora }}</strong>
+            </div>
+            <div class="resumen-item">
+              <span>Idioma</span><strong>{{ seleccion.idioma }}</strong>
+            </div>
+            <div class="resumen-item">
+              <span>Adultos</span><strong>{{ seleccion.adultos }}</strong>
+            </div>
+            <div class="resumen-item">
+              <span>Niños</span><strong>{{ seleccion.ninos }}</strong>
+            </div>
+            <div class="resumen-item">
+              <span>Nombre</span
+              ><strong>{{ datosPersonales.nombre }} {{ datosPersonales.apellido }}</strong>
+            </div>
+            <div class="resumen-item">
+              <span>Email</span><strong>{{ datosPersonales.email }}</strong>
+            </div>
+            <div class="notice-bar">
+              ⚠️ Solo las personas incluidas en tu reserva podrán asistir al tour ({{
+                totalPersonas()
+              }}
+              persona{{ totalPersonas() > 1 ? 's' : '' }})
+            </div>
+            <div class="bottom-actions" style="margin-top: 1rem">
+              <button class="btn-secondary" (click)="paso.set(2)">← Volver</button>
+              <button class="btn-primary" (click)="confirmar()" [disabled]="cargando()">
+                {{ cargando() ? 'Confirmando...' : 'Ir al pago →' }}
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- PASO 4: Éxito -->
+        @if (paso() === 4) {
+          <div class="card confirm-box">
+            <div class="confirm-icon">⏳</div>
+            <h2 class="confirm-title">¡Reserva recibida!</h2>
+            <p class="confirm-subtitle">
+              Tu reserva #{{ reservaCreada() }} está en estado <strong>PENDIENTE</strong>.<br />
+              Un administrador la confirmará pronto. Te notificaremos por correo.
+            </p>
+            <div class="pending-badge">⏳ Pendiente de confirmación</div>
+            <div class="admin-note">
+              ℹ️ El administrador revisará tu reserva y la confirmará o rechazará en breve.
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Sidebar resumen -->
+      <div class="checkout-sidebar">
+        <div class="card">
+          <h3 class="card-title">Resumen</h3>
+          <p style="font-weight: 500">{{ t.name }}</p>
+          <div class="price-row">
+            <span>Precio base</span><span>USD {{ t.price }}</span>
+          </div>
+          <div class="price-row">
+            <span>Personas</span><span>{{ totalPersonas() }}</span>
+          </div>
+          <div class="price-total">
+            <span>Total</span><span>USD {{ totalPrecio() }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

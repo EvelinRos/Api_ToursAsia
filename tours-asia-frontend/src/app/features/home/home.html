@@ -1,0 +1,58 @@
+<app-navbar />
+
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Descubre la magia de Asia</h1>
+    <p>Experiencias únicas, guías expertos y tours en español</p>
+    <a routerLink="/tours" class="btn-primary">Ver todos los tours</a>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Destinos populares</h2>
+    <div class="grid-3">
+      @for (destino of destinos(); track destino.id) {
+        <a [routerLink]="['/tours']" [queryParams]="{ destino: destino.id }" class="destino-card">
+          <div
+            class="destino-img"
+            [style.background-image]="'url(' + destino.cover_url + ')'"
+          ></div>
+          <div class="destino-info">
+            <span class="destino-country">{{ destino.country }}</span>
+            <h3>{{ destino.name }}</h3>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="section section-gray">
+  <div class="container">
+    <h2 class="section-title">Tours destacados</h2>
+    <div class="grid-3">
+      @for (tour of tours(); track tour.id) {
+        <div class="tour-card">
+          <div class="tour-img" [style.background-image]="'url(' + tour.photo_url + ')'">
+            @if (tour.is_popular) {
+              <span class="badge-popular">Popular</span>
+            }
+          </div>
+          <div class="tour-body">
+            <span class="tour-destino">{{ tour.destino.name }}</span>
+            <h3 class="tour-name">{{ tour.name }}</h3>
+            <div class="tour-meta">
+              <span>⭐ {{ tour.rating }} ({{ tour.reviews_count }})</span>
+              <span>{{ tour.duration }} días</span>
+            </div>
+            <div class="tour-footer">
+              <span class="tour-price">USD {{ tour.price }}</span>
+              <a [routerLink]="['/tours', tour.id]" class="btn-sm">Ver tour</a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

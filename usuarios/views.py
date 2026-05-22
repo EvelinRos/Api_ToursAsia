@@ -13,6 +13,14 @@ from .forms import RegistroClienteForm
 from .models import Usuario
 from destinos.models import Destino, Tour, Reserva
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+
 class StaffRequiredMixin(UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_authenticated and self.request.user.is_staff
@@ -175,6 +183,9 @@ class ActualizarEstadoReservaView(StaffRequiredMixin, View):
         data = json.loads(request.body)
         reserva_id = data.get('id')
         nuevo_estado = data.get('estado')
+        ESTADOS_VALIDOS = ['pendiente', 'confirmada', 'rechazada', 'cancelada']
+        if nuevo_estado not in ESTADOS_VALIDOS:
+            return JsonResponse({'success': False, 'error': 'Estado inválido'})
         try:
             reserva = Reserva.objects.get(id=reserva_id)
             reserva.status = nuevo_estado
@@ -194,3 +205,25 @@ class TogglePopularTourView(StaffRequiredMixin, View):
             return JsonResponse({'success': True, 'is_popular': tour.is_popular})
         except Tour.DoesNotExist:
             return JsonResponse({'success': False})
+        
+class RegistroAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        form = RegistroClienteForm(request.data)
+        if form.is_valid():
+            user = form.save()
+            return Response({'mensaje': 'Usuario creado correctamente.'}, status=status.HTTP_201_CREATED)
+        return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CustomTokenSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['email'] = user.email
+        token['first_name'] = user.first_name
+        token['is_staff'] = user.is_staff
+        return token
+
+class CustomTokenView(TokenObtainPairView):
+    serializer_class = CustomTokenSerializer

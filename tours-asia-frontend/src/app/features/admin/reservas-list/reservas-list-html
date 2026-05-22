@@ -1,0 +1,55 @@
+<div class="metrics">
+  <div class="metric"><div class="metric-label">Total</div><div class="metric-val">{{ reservas().length }}</div></div>
+  <div class="metric"><div class="metric-label">Pendientes</div><div class="metric-val amber">{{ totalPor('pendiente') }}</div></div>
+  <div class="metric"><div class="metric-label">Confirmadas</div><div class="metric-val green">{{ totalPor('confirmada') }}</div></div>
+  <div class="metric"><div class="metric-label">Rechazadas</div><div class="metric-val red">{{ totalPor('rechazada') }}</div></div>
+</div>
+
+<div class="section-header">
+  <h2 class="section-title">Reservas</h2>
+  <div class="filters">
+    <button class="filter-btn" [class.active]="filtro()===''" (click)="filtro.set('')">Todas</button>
+    <button class="filter-btn" [class.active]="filtro()==='pendiente'" (click)="filtro.set('pendiente')">Pendientes</button>
+    <button class="filter-btn" [class.active]="filtro()==='confirmada'" (click)="filtro.set('confirmada')">Confirmadas</button>
+    <button class="filter-btn" [class.active]="filtro()==='rechazada'" (click)="filtro.set('rechazada')">Rechazadas</button>
+    <input class="search-input" [(ngModel)]="busqueda" placeholder="Buscar cliente o ID..." />
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th><th>Cliente</th><th>Tour</th><th>Fecha</th><th>Personas</th><th>Total</th><th>Estado</th><th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (r of reservasFiltradas; track r.id) {
+        <tr>
+          <td style="color:#e8500a;font-weight:500">#{{ r.id }}</td>
+          <td>
+            <div style="font-weight:500">{{ r.customer_name }}</div>
+            <div style="font-size:12px;opacity:.7">{{ r.customer_email }}</div>
+          </td>
+          <td>{{ r.tour.name }}</td>
+          <td>{{ r.date }}</td>
+          <td>{{ r.adults }}A · {{ r.children }}N</td>
+          <td>USD {{ r.total_amount }}</td>
+          <td><span class="badge-status" [class]="'st-' + r.status">{{ r.status }}</span></td>
+          <td>
+            <div class="actions-cell">
+              <a [routerLink]="['/admin/reservas', r.id]" class="act-btn view">👁</a>
+              @if (r.status === 'pendiente') {
+                <button class="act-btn confirm" (click)="cambiarEstado(r.id, 'confirmada')">✓</button>
+                <button class="act-btn reject" (click)="cambiarEstado(r.id, 'rechazada')">✗</button>
+              }
+            </div>
+          </td>
+        </tr>
+      }
+      @empty {
+        <tr><td colspan="8" class="empty-state">No hay reservas.</td></tr>
+      }
+    </tbody>
+  </table>
+</div>

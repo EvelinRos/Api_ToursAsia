@@ -1,0 +1,387 @@
+<!-- Ejemplo de template refactorizado con Reactive Forms y errores inline -->
+<app-navbar />
+
+<div class="reserva-container">
+  <div class="reserva-content">
+    <!-- Paso 1: Selección -->
+    @if (paso() === 1) {
+      <div class="paso paso-1">
+        <h2>Paso 1: Selecciona tu fecha y hora</h2>
+
+        @if (tour(); as tour) {
+          <form [formGroup]="paso1Form">
+            <!-- Fecha -->
+            <div class="form-group">
+              <label for="fecha">Fecha de la reserva *</label>
+              <input
+                id="fecha"
+                type="date"
+                formControlName="fecha"
+                class="form-control"
+                [class.is-invalid]="
+                  paso1Form.get('fecha')?.invalid && paso1Form.get('fecha')?.touched
+                "
+              />
+
+              @if (errorFecha()) {
+                <p class="error-message">{{ errorFecha() }}</p>
+              }
+            </div>
+
+            <!-- Hora -->
+            <div class="form-group">
+              <label for="hora">Horario *</label>
+              <select
+                id="hora"
+                formControlName="hora"
+                class="form-control"
+                [class.is-invalid]="
+                  paso1Form.get('hora')?.invalid && paso1Form.get('hora')?.touched
+                "
+              >
+                <option value="">Selecciona un horario</option>
+                @for (slot of tour.time_slots; track slot) {
+                  <option [value]="slot">{{ slot }}</option>
+                }
+              </select>
+
+              @if (errorHora()) {
+                <p class="error-message">{{ errorHora() }}</p>
+              }
+            </div>
+
+            <!-- Cantidad de personas -->
+            <div class="form-group">
+              <label>Cantidad de personas *</label>
+              <div class="personas-selector">
+                <div class="persona-type">
+                  <label for="adultos">Adultos:</label>
+                  <div class="input-group">
+                    <button
+                      type="button"
+                      class="btn-minus"
+                      (click)="
+                        paso1Form
+                          .get('adultos')!
+                          .setValue(Math.max(1, paso1Form.get('adultos')!.value - 1))
+                      "
+                    >
+                      −
+                    </button>
+                    <input
+                      id="adultos"
+                      type="number"
+                      formControlName="adultos"
+                      readonly
+                      class="persona-input"
+                    />
+                    <button
+                      type="button"
+                      class="btn-plus"
+                      (click)="
+                        paso1Form.get('adultos')!.setValue(paso1Form.get('adultos')!.value + 1)
+                      "
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <div class="persona-type">
+                  <label for="ninos">Niños (3-12):</label>
+                  <div class="input-group">
+                    <button
+                      type="button"
+                      class="btn-minus"
+                      (click)="
+                        paso1Form
+                          .get('ninos')!
+                          .setValue(Math.max(0, paso1Form.get('ninos')!.value - 1))
+                      "
+                    >
+                      −
+                    </button>
+                    <input
+                      id="ninos"
+                      type="number"
+                      formControlName="ninos"
+                      readonly
+                      class="persona-input"
+                    />
+                    <button
+                      type="button"
+                      class="btn-plus"
+                      (click)="paso1Form.get('ninos')!.setValue(paso1Form.get('ninos')!.value + 1)"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <div class="persona-type">
+                  <label for="bebes">Bebés (&lt;3):</label>
+                  <div class="input-group">
+                    <button
+                      type="button"
+                      class="btn-minus"
+                      (click)="
+                        paso1Form
+                          .get('bebes')!
+                          .setValue(Math.max(0, paso1Form.get('bebes')!.value - 1))
+                      "
+                    >
+                      −
+                    </button>
+                    <input
+                      id="bebes"
+                      type="number"
+                      formControlName="bebes"
+                      readonly
+                      class="persona-input"
+                    />
+                    <button
+                      type="button"
+                      class="btn-plus"
+                      (click)="paso1Form.get('bebes')!.setValue(paso1Form.get('bebes')!.value + 1)"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              @if (errorPersonas()) {
+                <p class="error-message">{{ errorPersonas() }}</p>
+              }
+            </div>
+
+            <!-- Idioma -->
+            <div class="form-group">
+              <label for="idioma">Idioma del tour *</label>
+              <select id="idioma" formControlName="idioma" class="form-control">
+                <option value="Español">Español</option>
+                <option value="English">English</option>
+                <option value="Français">Français</option>
+              </select>
+            </div>
+          </form>
+
+          <div class="paso-actions">
+            <button class="btn btn-secondary" (click)="volver()">Volver</button>
+            <button class="btn btn-primary" (click)="irPaso2()" [disabled]="!paso1Form.valid">
+              Continuar
+            </button>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Paso 2: Datos Personales -->
+    @if (paso() === 2) {
+      <div class="paso paso-2">
+        <h2>Paso 2: Datos personales</h2>
+
+        <form [formGroup]="paso2Form">
+          <!-- Nombre -->
+          <div class="form-group">
+            <label for="nombre">Nombre *</label>
+            <input
+              id="nombre"
+              type="text"
+              formControlName="nombre"
+              class="form-control"
+              [class.is-invalid]="
+                paso2Form.get('nombre')?.invalid && paso2Form.get('nombre')?.touched
+              "
+              placeholder="Tu nombre"
+            />
+
+            @if (paso2Form.get('nombre')?.invalid && paso2Form.get('nombre')?.touched) {
+              @if (paso2Form.get('nombre')?.hasError('required')) {
+                <p class="error-message">El nombre es requerido</p>
+              }
+              @if (paso2Form.get('nombre')?.hasError('minlength')) {
+                <p class="error-message">El nombre debe tener al menos 2 caracteres</p>
+              }
+            }
+          </div>
+
+          <!-- Apellido -->
+          <div class="form-group">
+            <label for="apellido">Apellido *</label>
+            <input
+              id="apellido"
+              type="text"
+              formControlName="apellido"
+              class="form-control"
+              [class.is-invalid]="
+                paso2Form.get('apellido')?.invalid && paso2Form.get('apellido')?.touched
+              "
+              placeholder="Tu apellido"
+            />
+
+            @if (paso2Form.get('apellido')?.invalid && paso2Form.get('apellido')?.touched) {
+              @if (paso2Form.get('apellido')?.hasError('required')) {
+                <p class="error-message">El apellido es requerido</p>
+              }
+              @if (paso2Form.get('apellido')?.hasError('minlength')) {
+                <p class="error-message">El apellido debe tener al menos 2 caracteres</p>
+              }
+            }
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              class="form-control"
+              [class.is-invalid]="
+                paso2Form.get('email')?.invalid && paso2Form.get('email')?.touched
+              "
+              placeholder="tu.email@ejemplo.com"
+            />
+
+            @if (paso2Form.get('email')?.invalid && paso2Form.get('email')?.touched) {
+              @if (paso2Form.get('email')?.hasError('required')) {
+                <p class="error-message">El email es requerido</p>
+              }
+              @if (paso2Form.get('email')?.hasError('email')) {
+                <p class="error-message">El email no es válido</p>
+              }
+            }
+          </div>
+
+          <!-- Teléfono -->
+          <div class="form-group">
+            <label for="telefono">Teléfono *</label>
+            <input
+              id="telefono"
+              type="tel"
+              formControlName="telefono"
+              class="form-control"
+              [class.is-invalid]="
+                paso2Form.get('telefono')?.invalid && paso2Form.get('telefono')?.touched
+              "
+              placeholder="+57 300 1234567"
+            />
+
+            @if (paso2Form.get('telefono')?.invalid && paso2Form.get('telefono')?.touched) {
+              <p class="error-message">Ingresa un teléfono válido</p>
+            }
+          </div>
+
+          <!-- País -->
+          <div class="form-group">
+            <label for="pais">País *</label>
+            <input
+              id="pais"
+              type="text"
+              formControlName="pais"
+              class="form-control"
+              placeholder="Tu país"
+            />
+          </div>
+
+          <!-- Comentarios -->
+          <div class="form-group">
+            <label for="comentarios">Comentarios adicionales</label>
+            <textarea
+              id="comentarios"
+              formControlName="comentarios"
+              class="form-control"
+              rows="3"
+              placeholder="Alguna información adicional..."
+            ></textarea>
+          </div>
+
+          <!-- Aceptar términos -->
+          <div class="form-group checkbox-group">
+            <label for="aceptaTerminos">
+              <input id="aceptaTerminos" type="checkbox" formControlName="aceptaTerminos" />
+              Acepto los términos y condiciones *
+            </label>
+
+            @if (errorTerminos()) {
+              <p class="error-message">{{ errorTerminos() }}</p>
+            }
+          </div>
+        </form>
+
+        <div class="paso-actions">
+          <button class="btn btn-secondary" (click)="paso.set(1)">Volver</button>
+          <button class="btn btn-primary" (click)="irPaso3()" [disabled]="!paso2Form.valid">
+            Continuar
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Paso 3: Confirmación -->
+    @if (paso() === 3) {
+      <div class="paso paso-3">
+        <h2>Paso 3: Confirmación</h2>
+
+        @if (tour(); as tour) {
+          <div class="resumen">
+            <h3>{{ tour.name }}</h3>
+            <dl class="resumen-list">
+              <dt>Fecha:</dt>
+              <dd>{{ paso1Form.get('fecha')?.value }}</dd>
+
+              <dt>Horario:</dt>
+              <dd>{{ paso1Form.get('hora')?.value }}</dd>
+
+              <dt>Personas:</dt>
+              <dd>
+                {{ paso1Form.get('adultos')?.value }} adulto(s),
+                {{ paso1Form.get('ninos')?.value }} niño(s),
+                {{ paso1Form.get('bebes')?.value }} bebé(s)
+              </dd>
+
+              <dt>Idioma:</dt>
+              <dd>{{ paso1Form.get('idioma')?.value }}</dd>
+
+              <dt>Nombre:</dt>
+              <dd>{{ paso2Form.get('nombre')?.value }} {{ paso2Form.get('apellido')?.value }}</dd>
+
+              <dt>Email:</dt>
+              <dd>{{ paso2Form.get('email')?.value }}</dd>
+
+              <dt>Teléfono:</dt>
+              <dd>{{ paso2Form.get('telefono')?.value }}</dd>
+
+              <dt class="total">Precio total:</dt>
+              <dd class="total">
+                ${{
+                  paso1Form.get('adultos')?.value! * tour.price +
+                    paso1Form.get('ninos')?.value! * tour.price | number: '1.2-2'
+                }}
+              </dd>
+            </dl>
+          </div>
+        }
+
+        <div class="paso-actions">
+          <button class="btn btn-secondary" (click)="paso.set(2)">Volver</button>
+          <button class="btn btn-primary btn-lg" (click)="confirmar()" [disabled]="cargando()">
+            {{ cargando() ? 'Procesando...' : 'Confirmar reserva' }}
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Confirmación exitosa -->
+    @if (reservaCreada(); as id) {
+      <div class="paso paso-exito">
+        <h2>¡Reserva confirmada!</h2>
+        <p>
+          Tu número de reserva es: <strong>#{{ id }}</strong>
+        </p>
+        <p>Te hemos enviado un email de confirmación.</p>
+      </div>
+    }
+  </div>
+</div>

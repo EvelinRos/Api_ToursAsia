@@ -1,0 +1,50 @@
+<app-navbar />
+
+<div class="container">
+  <div class="mis-reservas-header">
+    <h1>Mis Reservas</h1>
+  </div>
+
+  @if (cargando) {
+    <div class="loading">
+      <p>Cargando tus reservas...</p>
+    </div>
+  } @else if (error) {
+    <div class="error-message">
+      <p>{{ error }}</p>
+    </div>
+  } @else if (reservas.length === 0) {
+    <div class="empty-state">
+      <p>No tienes reservas aún.</p>
+      <a href="/tours" class="btn btn-primary">Ver tours disponibles</a>
+    </div>
+  } @else {
+    <div class="reservas-grid">
+      @for (reserva of reservas; track reserva.id) {
+        <div class="reserva-card">
+          <div class="reserva-card-header">
+            <h3>{{ reserva.tour.name }}</h3>
+            <span class="status" [class]="'status-' + reserva.status">
+              {{ reserva.status }}
+            </span>
+          </div>
+          <div class="reserva-card-body">
+            <dl>
+              <dt>Fecha:</dt>
+              <dd>{{ reserva.date }}</dd>
+              <dt>Hora:</dt>
+              <dd>{{ reserva.time_slot }}</dd>
+              <dt>Personas:</dt>
+              <dd>{{ reserva.adults }} adulto(s), {{ reserva.children }} niño(s)</dd>
+              <dt>Total:</dt>
+              <dd>${{ reserva.total_amount }}</dd>
+            </dl>
+          </div>
+          <div class="reserva-card-footer">
+            <button class="btn btn-sm" (click)="verDetalles(reserva.id)">Ver detalles</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

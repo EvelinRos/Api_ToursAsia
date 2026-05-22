@@ -4,6 +4,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 from destinos.views import DestinoViewSet, TourViewSet, ReservaViewSet
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from usuarios.views import RegistroAPIView 
 
 # API Router configuration
 router = DefaultRouter()
@@ -13,6 +15,10 @@ router.register(r'reservas', ReservaViewSet, basename='reserva')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # API JWT auth
+    path('api/auth/token/', TokenObtainPairView.as_view(), name='token-obtain'),
+    path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token-refresh'),
+    path('api/auth/registro/', RegistroAPIView.as_view(), name='api-registro'),
     # API endpoints
     path('api/', include(router.urls)),
     # Web views

@@ -38,6 +38,7 @@ class ReservaWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reserva
         fields = '__all__'
+        read_only_fields = ['status', 'created_at', 'updated_at']
 
     def validate_date(self, value):
         if value < timezone.now().date():
@@ -47,4 +48,14 @@ class ReservaWriteSerializer(serializers.ModelSerializer):
     def validate_adults(self, value):
         if value < 1:
             raise serializers.ValidationError("Debe haber al menos 1 adulto.")
+        return value
+    
+class ReservaStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reserva
+        fields = ['status']
+
+    def validate_status(self, value):
+        if value not in ['pendiente', 'confirmada', 'rechazada', 'cancelada']:
+            raise serializers.ValidationError("Estado inválido.")
         return value

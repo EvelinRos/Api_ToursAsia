@@ -54,12 +54,10 @@ class Reserva(models.Model):
     STATUS_CHOICES = [
         ('pendiente', 'Pendiente'),
         ('confirmada', 'Confirmada'),
+        ('rechazada', 'Rechazada'), 
         ('cancelada', 'Cancelada'),
     ]
-    PAYMENT_CHOICES = [
-        ('tarjeta', 'Tarjeta'),
-        ('paypal', 'PayPal'),
-    ]
+   
     LANG_CHOICES = [
         ('Español', 'Español'),
         ('English', 'English'),
@@ -87,14 +85,6 @@ class Reserva(models.Model):
     customer_phone = models.CharField(max_length=30, blank=True)
     customer_country = models.CharField(max_length=60, blank=True)
     
-    payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES, 
-                                       default='tarjeta')
-    coupon_code = models.CharField(max_length=30, blank=True)
-    discount_amount = models.DecimalField(max_digits=8, decimal_places=2, 
-                                           default=0)
-    service_fee = models.DecimalField(max_digits=8, decimal_places=2, 
-                                       default=3.00)
-    subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, 
                                         default=0)
     

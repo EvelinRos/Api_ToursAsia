@@ -1,0 +1,1779 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Reservas - Tours Asia</title>
+    <style>
+      :root {
+        --color-primary: #e8500a;
+        --color-primary-dark: #c73f08;
+        --color-success: #22c55e;
+        --color-danger: #ef4444;
+        --color-warning: #eab308;
+        --color-info: #3b82f6;
+        --color-gray: #6b7280;
+        --color-gray-light: #f3f4f6;
+        --color-gray-dark: #1f2937;
+        --color-border: #e5e7eb;
+
+        --bg-primary: #ffffff;
+        --bg-secondary: #f9fafb;
+        --text-primary: #111827;
+        --text-secondary: #6b7280;
+        --border-color: #e5e7eb;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg-primary: #1f2937;
+          --bg-secondary: #111827;
+          --text-primary: #f9fafb;
+          --text-secondary: #d1d5db;
+          --border-color: #374151;
+        }
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+        line-height: 1.5;
+      }
+
+      .navbar {
+        background-color: var(--bg-primary);
+        border-bottom: 1px solid var(--border-color);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .navbar-brand {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--color-primary);
+      }
+
+      .navbar-links {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .navbar-links a {
+        color: var(--text-primary);
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: color 0.2s;
+      }
+
+      .navbar-links a:hover {
+        color: var(--color-primary);
+      }
+
+      .btn-login {
+        background-color: var(--color-primary);
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: background-color 0.2s;
+      }
+
+      .btn-login:hover {
+        background-color: var(--color-primary-dark);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .stepper {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 3rem;
+        flex-wrap: wrap;
+      }
+
+      .step {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .step-number {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.9rem;
+        background-color: var(--color-gray-light);
+        color: var(--text-primary);
+        border: 2px solid var(--border-color);
+      }
+
+      .step.active .step-number {
+        background-color: var(--color-primary);
+        color: white;
+        border-color: var(--color-primary);
+      }
+
+      .step.completed .step-number {
+        background-color: var(--color-success);
+        color: white;
+        border-color: var(--color-success);
+      }
+
+      .step-label {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+
+      .step.active .step-label {
+        color: var(--color-primary);
+        font-weight: 600;
+      }
+
+      .content-wrapper {
+        background-color: var(--bg-primary);
+        border-radius: 12px;
+        border: 0.5px solid var(--border-color);
+        padding: 2rem;
+      }
+
+      .step-content {
+        display: none;
+      }
+
+      .step-content.active {
+        display: block;
+      }
+
+      .two-column {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: start;
+      }
+
+      @media (max-width: 768px) {
+        .two-column {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .card {
+        background-color: var(--bg-primary);
+        border: 0.5px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+      }
+
+      .card-link {
+        color: var(--color-primary);
+        text-decoration: none;
+        font-size: 0.85rem;
+        float: right;
+      }
+
+      .card-link:hover {
+        text-decoration: underline;
+      }
+
+      .badges {
+        display: flex;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .badge {
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+        padding: 0.35rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        border: 0.5px solid var(--border-color);
+      }
+
+      .section {
+        margin-bottom: 2rem;
+      }
+
+      .section-title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: var(--text-primary);
+      }
+
+      .section-text {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      @media (max-width: 640px) {
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .item-check {
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+        padding: 0.5rem 0;
+      }
+
+      .icon {
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 0.9rem;
+      }
+
+      .icon-check {
+        color: var(--color-success);
+      }
+
+      .icon-x {
+        color: var(--color-danger);
+      }
+
+      .widget {
+        background-color: var(--bg-primary);
+        border: 0.5px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        position: sticky;
+        top: 2rem;
+      }
+
+      @media (max-width: 768px) {
+        .widget {
+          position: static;
+          top: auto;
+        }
+      }
+
+      .widget-total {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+      }
+
+      .widget-price {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--color-primary);
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.25rem;
+      }
+
+      .form-label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+      }
+
+      .form-input,
+      .form-select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 0.5px solid var(--border-color);
+        border-radius: 6px;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        font-size: 0.95rem;
+        font-family: inherit;
+        transition: border-color 0.2s;
+      }
+
+      .form-input:focus,
+      .form-select:focus {
+        outline: none;
+        border-color: var(--color-primary);
+      }
+
+      .form-input.error,
+      .form-select.error {
+        border-color: var(--color-primary);
+        background-color: rgba(232, 80, 10, 0.05);
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      @media (max-width: 640px) {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .form-row.flex-2-1 {
+        grid-template-columns: 2fr 1fr;
+      }
+
+      @media (max-width: 640px) {
+        .form-row.flex-2-1 {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .counter {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin: 0.5rem 0;
+      }
+
+      .counter-btn {
+        width: 36px;
+        height: 36px;
+        border: 0.5px solid var(--border-color);
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: background-color 0.2s;
+      }
+
+      .counter-btn:hover {
+        background-color: var(--bg-secondary);
+      }
+
+      .counter-value {
+        min-width: 40px;
+        text-align: center;
+        font-weight: 600;
+      }
+
+      .counter-price {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-left: auto;
+      }
+
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin: 1rem 0;
+      }
+
+      .checkbox-group input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: var(--color-primary);
+      }
+
+      .checkbox-label {
+        cursor: pointer;
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+      }
+
+      .checkbox-group.error .checkbox-label {
+        color: var(--color-primary);
+        font-weight: 600;
+      }
+
+      .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+      }
+
+      .alert-warning {
+        background-color: rgba(234, 179, 8, 0.1);
+        border: 0.5px solid var(--color-warning);
+        color: var(--text-primary);
+      }
+
+      .alert-info {
+        background-color: rgba(59, 130, 246, 0.1);
+        border: 0.5px solid var(--color-info);
+        color: var(--text-primary);
+      }
+
+      .alert-danger {
+        background-color: rgba(239, 68, 68, 0.1);
+        border: 0.5px solid var(--color-danger);
+        color: var(--text-primary);
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: all 0.2s;
+        font-family: inherit;
+      }
+
+      .btn-primary {
+        background-color: var(--color-primary);
+        color: white;
+        width: 100%;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--color-primary-dark);
+      }
+
+      .btn-primary:disabled {
+        background-color: var(--color-gray);
+        cursor: not-allowed;
+      }
+
+      .btn-secondary {
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 0.5px solid var(--border-color);
+        width: 100%;
+      }
+
+      .btn-secondary:hover {
+        background-color: var(--border-color);
+      }
+
+      .btn-danger {
+        background-color: var(--color-danger);
+        color: white;
+        width: 100%;
+      }
+
+      .btn-danger:hover {
+        background-color: #dc2626;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .button-group .btn {
+        flex: 1;
+      }
+
+      .summary-grid {
+        background-color: var(--bg-secondary);
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+      }
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 0.5px solid var(--border-color);
+        font-size: 0.95rem;
+      }
+
+      .summary-row:last-child {
+        border-bottom: none;
+      }
+
+      .summary-label {
+        color: var(--text-secondary);
+      }
+
+      .summary-value {
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .summary-total {
+        font-size: 1.1rem;
+        color: var(--color-primary);
+        font-weight: 700;
+      }
+
+      .summary-divider {
+        padding: 0.5rem 0;
+        border-top: 0.5px solid var(--border-color);
+        margin-bottom: 0.5rem;
+      }
+
+      .tour-summary-card {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background-color: var(--bg-secondary);
+        border-radius: 8px;
+        border: 0.5px solid var(--border-color);
+      }
+
+      .tour-summary-icon {
+        width: 60px;
+        height: 60px;
+        background-color: var(--bg-primary);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        flex-shrink: 0;
+      }
+
+      .tour-summary-info {
+        flex: 1;
+      }
+
+      .tour-summary-title {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+      }
+
+      .tour-summary-details {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+      }
+
+      .tour-summary-actions {
+        display: flex;
+        gap: 0.5rem;
+        padding-left: 1rem;
+        align-items: center;
+      }
+
+      .btn-icon {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2rem;
+        padding: 0.5rem;
+        color: var(--text-secondary);
+        transition: color 0.2s;
+      }
+
+      .btn-icon:hover {
+        color: var(--color-primary);
+      }
+
+      .tour-summary-card.deleted {
+        opacity: 0.6;
+        pointer-events: none;
+      }
+
+      .confirmation-content {
+        max-width: 560px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .confirmation-icon {
+        width: 80px;
+        height: 80px;
+        background-color: rgba(234, 179, 8, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        margin: 0 auto 1.5rem;
+        color: var(--color-warning);
+      }
+
+      .confirmation-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .confirmation-subtitle {
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+      }
+
+      .confirmation-badge {
+        display: inline-block;
+        background-color: var(--color-primary);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-bottom: 2rem;
+      }
+
+      .modal {
+        display: none;
+        position: relative;
+        margin-bottom: 2rem;
+        padding: 2rem;
+        background-color: var(--bg-primary);
+        border: 0.5px solid var(--border-color);
+        border-radius: 12px;
+        z-index: 1000;
+      }
+
+      .modal.active {
+        display: block;
+      }
+
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        z-index: 999;
+      }
+
+      .modal-overlay.active {
+        display: block;
+      }
+
+      .modal-content {
+        background-color: var(--bg-primary);
+        border: 0.5px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+        max-width: 500px;
+        margin: auto;
+        position: relative;
+        margin-top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .modal-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+      }
+
+      .modal-text {
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+      }
+
+      .modal-price {
+        font-size: 1.3rem;
+        color: var(--color-primary);
+        font-weight: 700;
+        margin: 1rem 0;
+        text-align: center;
+      }
+
+      .security-note {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        padding: 0.75rem;
+        background-color: rgba(34, 197, 94, 0.1);
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: var(--color-success);
+        margin-top: 1rem;
+      }
+
+      .meeting-point {
+        display: flex;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+      }
+
+      .meeting-icon {
+        font-size: 1.2rem;
+        color: var(--color-primary);
+      }
+
+      .info-text {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-top: 0.5rem;
+      }
+
+      .deleted-notice {
+        display: none;
+        padding: 1rem;
+        background-color: rgba(239, 68, 68, 0.1);
+        border-left: 4px solid var(--color-danger);
+        border-radius: 4px;
+        color: var(--color-danger);
+        font-weight: 600;
+        margin-top: 1rem;
+      }
+
+      .deleted-notice.show {
+        display: block;
+      }
+
+      .confirmation-number {
+        font-size: 1.2rem;
+        color: var(--color-primary);
+        font-weight: 700;
+        margin: 1rem 0;
+      }
+
+      .section-note {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-top: 0.75rem;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-brand">TOURS ASIA</div>
+      <div class="navbar-links">
+            <a href="{% url 'destino-list' %}">Destinos</a>
+            <a href="{% url 'tour-list' %}">Tours</a>
+            <a href="#reservas">Consultar Reserva</a>
+            {% if user.is_authenticated %}
+                <span>{{ user.first_name }}</span>
+                <a href="/admin/logout">Cerrar sesión</a>
+            {% else %}
+                <button class="btn-login" onclick="alert('Ir a login')">Iniciar sesión</button>
+            {% endif %}
+    <div class="container">
+      <div class="stepper" id="stepper">
+        <div class="step active">
+          <div class="step-number">1</div>
+          <div class="step-label">Detalle y disponibilidad</div>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-label">Datos personales</div>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-label">Confirmación</div>
+        </div>
+      </div>
+
+      <div class="content-wrapper">
+        <div class="step-content active" id="step-1">
+          <div class="two-column">
+            <div>
+              <div class="card">
+                <h2 style="margin-bottom: 1rem">
+                  {% if tour %}{{ tour.name }}{% else %}Tokio: Tour de los Templos y Modernidad{% endif %}
+                </h2>
+
+                <div class="badges">
+                  <div class="badge">4,9 · 127 reseñas</div>
+                  <div class="badge">Cancelación gratuita (24h)</div>
+                  <div class="badge">Más popular</div>
+                </div>
+
+                <div class="section">
+                  <div class="section-title">Descripción</div>
+                  <div class="section-text">
+                    {% if tour %}{{ tour.description }}{% else %}Experimenta lo mejor de Tokio en un viaje de un día.
+                    Visitarás templos milenarios, mercados tradicionales y los
+                    rascacielos más emblemáticos de la ciudad. Acompañado por un
+                    guía certificado que te contará las historias detrás de cada
+                    lugar. Incluye transporte privado, entradas a monumentos y
+                    paradas para fotos icónicas.{% endif %}
+                  </div>
+                </div>
+
+                <div class="section">
+                  <div class="section-title">¿Qué incluye?</div>
+                  <div class="grid-2">
+                    <div>
+                      <div class="item-check">
+                        <span class="icon icon-check">✓</span>
+                        <span>Guía certificado</span>
+                      </div>
+                      <div class="item-check">
+                        <span class="icon icon-check">✓</span>
+                        <span>Transporte privado</span>
+                      </div>
+                      <div class="item-check">
+                        <span class="icon icon-check">✓</span>
+                        <span>Entradas monumentos</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="item-check">
+                        <span class="icon icon-x">✗</span>
+                        <span>Propinas</span>
+                      </div>
+                      <div class="item-check">
+                        <span class="icon icon-x">✗</span>
+                        <span>Seguro de viaje</span>
+                      </div>
+                      <div class="item-check">
+                        <span class="icon icon-x">✗</span>
+                        <span>Comidas</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="section">
+                  <div class="section-title">Punto de encuentro</div>
+                  <div class="meeting-point">
+                    <span class="meeting-icon">📍</span>
+                    <div>
+                      <div>
+                        Estación Central de Tokio, Salida Marunouchi Norte
+                      </div>
+                      <div class="section-note">
+                        Por favor, llega 15 minutos antes
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="section">
+                  <div class="section-title">Política de cancelación</div>
+                  <div class="section-text">
+                    Cancelación gratuita hasta 24 horas antes de la actividad.
+                    Si cancelas con menos de 24 horas de anticipación, se cobra
+                    el 100% del monto.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="widget">
+                <div class="widget-total">Total</div>
+                <div class="widget-price" id="widget-price">USD 850.00</div>
+
+                <div class="form-group">
+                  <label class="form-label">Fecha</label>
+                  <input
+                    type="date"
+                    class="form-input"
+                    id="input-fecha"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Hora</label>
+                  <input
+                    type="time"
+                    class="form-input"
+                    id="input-hora"
+                    value="09:00"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <div class="section-title">Participantes</div>
+                  <div class="info-text">Mín: 1 — Máx: 25</div>
+
+                  <div style="margin-top: 1rem">
+                    <div style="font-weight: 500; margin-bottom: 0.75rem">
+                      Adultos (13 años o más) — USD 850 c/u
+                    </div>
+                    <div class="counter">
+                      <button class="counter-btn" id="btn-adultos-minus">
+                        −
+                      </button>
+                      <span class="counter-value" id="adultos-value">1</span>
+                      <button class="counter-btn" id="btn-adultos-plus">
+                        +
+                      </button>
+                      <span class="counter-price" id="adultos-price"
+                        >USD 850.00</span
+                      >
+                    </div>
+                  </div>
+
+                  <div style="margin-top: 1.5rem">
+                    <div style="font-weight: 500; margin-bottom: 0.75rem">
+                      Niños (2 a 12 años) — USD 600 c/u
+                    </div>
+                    <div class="counter">
+                      <button class="counter-btn" id="btn-ninos-minus">
+                        −
+                      </button>
+                      <span class="counter-value" id="ninos-value">0</span>
+                      <button class="counter-btn" id="btn-ninos-plus">+</button>
+                      <span class="counter-price" id="ninos-price"
+                        >USD 0.00</span
+                      >
+                    </div>
+                  </div>
+
+                  <div class="info-text">Precios mostrados en USD</div>
+                </div>
+
+                <button class="btn btn-primary" id="btn-reservar">
+                  Reservar ahora
+                </button>
+
+                <div class="security-note">
+                  <span>🔒</span>
+                  <span>Pago seguro y reserva instantánea</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-content" id="step-2">
+          <div class="two-column">
+            <div>
+              <div class="card">
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 1rem;
+                  "
+                >
+                  <div class="card-title">Datos de la reserva</div>
+                  <a href="#" class="card-link"
+                    >¿Ya eres cliente? Inicia sesión</a
+                  >
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Nombre</label>
+                    <input
+                      type="text"
+                      class="form-input"
+                      id="input-nombre"
+                      placeholder="Tu nombre"
+                      value="{% if user_name %}{{ user_name }}{% endif %}"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Apellidos</label>
+                    <input
+                      type="text"
+                      class="form-input"
+                      id="input-apellido"
+                      placeholder="Tus apellidos"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-row flex-2-1">
+                  <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input
+                      type="email"
+                      class="form-input"
+                      id="input-email"
+                      placeholder="tu@email.com"
+                      value="{% if user_email %}{{ user_email }}{% endif %}"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">País</label>
+                    <select class="form-select" id="input-pais">
+                      <option value="+57">Colombia (+57)</option>
+                      <option value="+34">España (+34)</option>
+                      <option value="+52">México (+52)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Teléfono</label>
+                    <input
+                      type="tel"
+                      class="form-input"
+                      id="input-telefono"
+                      placeholder="Número de teléfono"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-title">Resumen de la reserva</div>
+                <div class="tour-summary-card" id="tour-summary-card">
+                  <div class="tour-summary-icon">🏯</div>
+                  <div class="tour-summary-info">
+                    <div class="tour-summary-title">
+                      {% if tour %}{{ tour.name }}{% else %}Tokio: Tour de los Templos y Modernidad{% endif %}
+                    </div>
+                    <div class="tour-summary-details" id="tour-summary-details">
+                      Sin detalles
+                    </div>
+                  </div>
+                  <div class="tour-summary-actions">
+                    <button
+                      class="btn-icon"
+                      id="btn-editar-reserva"
+                      title="Editar reserva"
+                    >
+                      ✏️
+                    </button>
+                    <button
+                      class="btn-icon"
+                      id="btn-eliminar-reserva"
+                      title="Eliminar reserva"
+                    >
+                      🗑️
+                    </button>
+                  </div>
+                </div>
+                <div class="deleted-notice" id="deleted-notice">
+                  Reserva eliminada
+                </div>
+
+                <div class="alert alert-warning">
+                  <strong>⚠️</strong> Sólo las personas incluidas en tu reserva
+                  podrán asistir al tour.
+                </div>
+              </div>
+
+              <div class="checkbox-group">
+                <input type="checkbox" id="check-newsletter" />
+                <label class="checkbox-label" for="check-newsletter"
+                  >No quiero recibir novedades y promociones</label
+                >
+              </div>
+
+              <div class="checkbox-group" id="check-terms-group">
+                <input type="checkbox" id="check-terms" />
+                <label class="checkbox-label" for="check-terms"
+                  >Acepto la política de privacidad y las condiciones
+                  generales</label
+                >
+              </div>
+
+              <div class="button-group">
+                <button class="btn btn-secondary" id="btn-volver-paso2">
+                  ← Volver
+                </button>
+                <button class="btn btn-primary" id="btn-siguiente-paso3">
+                  Ir al pago →
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div class="card">
+                <div class="card-title">Resumen del pedido</div>
+                <div class="summary-grid">
+                  <div class="summary-row">
+                    <span class="summary-label">Tour</span>
+                    <span class="summary-value"
+                      >{% if tour %}{{ tour.name }}{% else %}Tokio: Templos y Modernidad{% endif %}</span
+                    >
+                  </div>
+                  <div class="summary-row">
+                    <span class="summary-label">Fecha</span>
+                    <span class="summary-value" id="summary-fecha">-</span>
+                  </div>
+                  <div class="summary-row">
+                    <span class="summary-label">Hora</span>
+                    <span class="summary-value" id="summary-hora">-</span>
+                  </div>
+                  <div class="summary-row">
+                    <span class="summary-label">Participantes</span>
+                    <span class="summary-value" id="summary-participantes"
+                      >-</span
+                    >
+                  </div>
+                  <div class="summary-divider"></div>
+                  <div class="summary-row">
+                    <span class="summary-label" id="summary-adultos-label"
+                      >Adultos</span
+                    >
+                    <span class="summary-value" id="summary-adultos">-</span>
+                  </div>
+                  <div
+                    class="summary-row"
+                    id="summary-ninos-row"
+                    style="display: none"
+                  >
+                    <span class="summary-label" id="summary-ninos-label"
+                      >Niños</span
+                    >
+                    <span class="summary-value" id="summary-ninos">-</span>
+                  </div>
+                  <div class="summary-divider"></div>
+                  <div class="summary-row">
+                    <span class="summary-label">Total</span>
+                    <span class="summary-value summary-total" id="summary-total"
+                      >USD 0.00</span
+                    >
+                  </div>
+                </div>
+                <div class="info-text">Precios en USD</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-content" id="step-3">
+          <div class="confirmation-content">
+            <div class="confirmation-icon">⏱️</div>
+            <h2 class="confirmation-title">¡Reserva recibida!</h2>
+            <p class="confirmation-subtitle">
+              Tu solicitud fue registrada correctamente. Un administrador
+              revisará y confirmará tu reserva a la brevedad posible.
+            </p>
+
+            <div class="confirmation-badge">
+              Estado: Pendiente de confirmación
+            </div>
+
+            <div class="summary-grid">
+              <div class="summary-row">
+                <span class="summary-label">Tour</span>
+                <span class="summary-value">{% if tour %}{{ tour.name }}{% else %}Tokio: Templos y Modernidad{% endif %}</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Fecha</span>
+                <span class="summary-value" id="conf-fecha">-</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Hora</span>
+                <span class="summary-value" id="conf-hora">-</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Participantes</span>
+                <span class="summary-value" id="conf-participantes">-</span>
+              </div>
+              <div class="summary-divider"></div>
+              <div class="summary-row">
+                <span class="summary-label">Subtotal adultos</span>
+                <span class="summary-value" id="conf-adultos">-</span>
+              </div>
+              <div
+                class="summary-row"
+                id="conf-ninos-row"
+                style="display: none"
+              >
+                <span class="summary-label">Subtotal niños</span>
+                <span class="summary-value" id="conf-ninos">-</span>
+              </div>
+              <div class="summary-divider"></div>
+              <div class="summary-row">
+                <span class="summary-label">Total</span>
+                <span class="summary-value summary-total" id="conf-total"
+                  >USD 0.00</span
+                >
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Nº reserva</span>
+                <span class="confirmation-number" id="conf-numero"
+                  >#RVA-00142</span
+                >
+              </div>
+            </div>
+
+            <div class="alert alert-info">
+              <strong>ℹ️</strong> Recibirás la confirmación cuando el
+              administrador apruebe tu reserva. Puedes consultar el estado en la
+              sección <strong>Consultar Reserva</strong> con tu número de
+              reserva.
+            </div>
+
+            <div class="button-group" style="gap: 1rem">
+              <button class="btn btn-secondary" id="btn-nueva-reserva">
+                ← Nueva reserva
+              </button>
+              <button class="btn btn-primary" id="btn-panel-admin">
+                Panel admin ↗
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-overlay"></div>
+
+    <div class="modal" id="modal-editar">
+      <div class="modal-content">
+        <div class="modal-title">Editar reserva</div>
+
+        <div class="form-group">
+          <label class="form-label">Fecha</label>
+          <input type="date" class="form-input" id="modal-fecha" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Hora</label>
+          <input type="time" class="form-input" id="modal-hora" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Adultos</label>
+          <div class="counter">
+            <button class="counter-btn" id="modal-adultos-minus">−</button>
+            <span class="counter-value" id="modal-adultos-value">1</span>
+            <button class="counter-btn" id="modal-adultos-plus">+</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Niños</label>
+          <div class="counter">
+            <button class="counter-btn" id="modal-ninos-minus">−</button>
+            <span class="counter-value" id="modal-ninos-value">0</span>
+            <button class="counter-btn" id="modal-ninos-plus">+</button>
+          </div>
+        </div>
+
+        <div class="modal-price" id="modal-new-total">USD 850.00</div>
+
+        <div class="button-group">
+          <button class="btn btn-secondary" id="btn-modal-cancelar">
+            Cancelar
+          </button>
+          <button class="btn btn-primary" id="btn-modal-guardar">
+            Guardar cambios
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="modal-eliminar">
+      <div class="modal-content">
+        <div class="modal-title">¿Eliminar reserva?</div>
+        <div class="modal-text">
+          Esta acción no se puede deshacer. Se eliminará toda la información de
+          tu reserva.
+        </div>
+
+        <div class="button-group">
+          <button class="btn btn-secondary" id="btn-modal-eliminar-cancelar">
+            Cancelar
+          </button>
+          <button class="btn btn-danger" id="btn-modal-eliminar-confirmar">
+            Sí, eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const PRICE_ADULTO = 850;
+      const PRICE_NINO = 600;
+      const MAX_PARTICIPANTES = 25;
+      const TOUR_ID = {{ tour.id|default:"1" }};
+
+      const state = {
+        adultos: 1,
+        ninos: 0,
+        fecha: "",
+        hora: "09:00",
+        nombre: "{% if user_name %}{{ user_name }}{% endif %}",
+        apellido: "",
+        email: "{% if user_email %}{{ user_email }}{% endif %}",
+        pais: "+57",
+        telefono: "",
+        reservaEliminada: false,
+        numeroReserva: null,
+      };
+
+      function formatPrice(amount) {
+        return (
+          "USD " +
+          amount.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        );
+      }
+
+      function generateReservationNumber() {
+        return (
+          "#RVA-" + String(Math.floor(Math.random() * 10000)).padStart(5, "0")
+        );
+      }
+
+      function updateWidgetPrice() {
+        const total = state.adultos * PRICE_ADULTO + state.ninos * PRICE_NINO;
+        document.getElementById("widget-price").textContent =
+          formatPrice(total);
+
+        const adultosSubtotal = state.adultos * PRICE_ADULTO;
+        const ninosSubtotal = state.ninos * PRICE_NINO;
+        document.getElementById("adultos-price").textContent =
+          formatPrice(adultosSubtotal);
+        document.getElementById("ninos-price").textContent =
+          formatPrice(ninosSubtotal);
+      }
+
+      function updateSummary() {
+        const total = state.adultos * PRICE_ADULTO + state.ninos * PRICE_NINO;
+        const adultosSubtotal = state.adultos * PRICE_ADULTO;
+        const ninosSubtotal = state.ninos * PRICE_NINO;
+
+        const fechaInput = document.getElementById("input-fecha").value;
+        const horaInput = document.getElementById("input-hora").value;
+
+        if (fechaInput) {
+          const fecha = new Date(fechaInput + "T00:00:00");
+          const fechaFormato = fecha.toLocaleDateString("es-ES", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+          document.getElementById("summary-fecha").textContent = fechaFormato;
+          document.getElementById("tour-summary-details").textContent =
+            `${fechaFormato} a las ${horaInput}`;
+        }
+
+        document.getElementById("summary-hora").textContent = horaInput;
+        document.getElementById("summary-participantes").textContent =
+          state.adultos + state.ninos + " personas";
+        document.getElementById("adultos-price").textContent =
+          formatPrice(adultosSubtotal);
+        document.getElementById("ninos-price").textContent =
+          formatPrice(ninosSubtotal);
+
+        document.getElementById("summary-adultos").textContent =
+          formatPrice(adultosSubtotal);
+        if (state.ninos > 0) {
+          document.getElementById("summary-ninos").textContent =
+            formatPrice(ninosSubtotal);
+          document.getElementById("summary-ninos-row").style.display = "flex";
+        } else {
+          document.getElementById("summary-ninos-row").style.display = "none";
+        }
+
+        document.getElementById("summary-total").textContent =
+          formatPrice(total);
+
+        document.getElementById("conf-fecha").textContent = fechaFormato || "-";
+        document.getElementById("conf-hora").textContent = horaInput;
+        document.getElementById("conf-participantes").textContent =
+          state.adultos + state.ninos + " personas";
+        document.getElementById("conf-adultos").textContent =
+          formatPrice(adultosSubtotal);
+        if (state.ninos > 0) {
+          document.getElementById("conf-ninos").textContent =
+            formatPrice(ninosSubtotal);
+          document.getElementById("conf-ninos-row").style.display = "flex";
+        } else {
+          document.getElementById("conf-ninos-row").style.display = "none";
+        }
+        document.getElementById("conf-total").textContent = formatPrice(total);
+      }
+
+      function updateModalPrice() {
+        const total =
+          parseInt(document.getElementById("modal-adultos-value").textContent) *
+            PRICE_ADULTO +
+          parseInt(document.getElementById("modal-ninos-value").textContent) *
+            PRICE_NINO;
+        document.getElementById("modal-new-total").textContent =
+          formatPrice(total);
+      }
+
+      function goToStep(stepNumber) {
+        document
+          .querySelectorAll(".step-content")
+          .forEach((el) => el.classList.remove("active"));
+        document
+          .querySelectorAll(".step")
+          .forEach((el) => el.classList.remove("active", "completed"));
+
+        document.getElementById("step-" + stepNumber).classList.add("active");
+
+        for (let i = 1; i < stepNumber; i++) {
+          document.querySelectorAll(".step")[i - 1].classList.add("completed");
+        }
+        document
+          .querySelectorAll(".step")
+          [stepNumber - 1].classList.add("active");
+
+        if (stepNumber === 2) {
+          updateSummary();
+        } else if (stepNumber === 3) {
+          if (document.getElementById("loading-spinner")) {
+            document.getElementById("loading-spinner").classList.add("show");
+            if (document.getElementById("confirmation-content")) {
+              document.getElementById("confirmation-content").style.display = "none";
+            }
+          }
+          submitReservation();
+        }
+      }
+
+      function openModal(modalId) {
+        document.getElementById("modal-overlay").classList.add("active");
+        document.getElementById(modalId).classList.add("active");
+      }
+
+      function closeModal(modalId) {
+        document.getElementById("modal-overlay").classList.remove("active");
+        document.getElementById(modalId).classList.remove("active");
+      }
+
+      function submitReservation() {
+        const data = {
+          tour_id: TOUR_ID,
+          adultos: state.adultos,
+          ninos: state.ninos,
+          fecha: document.getElementById("input-fecha").value,
+          hora: document.getElementById("input-hora").value,
+          nombre: document.getElementById("input-nombre").value,
+          apellido: document.getElementById("input-apellido").value,
+          email: document.getElementById("input-email").value,
+          pais: document.getElementById("input-pais").value,
+          telefono: document.getElementById("input-telefono").value
+        };
+
+        fetch("{% url 'reserva' %}", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}"
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            state.numeroReserva = data.numero_reserva;
+            document.getElementById("conf-numero").textContent = data.numero_reserva;
+            if (document.getElementById("loading-spinner")) {
+              document.getElementById("loading-spinner").classList.remove("show");
+            }
+            if (document.getElementById("confirmation-content")) {
+              document.getElementById("confirmation-content").style.display = "block";
+            }
+            updateSummary();
+          } else {
+            alert("Error: " + data.error);
+            goToStep(2);
+          }
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          alert("Ocurrió un error al procesar la reserva");
+          goToStep(2);
+        });
+      }
+
+      document
+        .getElementById("btn-adultos-minus")
+        .addEventListener("click", () => {
+          if (state.adultos > 1) {
+            state.adultos--;
+            document.getElementById("adultos-value").textContent =
+              state.adultos;
+            updateWidgetPrice();
+            updateSummary();
+          }
+        });
+
+      document
+        .getElementById("btn-adultos-plus")
+        .addEventListener("click", () => {
+          if (state.adultos + state.ninos < MAX_PARTICIPANTES) {
+            state.adultos++;
+            document.getElementById("adultos-value").textContent =
+              state.adultos;
+            updateWidgetPrice();
+            updateSummary();
+          }
+        });
+
+      document
+        .getElementById("btn-ninos-minus")
+        .addEventListener("click", () => {
+          if (state.ninos > 0) {
+            state.ninos--;
+            document.getElementById("ninos-value").textContent = state.ninos;
+            updateWidgetPrice();
+            updateSummary();
+          }
+        });
+
+      document
+        .getElementById("btn-ninos-plus")
+        .addEventListener("click", () => {
+          if (state.adultos + state.ninos < MAX_PARTICIPANTES) {
+            state.ninos++;
+            document.getElementById("ninos-value").textContent = state.ninos;
+            updateWidgetPrice();
+            updateSummary();
+          }
+        });
+
+      document
+        .getElementById("input-fecha")
+        .addEventListener("change", updateSummary);
+      document
+        .getElementById("input-hora")
+        .addEventListener("change", updateSummary);
+
+      document.getElementById("btn-reservar").addEventListener("click", () => {
+        if (!document.getElementById("input-fecha").value) {
+          document.getElementById("input-fecha").classList.add("error");
+          document.getElementById("input-fecha").focus();
+          return;
+        }
+        document.getElementById("input-fecha").classList.remove("error");
+        goToStep(2);
+      });
+
+      document
+        .getElementById("btn-volver-paso2")
+        .addEventListener("click", () => {
+          goToStep(1);
+        });
+
+      document
+        .getElementById("btn-siguiente-paso3")
+        .addEventListener("click", () => {
+          if (!document.getElementById("check-terms").checked) {
+            document.getElementById("check-terms-group").classList.add("error");
+            return;
+          }
+          document.getElementById("check-terms-group").classList.remove("error");
+          state.nombre = document.getElementById("input-nombre").value;
+          state.apellido = document.getElementById("input-apellido").value;
+          state.email = document.getElementById("input-email").value;
+          goToStep(3);
+        });
+
+      document
+        .getElementById("btn-nueva-reserva")
+        .addEventListener("click", () => {
+          state.adultos = 1;
+          state.ninos = 0;
+          state.fecha = "";
+          state.hora = "09:00";
+          state.nombre = "";
+          state.apellido = "";
+          state.email = "";
+          state.reservaEliminada = false;
+
+          document.getElementById("adultos-value").textContent = "1";
+          document.getElementById("ninos-value").textContent = "0";
+          document.getElementById("input-fecha").value = "";
+          document.getElementById("input-hora").value = "09:00";
+          document.getElementById("input-nombre").value = "";
+          document.getElementById("input-apellido").value = "";
+          document.getElementById("input-email").value = "";
+          document.getElementById("check-terms").checked = false;
+          document.getElementById("check-newsletter").checked = false;
+          document
+            .getElementById("check-terms-group")
+            .classList.remove("error");
+          document
+            .getElementById("tour-summary-card")
+            .classList.remove("deleted");
+          document.getElementById("deleted-notice").classList.remove("show");
+
+          updateWidgetPrice();
+          goToStep(1);
+        });
+
+      document
+        .getElementById("btn-panel-admin")
+        .addEventListener("click", () => {
+          window.location.href = "/admin/";
+        });
+
+      document
+        .getElementById("btn-editar-reserva")
+        .addEventListener("click", (e) => {
+          e.preventDefault();
+          if (state.reservaEliminada) return;
+
+          document.getElementById("modal-fecha").value =
+            document.getElementById("input-fecha").value;
+          document.getElementById("modal-hora").value =
+            document.getElementById("input-hora").value;
+          document.getElementById("modal-adultos-value").textContent =
+            state.adultos;
+          document.getElementById("modal-ninos-value").textContent =
+            state.ninos;
+          updateModalPrice();
+          openModal("modal-editar");
+        });
+
+      document
+        .getElementById("btn-eliminar-reserva")
+        .addEventListener("click", (e) => {
+          e.preventDefault();
+          if (state.reservaEliminada) return;
+          openModal("modal-eliminar");
+        });
+
+      document
+        .getElementById("modal-adultos-minus")
+        .addEventListener("click", () => {
+          const current = parseInt(
+            document.getElementById("modal-adultos-value").textContent,
+          );
+          if (current > 1) {
+            document.getElementById("modal-adultos-value").textContent =
+              current - 1;
+            updateModalPrice();
+          }
+        });
+
+      document
+        .getElementById("modal-adultos-plus")
+        .addEventListener("click", () => {
+          const adultos = parseInt(
+            document.getElementById("modal-adultos-value").textContent,
+          );
+          const ninos = parseInt(
+            document.getElementById("modal-ninos-value").textContent,
+          );
+          if (adultos + ninos < MAX_PARTICIPANTES) {
+            document.getElementById("modal-adultos-value").textContent =
+              adultos + 1;
+            updateModalPrice();
+          }
+        });
+
+      document
+        .getElementById("modal-ninos-minus")
+        .addEventListener("click", () => {
+          const current = parseInt(
+            document.getElementById("modal-ninos-value").textContent,
+          );
+          if (current > 0) {
+            document.getElementById("modal-ninos-value").textContent =
+              current - 1;
+            updateModalPrice();
+          }
+        });
+
+      document
+        .getElementById("modal-ninos-plus")
+        .addEventListener("click", () => {
+          const adultos = parseInt(
+            document.getElementById("modal-adultos-value").textContent,
+          );
+          const ninos = parseInt(
+            document.getElementById("modal-ninos-value").textContent,
+          );
+          if (adultos + ninos < MAX_PARTICIPANTES) {
+            document.getElementById("modal-ninos-value").textContent =
+              ninos + 1;
+            updateModalPrice();
+          }
+        });
+
+      document
+        .getElementById("btn-modal-guardar")
+        .addEventListener("click", () => {
+          state.fecha = document.getElementById("modal-fecha").value;
+          state.hora = document.getElementById("modal-hora").value;
+          state.adultos = parseInt(
+            document.getElementById("modal-adultos-value").textContent,
+          );
+          state.ninos = parseInt(
+            document.getElementById("modal-ninos-value").textContent,
+          );
+
+          document.getElementById("input-fecha").value = state.fecha;
+          document.getElementById("input-hora").value = state.hora;
+          document.getElementById("adultos-value").textContent = state.adultos;
+          document.getElementById("ninos-value").textContent = state.ninos;
+
+          updateWidgetPrice();
+          updateSummary();
+          closeModal("modal-editar");
+        });
+
+      document
+        .getElementById("btn-modal-cancelar")
+        .addEventListener("click", () => {
+          closeModal("modal-editar");
+        });
+
+      document
+        .getElementById("btn-modal-eliminar-confirmar")
+        .addEventListener("click", () => {
+          state.reservaEliminada = true;
+          document.getElementById("tour-summary-card").classList.add("deleted");
+          document.getElementById("deleted-notice").classList.add("show");
+          closeModal("modal-eliminar");
+        });
+
+      document
+        .getElementById("btn-modal-eliminar-cancelar")
+        .addEventListener("click", () => {
+          closeModal("modal-eliminar");
+        });
+
+      document
+        .getElementById("modal-overlay")
+        .addEventListener("click", (e) => {
+          if (e.target === document.getElementById("modal-overlay")) {
+            closeModal("modal-editar");
+            closeModal("modal-eliminar");
+          }
+        });
+
+      document.getElementById("input-fecha").min = new Date()
+        .toISOString()
+        .split("T")[0];
+
+      updateWidgetPrice();
+    </script>
+  </body>
+</html>

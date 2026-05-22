@@ -1,0 +1,95 @@
+<div class="reservas-admin">
+  <div class="header">
+    <h2>Gestión de Reservas</h2>
+  </div>
+
+  <div class="controls">
+    <div class="search-box">
+      <input
+        type="text"
+        placeholder="Buscar por nombre, email o ID..."
+        [(ngModel)]="busqueda"
+        class="input"
+      />
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn" [class.active]="filtro() === ''" (click)="filtro.set('')">
+        Todas
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="filtro() === 'pendiente'"
+        (click)="filtro.set('pendiente')"
+      >
+        Pendientes ({{ totalPor('pendiente') }})
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="filtro() === 'confirmada'"
+        (click)="filtro.set('confirmada')"
+      >
+        Confirmadas ({{ totalPor('confirmada') }})
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="filtro() === 'rechazada'"
+        (click)="filtro.set('rechazada')"
+      >
+        Rechazadas ({{ totalPor('rechazada') }})
+      </button>
+    </div>
+  </div>
+
+  @if (reservasFiltradas.length === 0) {
+    <div class="empty-state">
+      <p>No hay reservas que coincidan con los filtros</p>
+    </div>
+  } @else {
+    <div class="table-responsive">
+      <table class="reservas-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Tour</th>
+            <th>Fecha</th>
+            <th>Personas</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (reserva of reservasFiltradas; track reserva.id) {
+            <tr>
+              <td>#{{ reserva.id }}</td>
+              <td>
+                <div class="cliente-info">
+                  <div class="nombre">
+                    {{ reserva.customer_name }} {{ reserva.customer_lastname }}
+                  </div>
+                  <div class="email">{{ reserva.customer_email }}</div>
+                </div>
+              </td>
+              <td>{{ reserva.tour.name }}</td>
+              <td>{{ reserva.date }} {{ reserva.time_slot }}</td>
+              <td>{{ reserva.adults }}A, {{ reserva.children }}N</td>
+              <td>${{ reserva.total_amount }}</td>
+              <td>
+                <span class="status-badge" [class]="'status-' + reserva.status">
+                  {{ reserva.status }}
+                </span>
+              </td>
+              <td>
+                <router-link [routerLink]="['/admin/reservas', reserva.id]" class="btn-link">
+                  Ver
+                </router-link>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

@@ -1,0 +1,17 @@
+<div class="toast-container">
+  @for (notification of notificationService.notifications(); track notification.id) {
+    <div class="toast" [class]="'toast-' + notification.type">
+      <div class="toast-content">
+        <span class="toast-icon">●</span>
+        <p class="toast-message">{{ notification.message }}</p>
+      </div>
+      <button
+        class="toast-close"
+        (click)="removeNotification(notification.id)"
+        aria-label="Cerrar notificación"
+      >
+        ✕
+      </button>
+    </div>
+  }
+</div>

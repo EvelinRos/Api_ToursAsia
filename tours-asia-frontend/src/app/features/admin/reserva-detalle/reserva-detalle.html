@@ -1,0 +1,67 @@
+@if (reserva(); as r) {
+  <div class="detail-header-bar">
+    <div>
+      <h2>Reserva #{{ r.id }}</h2>
+      <span class="badge-status" [class]="'st-' + r.status">{{ r.status }}</span>
+    </div>
+    <a routerLink="/admin/reservas" class="btn-secondary">← Volver</a>
+  </div>
+
+  <div class="detail-grid">
+    <div class="detail-card">
+      <h3>Datos del cliente</h3>
+      <div class="detail-field">
+        <span class="label">Nombre</span
+        ><span class="value">{{ r.customer_name }} {{ r.customer_lastname }}</span>
+      </div>
+      <div class="detail-field">
+        <span class="label">Email</span><span class="value">{{ r.customer_email }}</span>
+      </div>
+      <div class="detail-field">
+        <span class="label">Teléfono</span><span class="value">{{ r.customer_phone }}</span>
+      </div>
+      <div class="detail-field">
+        <span class="label">País</span><span class="value">{{ r.customer_country }}</span>
+      </div>
+    </div>
+
+    <div class="detail-card">
+      <h3>Detalles del tour</h3>
+      <div class="detail-field">
+        <span class="label">Tour</span><span class="value">{{ r.tour.name }}</span>
+      </div>
+      <div class="detail-field">
+        <span class="label">Fecha</span><span class="value">{{ r.date }}</span>
+      </div>
+      <div class="detail-field">
+        <span class="label">Horario</span><span class="value">{{ r.time_slot }}</span>
+      </div>
+      <div class="detail-field">
+        <span class="label">Idioma</span><span class="value">{{ r.language }}</span>
+      </div>
+      <div class="detail-field">
+        <span class="label">Adultos</span><span class="value">{{ r.adults }}</span>
+      </div>
+      <div class="detail-field">
+        <span class="label">Niños</span><span class="value">{{ r.children }}</span>
+      </div>
+      <div class="detail-field">
+        <span class="label">Total</span
+        ><span class="value" style="color: #e8500a; font-size: 18px; font-weight: 600"
+          >USD {{ r.total_amount }}</span
+        >
+      </div>
+    </div>
+  </div>
+
+  @if (r.status === 'pendiente') {
+    <div class="action-bar">
+      <button class="btn-confirm" (click)="cambiarEstado('confirmada')" [disabled]="cargando()">
+        ✓ Confirmar reserva
+      </button>
+      <button class="btn-reject" (click)="cambiarEstado('rechazada')" [disabled]="cargando()">
+        ✗ Rechazar
+      </button>
+    </div>
+  }
+}

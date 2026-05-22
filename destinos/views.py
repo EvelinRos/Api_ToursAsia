@@ -6,15 +6,18 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import ListView, DetailView, TemplateView, View
 from django.utils import timezone
 from django.db.models import Sum, Count
-from rest_framework import viewsets
 from decimal import Decimal
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 
 from .models import Destino, Tour, Reserva
 from .serializers import (
-    DestinoSerializer, 
-    TourReadSerializer, TourWriteSerializer,
-    ReservaReadSerializer, ReservaWriteSerializer
+    DestinoSerializer, TourReadSerializer, TourWriteSerializer,
+    ReservaReadSerializer, ReservaWriteSerializer, ReservaStatusSerializer
 )
+
 
 class ReadWriteSerializerMixin:
     read_serializer_class = None
@@ -106,96 +109,84 @@ class TourDetailView(DetailView):
     template_name = 'destinos/tour_detail.html'
     context_object_name = 'tour'
 
-class CheckoutPaso1View(View):
-    def get(self, request):
-        if 'checkout' not in request.session:
-            return redirect('home')
-            
-        return render(request, 'checkout/paso1.html', {
-            'checkout': request.session['checkout']
-        })
-
-    def post(self, request):
-        checkout = request.session.get('checkout')
-        if not checkout:
-            return redirect('home')
-        checkout['idioma'] = request.POST.get('idioma', 'Español')
-        checkout['paso_actual'] = 2
-        request.session['checkout'] = checkout
-        return redirect('checkout-paso2')
-
-class CheckoutPaso2View(View):
-    def get(self, request):
-        checkout = request.session.get('checkout')
-        if not checkout or checkout.get('paso_actual') < 1:
-            return redirect('checkout-paso1')
-            
-        if request.user.is_authenticated and not checkout.get('email'):
-            checkout['nombre'] = request.user.first_name
-            checkout['apellido'] = request.user.last_name
-            checkout['email'] = request.user.email
-            checkout['telefono'] = request.user.phone
-            checkout['pais'] = request.user.country
-            request.session['checkout'] = checkout
-
-        return render(request, 'checkout/paso2.html', {
-            'checkout': checkout
-        })
-
-    def post(self, request):
-        checkout = request.session.get('checkout')
-        if not checkout:
-            return redirect('home')
-            
-        checkout['nombre'] = request.POST.get('first_name')
-        checkout['apellido'] = request.POST.get('last_name')
-        checkout['email'] = request.POST.get('email')
-        checkout['telefono'] = request.POST.get('phone')
-        checkout['pais'] = request.POST.get('country')
-        checkout['paso_actual'] = 3
-        request.session['checkout'] = checkout
-        return redirect('checkout-paso3')
-
-class CheckoutPaso3View(View):
-    def get(self, request):
-        checkout = request.session.get('checkout')
-        if not checkout or checkout.get('paso_actual') < 2:
-            return redirect('checkout-paso2')
-        return render(request, 'checkout/paso3.html', {
-            'checkout': checkout
-        })
-
-    def post(self, request):
-        checkout = request.session.get('checkout')
-        if not checkout:
-            return redirect('home')
-            
-        payment_method = request.POST.get('payment_method', 'tarjeta')
+class ReservaView(TemplateView):
+    template_name = 'booking_system.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tour_id = self.request.GET.get('tour')
+        tour = None
         
-        tour = Tour.objects.get(pk=checkout['tour_id'])
-        reserva = Reserva.objects.create(
-            tour=tour,
-            date=checkout['fecha'],
-            time_slot=checkout['hora'],
-            adults=checkout['adultos'],
-            children=checkout.get('ninos', 0),
-            language=checkout['idioma'],
-            customer_name=checkout['nombre'],
-            customer_lastname=checkout['apellido'],
-            customer_email=checkout['email'],
-            customer_phone=checkout['telefono'],
-            customer_country=checkout['pais'],
-            payment_method=payment_method,
-            total_amount=Decimal(str(checkout['total'])),
-            subtotal=Decimal(str(checkout['subtotal'])),
-            service_fee=Decimal(str(checkout.get('tarifa', 3.00))),
-            discount_amount=Decimal(str(checkout.get('descuento', 0.0))),
-            user=request.user if request.user.is_authenticated else None,
-            status='pendiente'
-        )
+        if tour_id:
+            try:
+                tour = Tour.objects.get(pk=tour_id)
+                context['tour'] = tour
+                context['tour_name'] = tour.name
+                context['tour_description'] = tour.description
+            except Tour.DoesNotExist:
+                pass
         
-        del request.session['checkout']
-        return redirect('reserva-confirmada', pk=reserva.pk)
+        if self.request.user.is_authenticated:
+            context['user_name'] = self.request.user.first_name
+            context['user_email'] = self.request.user.email
+        
+        return context
+    
+    def post(self, request):
+        import json
+        from django.http import JsonResponse
+        
+        try:
+            data = json.loads(request.body)
+            
+            tour_id = data.get('tour_id')
+            if not tour_id:
+                tour_id = request.GET.get('tour', 1)
+            
+            tour = Tour.objects.get(pk=tour_id)
+            
+            adults = int(data.get('adultos', 1))
+            children = int(data.get('ninos', 0))
+            fecha = data.get('fecha')
+            hora = data.get('hora')
+            nombre = data.get('nombre')
+            apellido = data.get('apellido')
+            email = data.get('email')
+            pais = data.get('pais', '+57')
+            telefono = data.get('telefono')
+            
+            PRICE_ADULTO = 850
+            PRICE_NINO = 600
+            total_amount = (adults * PRICE_ADULTO) + (children * PRICE_NINO)
+            
+            reserva = Reserva.objects.create(
+                tour=tour,
+                date=fecha,
+                time_slot=hora,
+                adults=adults,
+                children=children,
+                customer_name=nombre,
+                customer_lastname=apellido,
+                customer_email=email,
+                customer_phone=telefono,
+                customer_country=pais,
+                total_amount=Decimal(str(total_amount)),
+                subtotal=Decimal(str(total_amount)),
+                user=request.user if request.user.is_authenticated else None,
+                status='pendiente'
+            )
+            
+            return JsonResponse({
+                'success': True,
+                'reserva_id': reserva.id,
+                'numero_reserva': f'RVA-{str(reserva.id).zfill(5)}',
+                'redirect': reverse('reserva-confirmada', kwargs={'pk': reserva.pk})
+            })
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'error': str(e)
+            }, status=400)
 
 class ReservaConfirmadaView(DetailView):
     model = Reserva
@@ -218,11 +209,45 @@ class TourViewSet(ReadWriteSerializerMixin, viewsets.ModelViewSet):
             return TourReadSerializer
         return TourWriteSerializer
 
-class ReservaViewSet(ReadWriteSerializerMixin, viewsets.ModelViewSet):
+class ReservaViewSet(viewsets.ModelViewSet):
     queryset = Reserva.objects.all()
     filterset_fields = ['tour', 'status']
 
+    def get_permissions(self):
+        if self.action == 'create':
+            return [IsAuthenticated()]
+        if self.action in ['list', 'retrieve', 'cambiar_estado', 'destroy']:
+            return [IsAdminUser()]
+        return [IsAdminUser()]
+
     def get_serializer_class(self):
+        if self.action == 'cambiar_estado':
+            return ReservaStatusSerializer
         if self.action in ['list', 'retrieve']:
             return ReservaReadSerializer
         return ReservaWriteSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:
+            return Reserva.objects.all().order_by('-created_at')
+        return Reserva.objects.filter(user=user).order_by('-created_at')
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        serializer.save(
+            user=user,
+            customer_name=user.first_name,
+            customer_lastname=user.last_name,
+            customer_email=user.email,
+            customer_phone=user.phone,
+            status='pendiente'
+        )
+
+    @action(detail=True, methods=['patch'], permission_classes=[IsAdminUser])
+    def cambiar_estado(self, request, pk=None):
+        reserva = self.get_object()
+        serializer = ReservaStatusSerializer(reserva, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(ReservaReadSerializer(reserva).data)

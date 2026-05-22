@@ -1,0 +1,19 @@
+<div class="admin-wrap">
+  <div class="admin-topbar">
+    <span class="brand">TOURS ASIA <span class="brand-badge">Panel Admin</span></span>
+    <div class="admin-info">
+      <span>{{ auth.usuario()?.email }}</span>
+      <button class="btn-outline-sm" (click)="auth.logout()">Salir</button>
+    </div>
+  </div>
+
+  <div class="admin-body">
+    <nav class="admin-sidenav">
+      <a routerLink="/admin/reservas" routerLinkActive="active" class="nav-item"> 📋 Reservas </a>
+      <a routerLink="/" class="nav-item"> 🌏 Ver sitio </a>
+    </nav>
+    <main class="admin-main">
+      <router-outlet />
+    </main>
+  </div>
+</div>

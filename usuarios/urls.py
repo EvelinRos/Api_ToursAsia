@@ -6,7 +6,7 @@ from .views import (
     DashboardDestinosView, DashboardDestinoCreateView, DashboardDestinoUpdateView, DashboardDestinoDeleteView,
     DashboardToursView, DashboardTourCreateView, DashboardTourUpdateView, DashboardTourDeleteView,
     DashboardReservasView, DashboardReservaDetalleView, DashboardUsuariosView,
-    VerificarEmailView, AplicarCuponView, ActualizarEstadoReservaView, TogglePopularTourView
+    VerificarEmailView, AplicarCuponView, ActualizarEstadoReservaView, TogglePopularTourView, ActualizarEstadoReservaView
 )
 
 urlpatterns = [
@@ -38,4 +38,5 @@ urlpatterns = [
     path('api/aplicar-cupon/', AplicarCuponView.as_view(), name='aplicar-cupon'),
     path('api/actualizar-estado-reserva/', ActualizarEstadoReservaView.as_view(), name='actualizar-estado-reserva'),
     path('api/toggle-popular-tour/', TogglePopularTourView.as_view(), name='toggle-popular'),
+    path('dashboard/reservas/actualizar-estado/', ActualizarEstadoReservaView.as_view(), name='dashboard-reserva-actualizar-estado'),
 ]

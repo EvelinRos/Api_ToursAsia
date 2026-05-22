@@ -1,0 +1,24 @@
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a routerLink="/" class="navbar-brand">🌏 Tours Asia</a>
+
+    <div class="navbar-links">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+        >Inicio</a
+      >
+      <a routerLink="/tours" routerLinkActive="active">Tours</a>
+
+      @if (auth.isLoggedIn()) {
+        @if (auth.isAdmin()) {
+          <a routerLink="/admin" routerLinkActive="active">Panel Admin</a>
+        } @else {
+          <a routerLink="/mis-reservas" routerLinkActive="active">Mis reservas</a>
+        }
+        <button class="btn-outline-sm" (click)="auth.logout()">Cerrar sesión</button>
+      } @else {
+        <a routerLink="/login" class="btn-outline-sm">Iniciar sesión</a>
+        <a routerLink="/registro" class="btn-primary-sm">Registrarse</a>
+      }
+    </div>
+  </div>
+</nav>
