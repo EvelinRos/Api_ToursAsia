@@ -36,8 +36,9 @@ export class MisReservasComponent implements OnInit {
     this.cargando = true;
     this.error = '';
     this.reservasService.getMisReservas().subscribe({
-      next: (response) => {
-        this.reservas = response.results;
+      next: (response: any) => {
+        const arr = response.results ?? response;
+        this.reservas = Array.isArray(arr) ? arr : [];
         this.cargando = false;
       },
       error: () => {
@@ -50,5 +51,19 @@ export class MisReservasComponent implements OnInit {
 
   verDetalles(id: number) {
     this.router.navigate(['/reservas', id]);
+  }
+
+  eliminar(id: number) {
+    if (confirm('¿Estás seguro de que deseas cancelar y eliminar esta reserva?')) {
+      this.reservasService.eliminar(id).subscribe({
+        next: () => {
+          this.notificationService.success('Reserva eliminada correctamente');
+          this.cargarReservas();
+        },
+        error: () => {
+          this.notificationService.error('Error al eliminar la reserva');
+        }
+      });
+    }
   }
 }

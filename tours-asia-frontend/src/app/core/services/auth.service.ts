@@ -19,7 +19,7 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
 
   login(email: string, password: string) {
-    return this.http.post<LoginResponse>(`${this.API}/token/`, { username: email, password }).pipe(
+    return this.http.post<LoginResponse>(`${this.API}/token/`, { email, password }).pipe(
       tap(res => {
         localStorage.setItem('access', res.access);
         localStorage.setItem('refresh', res.refresh);

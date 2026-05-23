@@ -12,8 +12,8 @@
       <span class="step-num">{{ paso() > 2 ? '✓' : '2' }}</span> Datos personales
     </div>
     <span class="step-sep">›</span>
-    <div class="step" [class.active]="paso() >= 3">
-      <span class="step-num">3</span> Confirmación
+    <div class="step" [class.active]="paso() >= 3" [class.done]="paso() > 3">
+      <span class="step-num">{{ paso() > 3 ? '✓' : '3' }}</span> Confirmación
     </div>
   </div>
 
@@ -59,14 +59,18 @@
                 <div class="persona-row">
                   <span>{{ tipo.label }}</span>
                   <div class="counter">
-                    <button class="cnt-btn" (click)="cambiar(tipo.key as any, -1)">−</button>
-                    <span class="cnt-val">{{ seleccion[tipo.key as keyof typeof seleccion] }}</span>
-                    <button class="cnt-btn" (click)="cambiar(tipo.key as any, 1)">+</button>
+                    <button class="cnt-btn" (click)="cambiar($any(tipo.key), -1)">−</button>
+                    <span class="cnt-val">{{ $any(seleccion)[tipo.key] }}</span>
+                    <button class="cnt-btn" (click)="cambiar($any(tipo.key), 1)">+</button>
                   </div>
                 </div>
               }
             </div>
 
+            @if (errorFecha()) { <div class="error-msg" style="color:red; margin-bottom: 10px;">{{ errorFecha() }}</div> }
+            @if (errorHora()) { <div class="error-msg" style="color:red; margin-bottom: 10px;">{{ errorHora() }}</div> }
+            @if (errorPersonas()) { <div class="error-msg" style="color:red; margin-bottom: 10px;">{{ errorPersonas() }}</div> }
+            
             <button class="btn-primary" (click)="irPaso2()">Continuar</button>
           </div>
         }
@@ -125,6 +129,9 @@
                 Acepto los términos y condiciones
               </label>
             </div>
+            
+            @if (errorTerminos()) { <div class="error-msg" style="color:red; margin-bottom: 10px;">{{ errorTerminos() }}</div> }
+
             <div class="bottom-actions">
               <button class="btn-secondary" (click)="paso.set(1)">← Volver</button>
               <button class="btn-primary" (click)="irPaso3()">Continuar →</button>
@@ -154,6 +161,11 @@
             <div class="resumen-item">
               <span>Niños</span><strong>{{ seleccion.ninos }}</strong>
             </div>
+            @if (seleccion.bebes > 0) {
+              <div class="resumen-item">
+                <span>Bebés</span><strong>{{ seleccion.bebes }}</strong>
+              </div>
+            }
             <div class="resumen-item">
               <span>Nombre</span
               ><strong>{{ datosPersonales.nombre }} {{ datosPersonales.apellido }}</strong>
@@ -163,32 +175,34 @@
             </div>
             <div class="notice-bar">
               ⚠️ Solo las personas incluidas en tu reserva podrán asistir al tour ({{
-                totalPersonas()
+                totalPersonas
               }}
-              persona{{ totalPersonas() > 1 ? 's' : '' }})
+              persona{{ totalPersonas > 1 ? 's' : '' }})
             </div>
+            
+            @if (errorTerminos()) { <div class="error-msg" style="color:red; margin-bottom: 10px;">{{ errorTerminos() }}</div> }
+
             <div class="bottom-actions" style="margin-top: 1rem">
               <button class="btn-secondary" (click)="paso.set(2)">← Volver</button>
               <button class="btn-primary" (click)="confirmar()" [disabled]="cargando()">
-                {{ cargando() ? 'Confirmando...' : 'Ir al pago →' }}
+                {{ cargando() ? 'Procesando...' : 'Confirmar reserva' }}
               </button>
             </div>
           </div>
         }
 
-        <!-- PASO 4: Éxito -->
+        <!-- PASO 4: pantalla de éxito (sin pagos) -->
         @if (paso() === 4) {
           <div class="card confirm-box">
-            <div class="confirm-icon">⏳</div>
-            <h2 class="confirm-title">¡Reserva recibida!</h2>
-            <p class="confirm-subtitle">
-              Tu reserva #{{ reservaCreada() }} está en estado <strong>PENDIENTE</strong>.<br />
-              Un administrador la confirmará pronto. Te notificaremos por correo.
+            <div class="confirm-icon">✅</div>
+            <h2>¡Reserva recibida!</h2>
+            <p>
+              Tu reserva <strong>#{{ reservaCreada() }}</strong> está
+              <strong>pendiente de confirmación</strong>.<br>
+              Un administrador la revisará y te notificará por correo.
             </p>
             <div class="pending-badge">⏳ Pendiente de confirmación</div>
-            <div class="admin-note">
-              ℹ️ El administrador revisará tu reserva y la confirmará o rechazará en breve.
-            </div>
+            <a routerLink="/mis-reservas" class="btn-primary">Ver mis reservas</a>
           </div>
         }
       </div>
@@ -202,10 +216,10 @@
             <span>Precio base</span><span>USD {{ t.price }}</span>
           </div>
           <div class="price-row">
-            <span>Personas</span><span>{{ totalPersonas() }}</span>
+            <span>Personas</span><span>{{ totalPersonas }}</span>
           </div>
           <div class="price-total">
-            <span>Total</span><span>USD {{ totalPrecio() }}</span>
+            <span>Total</span><span>USD {{ totalPrecio }}</span>
           </div>
         </div>
       </div>

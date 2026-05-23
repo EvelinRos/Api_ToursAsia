@@ -1,25 +1,14 @@
 from django.urls import path
 from .views import (
-    ClienteLoginView, ClienteLogoutView, ClienteRegistroView,
-    MisReservasView, MiReservaDetalleView,
-    AdminLoginView, AdminLogoutView, DashboardView,
+    DashboardView,
     DashboardDestinosView, DashboardDestinoCreateView, DashboardDestinoUpdateView, DashboardDestinoDeleteView,
     DashboardToursView, DashboardTourCreateView, DashboardTourUpdateView, DashboardTourDeleteView,
     DashboardReservasView, DashboardReservaDetalleView, DashboardUsuariosView,
-    VerificarEmailView, AplicarCuponView, ActualizarEstadoReservaView, TogglePopularTourView, ActualizarEstadoReservaView
+    ActualizarEstadoReservaView, TogglePopularTourView
 )
 
 urlpatterns = [
-    # Clientes
-    path('login/', ClienteLoginView.as_view(), name='cliente-login'),
-    path('logout/', ClienteLogoutView.as_view(), name='cliente-logout'),
-    path('registro/', ClienteRegistroView.as_view(), name='cliente-registro'),
-    path('mis-reservas/', MisReservasView.as_view(), name='mis-reservas'),
-    path('mis-reservas/<int:pk>/', MiReservaDetalleView.as_view(), name='mi-reserva-detalle'),
-    
-    # Admin
-    path('admin-login/', AdminLoginView.as_view(), name='admin-login'),
-    path('admin-logout/', AdminLogoutView.as_view(), name='admin-logout'),
+    # Dashboard web (Admin Django - solo para staff)
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
     path('dashboard/destinos/', DashboardDestinosView.as_view(), name='dashboard-destinos'),
     path('dashboard/destinos/nuevo/', DashboardDestinoCreateView.as_view(), name='dashboard-destino-create'),
@@ -32,11 +21,7 @@ urlpatterns = [
     path('dashboard/reservas/', DashboardReservasView.as_view(), name='dashboard-reservas'),
     path('dashboard/reservas/<int:pk>/', DashboardReservaDetalleView.as_view(), name='dashboard-reserva-detalle'),
     path('dashboard/usuarios/', DashboardUsuariosView.as_view(), name='dashboard-usuarios'),
-    
-    # AJAX endpoints
-    path('api/verificar-email/', VerificarEmailView.as_view(), name='verificar-email'),
-    path('api/aplicar-cupon/', AplicarCuponView.as_view(), name='aplicar-cupon'),
-    path('api/actualizar-estado-reserva/', ActualizarEstadoReservaView.as_view(), name='actualizar-estado-reserva'),
-    path('api/toggle-popular-tour/', TogglePopularTourView.as_view(), name='toggle-popular'),
+    # Utilidades dashboard
     path('dashboard/reservas/actualizar-estado/', ActualizarEstadoReservaView.as_view(), name='dashboard-reserva-actualizar-estado'),
+    path('dashboard/tours/toggle-popular/', TogglePopularTourView.as_view(), name='toggle-popular'),
 ]

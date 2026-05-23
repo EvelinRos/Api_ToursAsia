@@ -3,7 +3,7 @@ import { Tour } from './tour.model';
 export interface Reserva {
   id: number;
   tour: Tour;
-  user: number;
+  user: number | null;
   date: string;
   time_slot: string;
   adults: number;
@@ -18,4 +18,5 @@ export interface Reserva {
   total_amount: number;
   status: 'pendiente' | 'confirmada' | 'rechazada' | 'cancelada';
   created_at: string;
+  updated_at: string;
 }

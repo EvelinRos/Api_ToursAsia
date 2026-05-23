@@ -85,14 +85,9 @@ class Reserva(models.Model):
     customer_phone = models.CharField(max_length=30, blank=True)
     customer_country = models.CharField(max_length=60, blank=True)
     
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2, 
-                                        default=0)
-    
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     notes = models.TextField(blank=True)
-    people_count = models.PositiveIntegerField(default=1)
-    
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, 
-                               default='pendiente')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendiente')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

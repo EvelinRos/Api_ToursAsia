@@ -17,14 +17,13 @@ export interface CrearReservaPayload {
   customer_country: string;
   notes?: string;
   total_amount: number;
-  subtotal: number;
 }
 
 @Injectable({ providedIn: 'root' })
 export class ReservasService {
   private readonly API = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getMisReservas() {
     return this.http.get<{ results: Reserva[] }>(`${this.API}/reservas/`);
@@ -45,5 +44,9 @@ export class ReservasService {
 
   cambiarEstado(id: number, status: string) {
     return this.http.patch<Reserva>(`${this.API}/reservas/${id}/cambiar_estado/`, { status });
+  }
+
+  eliminar(id: number) {
+    return this.http.delete(`${this.API}/reservas/${id}/`);
   }
 }

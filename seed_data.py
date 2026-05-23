@@ -161,7 +161,7 @@ def run():
             'name': 'Templos de Bangkok y Gran Palacio',
             'duration': 1,
             'price': Decimal('55.00'),
-            'photo_url': 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc',
+            'photo_url': 'https://images.unsplash.com/photo-1563492065599-3520f775eeed',
             'description': 'Recorre los templos más importantes de la ciudad y el majestuoso Gran Palacio Real.',
             'what_includes': ['Guía local', 'Entradas', 'Transporte en minivan'],
             'what_not_includes': ['Comidas', 'Propinas'],

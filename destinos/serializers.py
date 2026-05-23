@@ -38,7 +38,7 @@ class ReservaWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reserva
         fields = '__all__'
-        read_only_fields = ['status', 'created_at', 'updated_at']
+        read_only_fields = ['status', 'total_amount', 'created_at', 'updated_at', 'user']
 
     def validate_date(self, value):
         if value < timezone.now().date():
