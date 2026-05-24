@@ -1,90 +1,130 @@
-<div class="reservas-admin">
-  <div class="header">
-    <h2>Gestión de Reservas</h2>
+<section class="rva-page">
+
+  <!-- MÉTRICAS -->
+  <div class="rva-metrics">
+    <div class="rva-metric">
+      <div class="rva-metric-label">Total reservas</div>
+      <div class="rva-metric-val">{{ total() }}</div>
+    </div>
+    <div class="rva-metric">
+      <div class="rva-metric-label">Pendientes</div>
+      <div class="rva-metric-val amber">{{ pendientes() }}</div>
+    </div>
+    <div class="rva-metric">
+      <div class="rva-metric-label">Confirmadas</div>
+      <div class="rva-metric-val green">{{ confirmadas() }}</div>
+    </div>
+    <div class="rva-metric">
+      <div class="rva-metric-label">Rechazadas</div>
+      <div class="rva-metric-val red">{{ rechazadas() }}</div>
+    </div>
   </div>
 
-  <div class="controls">
-    <div class="search-box">
+  <!-- CONTROLES -->
+  <div class="rva-controls">
+    <div class="rva-search">
       <input
-        type="text"
-        placeholder="Buscar por nombre, email o ID..."
+        type="search"
+        placeholder="Buscar por nombre, email, tour o ID..."
         [(ngModel)]="busqueda"
-        class="input"
+        class="rva-input"
+        aria-label="Buscar reservas"
       />
     </div>
-
-    <div class="filters">
-      <button class="filter-btn" [class.active]="filtro() === ''" (click)="filtro.set('')">
-        Todas
-      </button>
-      <button
-        class="filter-btn"
-        [class.active]="filtro() === 'pendiente'"
-        (click)="filtro.set('pendiente')"
-      >
-        Pendientes ({{ totalPor('pendiente') }})
-      </button>
-      <button
-        class="filter-btn"
-        [class.active]="filtro() === 'confirmada'"
-        (click)="filtro.set('confirmada')"
-      >
-        Confirmadas ({{ totalPor('confirmada') }})
-      </button>
-      <button
-        class="filter-btn"
-        [class.active]="filtro() === 'rechazada'"
-        (click)="filtro.set('rechazada')"
-      >
-        Rechazadas ({{ totalPor('rechazada') }})
-      </button>
+    <div class="rva-filters" role="group" aria-label="Filtros de estado">
+      @for (btn of [
+        { label: 'Todas',       value: '' },
+        { label: 'Pendientes',  value: 'pendiente' },
+        { label: 'Confirmadas', value: 'confirmada' },
+        { label: 'Rechazadas',  value: 'rechazada' },
+        { label: 'Canceladas',  value: 'cancelada' }
+      ]; track btn.value) {
+        <button
+          class="rva-filter-btn"
+          [class.active]="filtro() === btn.value"
+          (click)="filtro.set(btn.value)"
+          type="button"
+        >
+          {{ btn.label }}
+        </button>
+      }
     </div>
   </div>
 
-  @if (reservasFiltradas.length === 0) {
-    <div class="empty-state">
-      <p>No hay reservas que coincidan con los filtros</p>
+  <!-- TABLA -->
+  @if (cargando()) {
+    <p class="rva-loading">Cargando reservas…</p>
+  } @else if (reservasFiltradas().length === 0) {
+    <div class="rva-empty">
+      <span aria-hidden="true">📭</span>
+      <p>No hay reservas que coincidan con los filtros aplicados.</p>
     </div>
   } @else {
-    <div class="table-responsive">
-      <table class="reservas-table">
+    <div class="rva-table-wrap">
+      <table class="rva-table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Cliente</th>
-            <th>Tour</th>
-            <th>Fecha</th>
-            <th>Personas</th>
-            <th>Total</th>
-            <th>Estado</th>
-            <th>Acciones</th>
+            <th scope="col">Nº reserva</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Tour</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Personas / Total</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          @for (reserva of reservasFiltradas; track reserva.id) {
-            <tr>
-              <td>#{{ reserva.id }}</td>
+          @for (r of reservasFiltradas(); track r.id) {
+            <tr
+              class="rva-row"
+              [routerLink]="['/admin/reservas', r.id]"
+              style="cursor: pointer;"
+              role="link"
+              [attr.aria-label]="'Ver detalle reserva #' + r.id"
+            >
+              <td class="rva-id">#RVA-{{ r.id | number: '5.0-0' }}</td>
               <td>
-                <div class="cliente-info">
-                  <div class="nombre">
-                    {{ reserva.customer_name }} {{ reserva.customer_lastname }}
-                  </div>
-                  <div class="email">{{ reserva.customer_email }}</div>
-                </div>
+                <div class="rva-cliente-nombre">{{ r.customer_name }} {{ r.customer_lastname }}</div>
+                <div class="rva-cliente-email">{{ r.customer_email }}</div>
               </td>
-              <td>{{ reserva.tour.name }}</td>
-              <td>{{ reserva.date }} {{ reserva.time_slot }}</td>
-              <td>{{ reserva.adults }}A, {{ reserva.children }}N</td>
-              <td>${{ reserva.total_amount }}</td>
+              <td class="rva-tour-name">{{ r.tour.name }}</td>
+              <td>{{ r.date }}<br /><span class="rva-hora">{{ r.time_slot }}</span></td>
               <td>
-                <span class="status-badge" [class]="'status-' + reserva.status">
-                  {{ reserva.status }}
+                {{ r.adults }}A{{ r.children > 0 ? ' · ' + r.children + 'N' : '' }}<br />
+                <span class="rva-total">{{ fmtUSD(r.total_amount) }}</span>
+              </td>
+              <td>
+                <span class="rva-badge" [class]="'rva-st-' + r.status">
+                  <span class="rva-dot" [class]="'rva-dot-' + r.status" aria-hidden="true"></span>
+                  {{ r.status | titlecase }}
                 </span>
               </td>
               <td>
-                <router-link [routerLink]="['/admin/reservas', reserva.id]" class="btn-link">
-                  Ver
-                </router-link>
+                <div class="rva-actions" (click)="$event.stopPropagation()">
+                  @if (r.status === 'pendiente') {
+                    <button
+                      class="rva-act-btn confirm"
+                      title="Confirmar reserva"
+                      (click)="cambiarEstado(r.id, 'confirmada', $event)"
+                      type="button"
+                      aria-label="Confirmar reserva #{{ r.id }}"
+                    >✓</button>
+                    <button
+                      class="rva-act-btn reject"
+                      title="Rechazar reserva"
+                      (click)="cambiarEstado(r.id, 'rechazada', $event)"
+                      type="button"
+                      aria-label="Rechazar reserva #{{ r.id }}"
+                    >✗</button>
+                  }
+                  <button
+                    class="rva-act-btn del"
+                    title="Eliminar reserva"
+                    (click)="eliminar(r.id, $event)"
+                    type="button"
+                    aria-label="Eliminar reserva #{{ r.id }}"
+                  >🗑</button>
+                </div>
               </td>
             </tr>
           }
@@ -92,4 +132,5 @@
       </table>
     </div>
   }
-</div>
+
+</section>

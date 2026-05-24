@@ -1,19 +1,57 @@
-<div class="admin-wrap">
-  <div class="admin-topbar">
-    <span class="brand">TOURS ASIA <span class="brand-badge">Panel Admin</span></span>
-    <div class="admin-info">
-      <span>{{ auth.usuario()?.email }}</span>
-      <button class="btn-outline-sm" (click)="auth.logout()">Salir</button>
-    </div>
-  </div>
+<div class="adm-wrap">
 
-  <div class="admin-body">
-    <nav class="admin-sidenav">
-      <a routerLink="/admin/reservas" routerLinkActive="active" class="nav-item"> 📋 Reservas </a>
-      <a routerLink="/" class="nav-item"> 🌏 Ver sitio </a>
+  <header class="adm-topbar">
+    <span class="adm-brand">
+      TOURS ASIA <span class="adm-brand-badge">Panel Admin</span>
+    </span>
+    <div class="adm-user-info">
+      <div class="adm-avatar" aria-hidden="true">
+        {{ auth.usuario()?.first_name?.charAt(0) }}{{ auth.usuario()?.last_name?.charAt(0) }}
+      </div>
+      <span>{{ auth.usuario()?.email }}</span>
+      <button class="adm-btn-salir" (click)="auth.logout()">Salir</button>
+    </div>
+  </header>
+
+  <div class="adm-body">
+
+    <nav class="adm-sidenav" aria-label="Navegación admin">
+      <a routerLink="/admin/reservas"
+         routerLinkActive="active"
+         class="adm-nav-item"
+         ariaCurrentWhenActive="page">
+        Reservas
+        @if (pendientes() > 0) {
+          <span class="adm-nav-badge" aria-label="{{ pendientes() }} pendientes">
+            {{ pendientes() }}
+          </span>
+        }
+      </a>
+      <a routerLink="/admin/tours"
+         routerLinkActive="active"
+         class="adm-nav-item"
+         ariaCurrentWhenActive="page">
+        Tours
+      </a>
+      <a routerLink="/admin/destinos"
+         routerLinkActive="active"
+         class="adm-nav-item"
+         ariaCurrentWhenActive="page">
+        Destinos
+      </a>
+      <a routerLink="/admin/usuarios"
+         routerLinkActive="active"
+         class="adm-nav-item"
+         ariaCurrentWhenActive="page">
+        Usuarios
+      </a>
+      <hr class="adm-nav-divider" />
+      <a routerLink="/" class="adm-nav-item">← Ver sitio</a>
     </nav>
-    <main class="admin-main">
+
+    <main class="adm-main">
       <router-outlet />
     </main>
+
   </div>
 </div>

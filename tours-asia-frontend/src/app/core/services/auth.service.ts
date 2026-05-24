@@ -1,6 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { LoginResponse, Usuario } from '../models/models';
@@ -34,6 +35,23 @@ export class AuthService {
     phone: string; country: string;
   }) {
     return this.http.post(`${this.API}/registro/`, datos);
+  }
+
+  /**
+   * Intenta renovar el access token usando el refresh token.
+   * Devuelve un Observable con el nuevo access token.
+   */
+  refrescarToken(refreshToken: string): Observable<string> {
+    return this.http.post<{ access: string }>(
+      `${this.API}/token/refresh/`,
+      { refresh: refreshToken }
+    ).pipe(
+      tap(res => {
+        localStorage.setItem('access', res.access);
+        this._usuario.set(this.decodificarToken(res.access));
+      }),
+      map(res => res.access)
+    );
   }
 
   logout() {

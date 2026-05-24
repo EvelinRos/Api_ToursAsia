@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './core/guards/auth.guard';
+import { authGuard }  from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
@@ -46,6 +46,18 @@ export const routes: Routes = [
       {
         path: 'reservas/:id',
         loadComponent: () => import('./features/admin/reserva-detalle/reserva-detalle').then(m => m.ReservaDetalleComponent),
+      },
+      {
+        path: 'tours',
+        loadComponent: () => import('./features/admin/tours-admin/tours-admin').then(m => m.ToursAdminComponent),
+      },
+      {
+        path: 'destinos',
+        loadComponent: () => import('./features/admin/destinos-admin/destinos-admin').then(m => m.DestinosAdminComponent),
+      },
+      {
+        path: 'usuarios',
+        loadComponent: () => import('./features/admin/usuarios-admin/usuarios-admin').then(m => m.UsuariosAdminComponent),
       },
     ],
   },

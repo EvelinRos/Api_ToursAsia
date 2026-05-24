@@ -102,3 +102,37 @@ class Reserva(models.Model):
     @property
     def total_participants(self):
         return self.adults + self.children
+
+
+class ReservaHistorial(models.Model):
+    """Registro inmutable de cada cambio de estado de una reserva."""
+
+    ACCIONES = [
+        ('creada',     'Reserva creada'),
+        ('confirmada', 'Reserva confirmada'),
+        ('rechazada',  'Reserva rechazada'),
+        ('cancelada',  'Reserva cancelada'),
+    ]
+
+    reserva = models.ForeignKey(
+        'Reserva',
+        on_delete=models.CASCADE,
+        related_name='historial',
+    )
+    accion = models.CharField(max_length=20, choices=ACCIONES)
+    realizada_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name='acciones_historial',
+    )
+    nota = models.CharField(max_length=255, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+        verbose_name = 'Historial de reserva'
+        verbose_name_plural = 'Historial de reservas'
+
+    def __str__(self):
+        return f"Reserva #{self.reserva_id} → {self.accion} ({self.created_at:%d/%m/%Y %H:%M})"

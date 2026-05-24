@@ -1,0 +1,61 @@
+<section class="adm-section">
+
+  <div class="adm-section-header">
+    <h2 class="adm-section-title">Usuarios registrados</h2>
+  </div>
+
+  <div class="rva-search" style="margin-bottom: 16px;">
+    <input
+      type="search"
+      placeholder="Buscar por nombre o email…"
+      [(ngModel)]="busqueda"
+      (input)="buscar()"
+      class="rva-input"
+      aria-label="Buscar usuarios"
+    />
+  </div>
+
+  @if (cargando()) {
+    <p class="adm-loading">Cargando usuarios…</p>
+  } @else if (usuarios().length === 0) {
+    <div class="adm-empty"><p>No se encontraron usuarios.</p></div>
+  } @else {
+    <div class="adm-table-wrap">
+      <table class="adm-table">
+        <thead>
+          <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Email</th>
+            <th scope="col">País</th>
+            <th scope="col">Teléfono</th>
+            <th scope="col">Reservas</th>
+            <th scope="col">Rol</th>
+            <th scope="col">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (u of usuarios(); track u.id) {
+            <tr>
+              <td>{{ u.first_name }} {{ u.last_name }}</td>
+              <td>{{ u.email }}</td>
+              <td>{{ u.country || '—' }}</td>
+              <td>{{ u.phone || '—' }}</td>
+              <td>{{ u.reservas_count }}</td>
+              <td>
+                <span class="rva-badge" [class]="u.is_staff ? 'rva-st-confirmada' : 'rva-st-pendiente'">
+                  {{ u.is_staff ? 'Admin' : 'Usuario' }}
+                </span>
+              </td>
+              <td>
+                <span class="rva-badge" [class]="u.is_active ? 'rva-st-confirmada' : 'rva-st-rechazada'">
+                  {{ u.is_active ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+</section>

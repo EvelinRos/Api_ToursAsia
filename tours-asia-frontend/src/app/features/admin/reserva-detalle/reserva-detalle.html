@@ -1,67 +1,196 @@
 @if (reserva(); as r) {
-  <div class="detail-header-bar">
+
+  <!-- CABECERA -->
+  <div class="det-header">
     <div>
-      <h2>Reserva #{{ r.id }}</h2>
-      <span class="badge-status" [class]="'st-' + r.status">{{ r.status }}</span>
+      <h2 class="det-title">Reserva #RVA-{{ r.id | number: '5.0-0' }}</h2>
+      <span class="rva-badge" [class]="'rva-st-' + r.status">
+        <span class="rva-dot" [class]="'rva-dot-' + r.status" aria-hidden="true"></span>
+        {{ r.status | titlecase }}
+      </span>
     </div>
-    <a routerLink="/admin/reservas" class="btn-secondary">← Volver</a>
-  </div>
-
-  <div class="detail-grid">
-    <div class="detail-card">
-      <h3>Datos del cliente</h3>
-      <div class="detail-field">
-        <span class="label">Nombre</span
-        ><span class="value">{{ r.customer_name }} {{ r.customer_lastname }}</span>
-      </div>
-      <div class="detail-field">
-        <span class="label">Email</span><span class="value">{{ r.customer_email }}</span>
-      </div>
-      <div class="detail-field">
-        <span class="label">Teléfono</span><span class="value">{{ r.customer_phone }}</span>
-      </div>
-      <div class="detail-field">
-        <span class="label">País</span><span class="value">{{ r.customer_country }}</span>
-      </div>
-    </div>
-
-    <div class="detail-card">
-      <h3>Detalles del tour</h3>
-      <div class="detail-field">
-        <span class="label">Tour</span><span class="value">{{ r.tour.name }}</span>
-      </div>
-      <div class="detail-field">
-        <span class="label">Fecha</span><span class="value">{{ r.date }}</span>
-      </div>
-      <div class="detail-field">
-        <span class="label">Horario</span><span class="value">{{ r.time_slot }}</span>
-      </div>
-      <div class="detail-field">
-        <span class="label">Idioma</span><span class="value">{{ r.language }}</span>
-      </div>
-      <div class="detail-field">
-        <span class="label">Adultos</span><span class="value">{{ r.adults }}</span>
-      </div>
-      <div class="detail-field">
-        <span class="label">Niños</span><span class="value">{{ r.children }}</span>
-      </div>
-      <div class="detail-field">
-        <span class="label">Total</span
-        ><span class="value" style="color: #e8500a; font-size: 18px; font-weight: 600"
-          >USD {{ r.total_amount }}</span
-        >
-      </div>
+    <div class="det-header-actions">
+      <span class="det-fecha-creacion">Creada el {{ r.created_at | date: 'dd/MM/yyyy HH:mm' }}</span>
+      <a routerLink="/admin/reservas" class="det-btn-volver">← Volver</a>
     </div>
   </div>
 
-  @if (r.status === 'pendiente') {
-    <div class="action-bar">
-      <button class="btn-confirm" (click)="cambiarEstado('confirmada')" [disabled]="cargando()">
-        ✓ Confirmar reserva
-      </button>
-      <button class="btn-reject" (click)="cambiarEstado('rechazada')" [disabled]="cargando()">
-        ✗ Rechazar
-      </button>
+  <!-- GRID DE DATOS -->
+  <div class="det-grid">
+
+    <!-- Datos del cliente -->
+    <div class="det-card">
+      <h3 class="det-card-title">👤 Datos del cliente</h3>
+      <dl class="det-dl">
+        <div class="det-field">
+          <dt>Nombre</dt>
+          <dd>{{ r.customer_name }} {{ r.customer_lastname }}</dd>
+        </div>
+        <div class="det-field">
+          <dt>Email</dt>
+          <dd><a [href]="'mailto:' + r.customer_email">{{ r.customer_email }}</a></dd>
+        </div>
+        <div class="det-field">
+          <dt>Teléfono</dt>
+          <dd>{{ r.customer_phone || '—' }}</dd>
+        </div>
+        <div class="det-field">
+          <dt>País</dt>
+          <dd>{{ r.customer_country || '—' }}</dd>
+        </div>
+      </dl>
+    </div>
+
+    <!-- Detalles del tour -->
+    <div class="det-card">
+      <h3 class="det-card-title">🗺️ Detalles del tour</h3>
+      <dl class="det-dl">
+        <div class="det-field">
+          <dt>Tour</dt>
+          <dd>{{ r.tour.name }}</dd>
+        </div>
+        <div class="det-field">
+          <dt>Destino</dt>
+          <dd>{{ r.tour.destino.name }}, {{ r.tour.destino.country }}</dd>
+        </div>
+        <div class="det-field">
+          <dt>Fecha</dt>
+          <dd>{{ r.date | date: 'dd/MM/yyyy' }}</dd>
+        </div>
+        <div class="det-field">
+          <dt>Horario</dt>
+          <dd>{{ r.time_slot }}</dd>
+        </div>
+        <div class="det-field">
+          <dt>Idioma</dt>
+          <dd>{{ r.language }}</dd>
+        </div>
+        <div class="det-field">
+          <dt>Adultos</dt>
+          <dd>
+            {{ r.adults }} × {{ fmtUSD(r.tour.price) }}
+            = {{ fmtUSD(r.adults * r.tour.price) }}
+          </dd>
+        </div>
+        <div class="det-field">
+          <dt>Niños</dt>
+          <dd>
+            @if (r.children > 0) {
+              {{ r.children }} × {{ fmtUSD(r.tour.price * 0.5) }}
+              = {{ fmtUSD(r.children * r.tour.price * 0.5) }}
+            } @else {
+              —
+            }
+          </dd>
+        </div>
+        <div class="det-field det-total">
+          <dt>Total</dt>
+          <dd>{{ fmtUSD(r.total_amount) }}</dd>
+        </div>
+      </dl>
+    </div>
+
+  </div>
+
+  @if (r.notes) {
+    <div class="det-card det-notes">
+      <h3 class="det-card-title">📝 Notas del cliente</h3>
+      <p>{{ r.notes }}</p>
     </div>
   }
+
+  <!-- ACCIONES (solo si la reserva está pendiente) -->
+  @if (r.status === 'pendiente') {
+    <div class="det-card det-action-card">
+      <h3 class="det-card-title">⚡ Gestión de estado</h3>
+      <p class="det-action-hint">
+        Puedes añadir una nota opcional que quedará registrada en el historial.
+      </p>
+      <textarea
+        class="det-nota-input"
+        [(ngModel)]="nota"
+        placeholder="Nota opcional para el historial (ej: Tour lleno el día 5, reasignado al 6)..."
+        rows="2"
+        aria-label="Nota del administrador"
+      ></textarea>
+      <div class="det-action-bar">
+        <button
+          class="det-btn-confirm"
+          (click)="cambiarEstado('confirmada')"
+          [disabled]="cargando()"
+          type="button"
+        >
+          ✓ Confirmar reserva
+        </button>
+        <button
+          class="det-btn-reject"
+          (click)="cambiarEstado('rechazada')"
+          [disabled]="cargando()"
+          type="button"
+        >
+          ✗ Rechazar
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- HISTORIAL DE CAMBIOS -->
+  <div class="det-card">
+    <h3 class="det-card-title">🕒 Historial de cambios</h3>
+    @if (r.historial.length === 0) {
+      <p class="det-empty-hist">Sin eventos registrados.</p>
+    } @else {
+      <ol class="det-historial" aria-label="Historial de cambios">
+        @for (h of r.historial; track h.id) {
+          <li class="det-hist-item">
+            <span
+              class="det-hist-dot"
+              [style.background]="colorAccion(h.accion)"
+              aria-hidden="true"
+            ></span>
+            <div class="det-hist-body">
+              <span class="det-hist-texto">{{ h.accion | titlecase }} por {{ h.realizada_por_email }}</span>
+              @if (h.nota) {
+                <span class="det-hist-nota">— {{ h.nota }}</span>
+              }
+              <time class="det-hist-time" [attr.datetime]="h.created_at">
+                {{ h.created_at | date: 'dd/MM/yyyy HH:mm' }}
+              </time>
+            </div>
+          </li>
+        }
+      </ol>
+    }
+  </div>
+
+  <!-- ZONA DE PELIGRO -->
+  <div class="det-card det-danger-zone">
+    <h3 class="det-card-title det-danger-title">⚠️ Zona de peligro</h3>
+    @if (!mostrarConfirmEliminar()) {
+      <button
+        class="det-btn-del"
+        (click)="mostrarConfirmEliminar.set(true)"
+        type="button"
+      >
+        🗑 Eliminar reserva permanentemente
+      </button>
+    } @else {
+      <p class="det-confirm-msg">
+        ¿Estás seguro? Esta acción no se puede deshacer.
+      </p>
+      <div class="det-action-bar">
+        <button class="det-btn-del-confirm" (click)="eliminar()" type="button">
+          Sí, eliminar
+        </button>
+        <button
+          class="det-btn-cancel"
+          (click)="mostrarConfirmEliminar.set(false)"
+          type="button"
+        >
+          Cancelar
+        </button>
+      </div>
+    }
+  </div>
+
 }
