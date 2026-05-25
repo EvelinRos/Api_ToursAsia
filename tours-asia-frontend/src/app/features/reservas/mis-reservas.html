@@ -2,25 +2,33 @@
 
 <div class="container">
   <div class="mis-reservas-header">
-    <h1>Mis Reservas</h1>
+    <h1><i class="ti ti-receipt" aria-hidden="true"></i> Mis Reservas</h1>
   </div>
 
-  @if (cargando) {
+  @if (cargando()) {
     <div class="loading">
+      <i class="ti ti-loader-2" aria-hidden="true"></i>
       <p>Cargando tus reservas...</p>
     </div>
-  } @else if (error) {
+  } @else if (error()) {
     <div class="error-message">
-      <p>{{ error }}</p>
+      <i class="ti ti-alert-circle" aria-hidden="true"></i>
+      <p>{{ error() }}</p>
+      <button class="btn btn-primary" (click)="cargarReservas()">
+        <i class="ti ti-refresh" aria-hidden="true"></i> Reintentar
+      </button>
     </div>
-  } @else if (reservas.length === 0) {
+  } @else if (reservas().length === 0) {
     <div class="empty-state">
+      <i class="ti ti-calendar-off" aria-hidden="true"></i>
       <p>No tienes reservas aún.</p>
-      <a href="/tours" class="btn btn-primary">Ver tours disponibles</a>
+      <a routerLink="/tours" class="btn btn-primary">
+        <i class="ti ti-plane" aria-hidden="true"></i> Ver tours disponibles
+      </a>
     </div>
   } @else {
     <div class="reservas-grid">
-      @for (reserva of reservas; track reserva.id) {
+      @for (reserva of reservas(); track reserva.id) {
         <div class="reserva-card">
           <div class="reserva-card-header">
             <h3>{{ reserva.tour.name }}</h3>
@@ -30,22 +38,28 @@
           </div>
           <div class="reserva-card-body">
             <dl>
-              <dt>Fecha:</dt>
+              <dt><i class="ti ti-calendar" aria-hidden="true"></i> Fecha:</dt>
               <dd>{{ reserva.date }}</dd>
-              <dt>Hora:</dt>
+              <dt><i class="ti ti-clock" aria-hidden="true"></i> Hora:</dt>
               <dd>{{ reserva.time_slot }}</dd>
-              <dt>Personas:</dt>
+              <dt><i class="ti ti-users" aria-hidden="true"></i> Personas:</dt>
               <dd>{{ reserva.adults }} adulto(s), {{ reserva.children }} niño(s)</dd>
-              <dt>Total:</dt>
+              <dt><i class="ti ti-currency-dollar" aria-hidden="true"></i> Total:</dt>
               <dd>${{ reserva.total_amount }}</dd>
             </dl>
           </div>
           <div class="reserva-card-footer">
-            <button class="btn btn-sm" (click)="verDetalles(reserva.id)">Ver detalles</button>
-            <button class="btn btn-sm" style="background-color: var(--hot-red); color: white; border: none; margin-left: 10px;" (click)="eliminar(reserva.id)">Eliminar</button>
+            <button class="btn btn-sm" (click)="verDetalles(reserva.id)">
+              <i class="ti ti-eye" aria-hidden="true"></i> Ver detalles
+            </button>
+            <button class="btn btn-sm btn-danger" (click)="eliminar(reserva.id)">
+              <i class="ti ti-trash" aria-hidden="true"></i> Eliminar
+            </button>
           </div>
         </div>
       }
     </div>
   }
 </div>
+
+<app-footer />

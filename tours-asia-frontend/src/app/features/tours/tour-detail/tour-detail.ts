@@ -4,11 +4,13 @@ import { CommonModule } from '@angular/common';
 import { ToursService } from '../../../core/services/tours.service';
 import { Tour } from '../../../core/models/models';
 import { NavbarComponent } from '../../../shared/components/navbar/navbar';
+import { FooterComponent } from '../../../shared/components/footer/footer';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-tour-detail',
-  imports: [RouterLink, CommonModule, NavbarComponent],
+  standalone: true,
+  imports: [RouterLink, CommonModule, NavbarComponent, FooterComponent],
   templateUrl: './tour-detail.html',
 })
 export class TourDetailComponent implements OnInit {

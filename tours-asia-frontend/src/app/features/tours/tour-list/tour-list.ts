@@ -5,10 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { ToursService } from '../../../core/services/tours.service';
 import { Tour, Destino } from '../../../core/models/models';
 import { NavbarComponent } from '../../../shared/components/navbar/navbar';
+import { FooterComponent } from '../../../shared/components/footer/footer';
 
 @Component({
   selector: 'app-tour-list',
-  imports: [RouterLink, CommonModule, FormsModule, NavbarComponent],
+  standalone: true,
+  imports: [RouterLink, CommonModule, FormsModule, NavbarComponent, FooterComponent],
   templateUrl: './tour-list.html',
 })
 export class TourListComponent implements OnInit {

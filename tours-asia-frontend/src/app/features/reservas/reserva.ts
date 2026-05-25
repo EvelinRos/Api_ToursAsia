@@ -7,11 +7,12 @@ import { ReservasService, CrearReservaPayload } from '../../core/services/reserv
 import { AuthService } from '../../core/services/auth.service';
 import { Tour } from '../../core/models/models';
 import { NavbarComponent } from '../../shared/components/navbar/navbar';
+import { FooterComponent } from '../../shared/components/footer/footer';
 
 @Component({
   selector: 'app-reserva',
   standalone: true,
-  imports: [FormsModule, CommonModule, NavbarComponent, RouterLink],
+  imports: [FormsModule, CommonModule, NavbarComponent, FooterComponent, RouterLink],
   templateUrl: './reserva.html',
 })
 export class ReservaComponent implements OnInit {

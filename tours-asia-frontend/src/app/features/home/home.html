@@ -36,19 +36,27 @@
         <div class="tour-card">
           <div class="tour-img" [style.background-image]="'url(' + tour.photo_url + ')'">
             @if (tour.is_popular) {
-              <span class="badge-popular">Popular</span>
+              <span class="badge-popular">
+                <i class="ti ti-flame" aria-hidden="true"></i> Popular
+              </span>
             }
           </div>
           <div class="tour-body">
             <span class="tour-destino">{{ tour.destino.name }}</span>
             <h3 class="tour-name">{{ tour.name }}</h3>
             <div class="tour-meta">
-              <span>⭐ {{ tour.rating }} ({{ tour.reviews_count }})</span>
-              <span>{{ tour.duration }} días</span>
+              <span
+                ><i class="ti ti-star-filled" aria-hidden="true"></i> {{ tour.rating }} ({{
+                  tour.reviews_count
+                }})</span
+              >
+              <span><i class="ti ti-clock" aria-hidden="true"></i> {{ tour.duration }} días</span>
             </div>
             <div class="tour-footer">
               <span class="tour-price">USD {{ tour.price }}</span>
-              <a [routerLink]="['/tours', tour.id]" class="btn-sm">Ver tour</a>
+              <a [routerLink]="['/tours', tour.id]" class="btn-sm">
+                Ver tour <i class="ti ti-arrow-right" aria-hidden="true"></i>
+              </a>
             </div>
           </div>
         </div>
@@ -56,3 +64,5 @@
     </div>
   </div>
 </section>
+
+<app-footer />

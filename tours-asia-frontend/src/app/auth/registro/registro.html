@@ -1,6 +1,14 @@
 <div class="auth-page">
   <div class="auth-card">
-    <div class="auth-logo">🌏</div>
+    <div class="auth-back">
+      <a routerLink="/" class="btn-back">
+        <i class="ti ti-arrow-left" aria-hidden="true"></i> Volver al inicio
+      </a>
+    </div>
+
+    <div class="auth-logo">
+      <i class="ti ti-world-longitude" aria-hidden="true"></i>
+    </div>
     <h1 class="auth-title">Crear cuenta</h1>
 
     @if (error()) {
@@ -44,7 +52,11 @@
     </div>
 
     <button class="btn-primary" (click)="submit()" [disabled]="cargando()">
-      {{ cargando() ? 'Registrando...' : 'Crear cuenta' }}
+      @if (cargando()) {
+        <i class="ti ti-loader-2" aria-hidden="true"></i> Registrando...
+      } @else {
+        <i class="ti ti-user-plus" aria-hidden="true"></i> Crear cuenta
+      }
     </button>
 
     <p class="auth-footer">¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>

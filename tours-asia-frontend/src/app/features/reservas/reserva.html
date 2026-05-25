@@ -67,10 +67,20 @@
               }
             </div>
 
-            @if (errorFecha()) { <div class="error-msg" style="color:red; margin-bottom: 10px;">{{ errorFecha() }}</div> }
-            @if (errorHora()) { <div class="error-msg" style="color:red; margin-bottom: 10px;">{{ errorHora() }}</div> }
-            @if (errorPersonas()) { <div class="error-msg" style="color:red; margin-bottom: 10px;">{{ errorPersonas() }}</div> }
-            
+            @if (errorFecha()) {
+              <div class="error-msg" style="color: red; margin-bottom: 10px">
+                {{ errorFecha() }}
+              </div>
+            }
+            @if (errorHora()) {
+              <div class="error-msg" style="color: red; margin-bottom: 10px">{{ errorHora() }}</div>
+            }
+            @if (errorPersonas()) {
+              <div class="error-msg" style="color: red; margin-bottom: 10px">
+                {{ errorPersonas() }}
+              </div>
+            }
+
             <button class="btn-primary" (click)="irPaso2()">Continuar</button>
           </div>
         }
@@ -129,8 +139,12 @@
                 Acepto los términos y condiciones
               </label>
             </div>
-            
-            @if (errorTerminos()) { <div class="error-msg" style="color:red; margin-bottom: 10px;">{{ errorTerminos() }}</div> }
+
+            @if (errorTerminos()) {
+              <div class="error-msg" style="color: red; margin-bottom: 10px">
+                {{ errorTerminos() }}
+              </div>
+            }
 
             <div class="bottom-actions">
               <button class="btn-secondary" (click)="paso.set(1)">← Volver</button>
@@ -179,8 +193,12 @@
               }}
               persona{{ totalPersonas > 1 ? 's' : '' }})
             </div>
-            
-            @if (errorTerminos()) { <div class="error-msg" style="color:red; margin-bottom: 10px;">{{ errorTerminos() }}</div> }
+
+            @if (errorTerminos()) {
+              <div class="error-msg" style="color: red; margin-bottom: 10px">
+                {{ errorTerminos() }}
+              </div>
+            }
 
             <div class="bottom-actions" style="margin-top: 1rem">
               <button class="btn-secondary" (click)="paso.set(2)">← Volver</button>
@@ -191,14 +209,14 @@
           </div>
         }
 
-        <!-- PASO 4: pantalla de éxito (sin pagos) -->
+        <!-- PASO 4: pantalla de éxito -->
         @if (paso() === 4) {
           <div class="card confirm-box">
             <div class="confirm-icon">✅</div>
             <h2>¡Reserva recibida!</h2>
             <p>
               Tu reserva <strong>#{{ reservaCreada() }}</strong> está
-              <strong>pendiente de confirmación</strong>.<br>
+              <strong>pendiente de confirmación</strong>.<br />
               Un administrador la revisará y te notificará por correo.
             </p>
             <div class="pending-badge">⏳ Pendiente de confirmación</div>
@@ -226,3 +244,5 @@
     </div>
   }
 </div>
+
+<app-footer />

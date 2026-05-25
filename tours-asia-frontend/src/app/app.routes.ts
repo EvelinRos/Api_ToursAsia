@@ -26,6 +26,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/reservas/mis-reservas').then(m => m.MisReservasComponent),
   },
   {
+    path: 'reservas/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/reservas/reserva').then(m => m.ReservaComponent),
+  },
+  {
     path: 'login',
     loadComponent: () => import('./auth/login/login').then(m => m.LoginComponent),
   },

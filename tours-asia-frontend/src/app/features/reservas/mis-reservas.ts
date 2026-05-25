@@ -1,30 +1,34 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, signal, inject, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReservasService } from '../../core/services/reservas.service';
 import { AuthService } from '../../core/services/auth.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { Reserva } from '../../core/models/models';
 import { NavbarComponent } from '../../shared/components/navbar/navbar';
+import { FooterComponent } from '../../shared/components/footer/footer';
 
 @Component({
   selector: 'app-mis-reservas',
   standalone: true,
-  imports: [CommonModule, NavbarComponent],
+  imports: [CommonModule, NavbarComponent, FooterComponent, RouterLink],
   templateUrl: './mis-reservas.html',
-  styleUrl: './mis-reservas.css'
+  styleUrl: './mis-reservas.css',
 })
 export class MisReservasComponent implements OnInit {
   private readonly reservasService = inject(ReservasService);
-  private readonly authService = inject(AuthService);
-  private readonly notificationService = inject(NotificationService);
-  private readonly router = inject(Router);
+  private readonly authService    = inject(AuthService);
+  private readonly notif          = inject(NotificationService);
+  private readonly router         = inject(Router);
+  private readonly destroyRef     = inject(DestroyRef);
 
-  reservas: Reserva[] = [];
-  cargando = true;
-  error = '';
+  // Usar signals para que la detección de cambios funcione correctamente
+  readonly reservas = signal<Reserva[]>([]);
+  readonly cargando = signal(true);
+  readonly error    = signal('');
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/login']);
       return;
@@ -32,38 +36,44 @@ export class MisReservasComponent implements OnInit {
     this.cargarReservas();
   }
 
-  private cargarReservas() {
-    this.cargando = true;
-    this.error = '';
-    this.reservasService.getMisReservas().subscribe({
-      next: (response: any) => {
-        const arr = response.results ?? response;
-        this.reservas = Array.isArray(arr) ? arr : [];
-        this.cargando = false;
-      },
-      error: () => {
-        this.error = 'No se pudieron cargar tus reservas';
-        this.notificationService.error(this.error);
-        this.cargando = false;
-      }
-    });
+  cargarReservas(): void {
+    this.cargando.set(true);
+    this.error.set('');
+
+    this.reservasService
+      .getMisReservas()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response: any) => {
+          const arr = response?.results ?? response;
+          this.reservas.set(Array.isArray(arr) ? arr : []);
+          this.cargando.set(false);
+        },
+        error: () => {
+          const msg = 'No se pudieron cargar tus reservas';
+          this.error.set(msg);
+          this.notif.error(msg);
+          this.cargando.set(false);
+        },
+      });
   }
 
-  verDetalles(id: number) {
+  verDetalles(id: number): void {
     this.router.navigate(['/reservas', id]);
   }
 
-  eliminar(id: number) {
-    if (confirm('¿Estás seguro de que deseas cancelar y eliminar esta reserva?')) {
-      this.reservasService.eliminar(id).subscribe({
+  eliminar(id: number): void {
+    if (!confirm('¿Estás seguro de que deseas cancelar y eliminar esta reserva?')) return;
+
+    this.reservasService
+      .eliminar(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
         next: () => {
-          this.notificationService.success('Reserva eliminada correctamente');
+          this.notif.success('Reserva eliminada correctamente');
           this.cargarReservas();
         },
-        error: () => {
-          this.notificationService.error('Error al eliminar la reserva');
-        }
+        error: () => this.notif.error('Error al eliminar la reserva'),
       });
-    }
   }
 }
