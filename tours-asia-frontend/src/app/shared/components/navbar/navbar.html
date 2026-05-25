@@ -18,9 +18,15 @@
           </a>
         } @else {
           <a routerLink="/mis-reservas" routerLinkActive="active">
-            <i class="ti ti-receipt" aria-hidden="true"></i> Mis reservas
+            <i class="ti ti-clipboard-list" aria-hidden="true"></i> Mis reservas
           </a>
         }
+
+        <div class="nav-user">
+          <div class="nav-user__avatar">{{ userInitials() }}</div>
+          <span class="nav-user__email">{{ userEmail() }}</span>
+        </div>
+
         <button class="btn-outline-sm" (click)="auth.logout()">
           <i class="ti ti-logout" aria-hidden="true"></i> Cerrar sesión
         </button>

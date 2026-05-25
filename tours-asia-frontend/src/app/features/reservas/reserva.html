@@ -2,18 +2,39 @@
 
 <div class="checkout-wrap">
   <!-- Barra de progreso -->
-  <div class="top-bar">🔒 Pago seguro</div>
+  <div class="top-bar"><i class="ti ti-lock icon-base icon-lock"></i>Pago seguro</div>
   <div class="steps-bar">
     <div class="step" [class.active]="paso() >= 1" [class.done]="paso() > 1">
-      <span class="step-num">{{ paso() > 1 ? '✓' : '1' }}</span> Selección
+      <span class="step-num">
+        @if (paso() > 1) {
+          <i class="ti ti-circle-check icon-base icon-check icon-stepper"></i>
+        } @else {
+          1
+        }
+      </span>
+      Selección
     </div>
     <span class="step-sep">›</span>
     <div class="step" [class.active]="paso() >= 2" [class.done]="paso() > 2">
-      <span class="step-num">{{ paso() > 2 ? '✓' : '2' }}</span> Datos personales
+      <span class="step-num">
+        @if (paso() > 2) {
+          <i class="ti ti-circle-check icon-base icon-check icon-stepper"></i>
+        } @else {
+          2
+        }
+      </span>
+      Datos personales
     </div>
     <span class="step-sep">›</span>
     <div class="step" [class.active]="paso() >= 3" [class.done]="paso() > 3">
-      <span class="step-num">{{ paso() > 3 ? '✓' : '3' }}</span> Confirmación
+      <span class="step-num">
+        @if (paso() > 3) {
+          <i class="ti ti-circle-check icon-base icon-check icon-stepper"></i>
+        } @else {
+          3
+        }
+      </span>
+      Confirmación
     </div>
   </div>
 
@@ -188,7 +209,11 @@
               <span>Email</span><strong>{{ datosPersonales.email }}</strong>
             </div>
             <div class="notice-bar">
-              ⚠️ Solo las personas incluidas en tu reserva podrán asistir al tour ({{
+              <i
+                class="ti ti-alert-triangle"
+                style="color: #f59e0b; font-size: 1rem; vertical-align: middle; margin-right: 6px"
+              ></i
+              >Solo las personas incluidas en tu reserva podrán asistir al tour ({{
                 totalPersonas
               }}
               persona{{ totalPersonas > 1 ? 's' : '' }})
@@ -212,14 +237,18 @@
         <!-- PASO 4: pantalla de éxito -->
         @if (paso() === 4) {
           <div class="card confirm-box">
-            <div class="confirm-icon">✅</div>
+            <div class="confirm-icon">
+              <i class="ti ti-circle-check icon-check-lg"></i>
+            </div>
             <h2>¡Reserva recibida!</h2>
             <p>
               Tu reserva <strong>#{{ reservaCreada() }}</strong> está
               <strong>pendiente de confirmación</strong>.<br />
               Un administrador la revisará y te notificará por correo.
             </p>
-            <div class="pending-badge">⏳ Pendiente de confirmación</div>
+            <div class="pending-badge">
+              <i class="ti ti-hourglass icon-base icon-hourglass"></i>Pendiente de confirmación
+            </div>
             <a routerLink="/mis-reservas" class="btn-primary">Ver mis reservas</a>
           </div>
         }

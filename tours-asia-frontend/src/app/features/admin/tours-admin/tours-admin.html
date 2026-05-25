@@ -1,10 +1,7 @@
 <section class="adm-section">
-
   <div class="adm-section-header">
     <h2 class="adm-section-title">Tours</h2>
-    <button class="adm-btn-primary" (click)="abrirCrear()" type="button">
-      + Nuevo tour
-    </button>
+    <button class="adm-btn-primary" (click)="abrirCrear()" type="button">+ Nuevo tour</button>
   </div>
 
   <!-- FORMULARIO CREAR / EDITAR -->
@@ -30,15 +27,32 @@
         </div>
         <div class="adm-field">
           <label for="tour-precio">Precio (USD) *</label>
-          <input id="tour-precio" type="number" [(ngModel)]="form.price" min="1" class="adm-input" />
+          <input
+            id="tour-precio"
+            type="number"
+            [(ngModel)]="form.price"
+            min="1"
+            class="adm-input"
+          />
         </div>
         <div class="adm-field">
           <label for="tour-duracion">Duración (días) *</label>
-          <input id="tour-duracion" type="number" [(ngModel)]="form.duration" min="1" class="adm-input" />
+          <input
+            id="tour-duracion"
+            type="number"
+            [(ngModel)]="form.duration"
+            min="1"
+            class="adm-input"
+          />
         </div>
         <div class="adm-field adm-field-full">
           <label for="tour-desc">Descripción</label>
-          <textarea id="tour-desc" [(ngModel)]="form.description" class="adm-input" rows="3"></textarea>
+          <textarea
+            id="tour-desc"
+            [(ngModel)]="form.description"
+            class="adm-input"
+            rows="3"
+          ></textarea>
         </div>
         <div class="adm-field adm-field-full">
           <label for="tour-photo">URL de foto</label>
@@ -50,7 +64,15 @@
         </div>
         <div class="adm-field">
           <label for="tour-rating">Rating</label>
-          <input id="tour-rating" type="number" [(ngModel)]="form.rating" min="1" max="5" step="0.1" class="adm-input" />
+          <input
+            id="tour-rating"
+            type="number"
+            [(ngModel)]="form.rating"
+            min="1"
+            max="5"
+            step="0.1"
+            class="adm-input"
+          />
         </div>
         <div class="adm-field adm-field-checkbox">
           <label>
@@ -62,7 +84,7 @@
 
       <div class="adm-form-actions">
         <button class="adm-btn-primary" (click)="guardar()" [disabled]="cargando()" type="button">
-          {{ cargando() ? 'Guardando…' : (modoEdicion() ? 'Actualizar' : 'Crear tour') }}
+          {{ cargando() ? 'Guardando…' : modoEdicion() ? 'Actualizar' : 'Crear tour' }}
         </button>
         <button class="adm-btn-secondary" (click)="cancelar()" type="button">Cancelar</button>
       </div>
@@ -102,13 +124,21 @@
                   type="button"
                   [attr.aria-label]="(tour.is_popular ? 'Desmarcar' : 'Marcar') + ' como popular'"
                 >
-                  {{ tour.is_popular ? '⭐ Popular' : '☆ Normal' }}
+                  @if (tour.is_popular) {
+                    <i class="ti ti-star-filled icon-base icon-star"></i>Popular
+                  } @else {
+                    <i class="ti ti-star icon-base icon-star-empty"></i>Normal
+                  }
                 </button>
               </td>
               <td>
                 <div class="adm-row-actions">
-                  <button class="adm-act-btn edit" (click)="abrirEditar(tour)" type="button">Editar</button>
-                  <button class="adm-act-btn del"  (click)="eliminar(tour.id)"  type="button">Eliminar</button>
+                  <button class="adm-act-btn edit" (click)="abrirEditar(tour)" type="button">
+                    Editar
+                  </button>
+                  <button class="adm-act-btn del" (click)="eliminar(tour.id)" type="button">
+                    Eliminar
+                  </button>
                 </div>
               </td>
             </tr>
@@ -117,5 +147,4 @@
       </table>
     </div>
   }
-
 </section>

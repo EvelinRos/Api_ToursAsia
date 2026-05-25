@@ -1,10 +1,11 @@
 <app-navbar />
 
 <section class="hero">
-  <div class="hero-inner">
-    <h1>Descubre la magia de Asia</h1>
-    <p>Experiencias únicas, guías expertos y tours en español</p>
-    <a routerLink="/tours" class="btn-primary">Ver todos los tours</a>
+  <div class="hero__overlay"></div>
+  <div class="hero__content">
+    <h1 class="hero__title">Descubre la magia de Asia</h1>
+    <p class="hero__subtitle">Experiencias únicas, guías expertos y tours en español</p>
+    <button class="hero__btn" routerLink="/tours">Ver todos los tours</button>
   </div>
 </section>
 
@@ -12,51 +13,22 @@
   <div class="container">
     <h2 class="section-title">Destinos populares</h2>
     <div class="grid-3">
-      @for (destino of destinos(); track destino.id) {
-        <a [routerLink]="['/tours']" [queryParams]="{ destino: destino.id }" class="destino-card">
-          <div
-            class="destino-img"
-            [style.background-image]="'url(' + destino.cover_url + ')'"
-          ></div>
-          <div class="destino-info">
-            <span class="destino-country">{{ destino.country }}</span>
-            <h3>{{ destino.name }}</h3>
+      @for (destino of destinosConTours(); track destino.id) {
+        <div class="destination-card" (click)="verTours(destino.id)">
+          <div class="destination-card__image-wrapper">
+            <img [src]="destino.cover_url" [alt]="destino.name" class="destination-card__image" />
+            <span class="destination-card__country">{{ destino.country | uppercase }}</span>
           </div>
-        </a>
-      }
-    </div>
-  </div>
-</section>
-
-<section class="section section-gray">
-  <div class="container">
-    <h2 class="section-title">Tours destacados</h2>
-    <div class="grid-3">
-      @for (tour of tours(); track tour.id) {
-        <div class="tour-card">
-          <div class="tour-img" [style.background-image]="'url(' + tour.photo_url + ')'">
-            @if (tour.is_popular) {
-              <span class="badge-popular">
-                <i class="ti ti-flame" aria-hidden="true"></i> Popular
+          <div class="destination-card__body">
+            <h3 class="destination-card__name">{{ destino.name }}</h3>
+            <p class="destination-card__description">{{ destino.description }}</p>
+            <div class="destination-card__footer">
+              <span class="destination-card__tours-count">
+                <i class="ti ti-map-route" aria-hidden="true"></i> {{ destino.totalTours }} tours
               </span>
-            }
-          </div>
-          <div class="tour-body">
-            <span class="tour-destino">{{ tour.destino.name }}</span>
-            <h3 class="tour-name">{{ tour.name }}</h3>
-            <div class="tour-meta">
-              <span
-                ><i class="ti ti-star-filled" aria-hidden="true"></i> {{ tour.rating }} ({{
-                  tour.reviews_count
-                }})</span
-              >
-              <span><i class="ti ti-clock" aria-hidden="true"></i> {{ tour.duration }} días</span>
-            </div>
-            <div class="tour-footer">
-              <span class="tour-price">USD {{ tour.price }}</span>
-              <a [routerLink]="['/tours', tour.id]" class="btn-sm">
-                Ver tour <i class="ti ti-arrow-right" aria-hidden="true"></i>
-              </a>
+              <span class="destination-card__link">
+                <i class="ti ti-plane" aria-hidden="true"></i> Ver tours
+              </span>
             </div>
           </div>
         </div>

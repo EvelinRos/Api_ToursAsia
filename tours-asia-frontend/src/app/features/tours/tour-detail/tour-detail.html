@@ -7,8 +7,13 @@
         <span class="tour-destino">{{ t.destino.name }}, {{ t.destino.country }}</span>
         <h1>{{ t.name }}</h1>
         <div class="tour-hero-meta">
-          <span>⭐ {{ t.rating }} ({{ t.reviews_count }} opiniones)</span>
-          <span>🕐 {{ t.duration }} días</span>
+          <span
+            ><i class="ti ti-star-filled icon-base icon-star"></i>{{ t.rating }} ({{
+              t.reviews_count
+            }}
+            opiniones)</span
+          >
+          <span><i class="ti ti-hourglass icon-base icon-hourglass"></i>{{ t.duration }} días</span>
         </div>
       </div>
     </div>
@@ -28,7 +33,9 @@
         <h2>¿Qué incluye?</h2>
         <ul class="includes-list">
           @for (item of t.what_includes; track item) {
-            <li class="include-item">✅ {{ item }}</li>
+            <li class="include-item">
+              <i class="ti ti-circle-check icon-base icon-check"></i>{{ item }}
+            </li>
           }
         </ul>
       </div>
@@ -38,7 +45,9 @@
           <h2>No incluye</h2>
           <ul class="includes-list">
             @for (item of t.what_not_includes; track item) {
-              <li class="include-item">❌ {{ item }}</li>
+              <li class="include-item">
+                <i class="ti ti-circle-x icon-base icon-x"></i>{{ item }}
+              </li>
             }
           </ul>
         </div>
@@ -47,7 +56,7 @@
       @if (t.meeting_point) {
         <div class="detail-section">
           <h2>Punto de encuentro</h2>
-          <p>📍 {{ t.meeting_point }}</p>
+          <p><i class="ti ti-map-pin icon-base icon-pin"></i>{{ t.meeting_point }}</p>
         </div>
       }
     </div>
@@ -56,7 +65,10 @@
     <div class="booking-sidebar">
       <div class="booking-card">
         <div class="booking-price">USD {{ t.price }} <span>/ persona</span></div>
-        <div class="booking-rating">⭐ {{ t.rating }} · {{ t.reviews_count }} opiniones</div>
+        <div class="booking-rating">
+          <i class="ti ti-star-filled icon-base icon-star"></i>{{ t.rating }} ·
+          {{ t.reviews_count }} opiniones
+        </div>
 
         <div class="form-group" style="margin-top: 1rem">
           <label>Horarios disponibles</label>

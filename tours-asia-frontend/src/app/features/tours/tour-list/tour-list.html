@@ -30,7 +30,12 @@
           <span class="tour-destino">{{ tour.destino.name }}, {{ tour.destino.country }}</span>
           <h3 class="tour-name">{{ tour.name }}</h3>
           <div class="tour-meta">
-            <span>⭐ {{ tour.rating }} ({{ tour.reviews_count }} opiniones)</span>
+            <span
+              ><i class="ti ti-star-filled icon-base icon-star"></i>{{ tour.rating }} ({{
+                tour.reviews_count
+              }}
+              opiniones)</span
+            >
             <span>{{ tour.duration }} días</span>
           </div>
           <div class="tour-footer">

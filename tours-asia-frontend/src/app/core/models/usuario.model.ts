@@ -6,7 +6,7 @@ export interface Usuario {
   is_staff:   boolean;
 }
 
-/** Modelo ampliado que devuelve el endpoint /api/usuarios/ (solo admin) */
+/** Endpoint /api/usuarios/ (solo admin) */
 export interface UsuarioAdmin {
   id:             number;
   email:          string;

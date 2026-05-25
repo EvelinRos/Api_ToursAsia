@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Animación de salida (añadir dinámicamente si no está en CSS)
+// Animación de salida para toasts
 const style = document.createElement('style');
 style.innerHTML = `
 @keyframes slideOut {

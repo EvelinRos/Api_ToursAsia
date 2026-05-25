@@ -5,4 +5,5 @@ export interface Destino {
   cover_url: string;
   description: string;
   highlights: string[];
+  totalTours?: number;
 }

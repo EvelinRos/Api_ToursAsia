@@ -1,5 +1,4 @@
 @if (reserva(); as r) {
-
   <!-- CABECERA -->
   <div class="det-header">
     <div>
@@ -10,17 +9,20 @@
       </span>
     </div>
     <div class="det-header-actions">
-      <span class="det-fecha-creacion">Creada el {{ r.created_at | date: 'dd/MM/yyyy HH:mm' }}</span>
+      <span class="det-fecha-creacion"
+        >Creada el {{ r.created_at | date: 'dd/MM/yyyy HH:mm' }}</span
+      >
       <a routerLink="/admin/reservas" class="det-btn-volver">← Volver</a>
     </div>
   </div>
 
   <!-- GRID DE DATOS -->
   <div class="det-grid">
-
     <!-- Datos del cliente -->
     <div class="det-card">
-      <h3 class="det-card-title">👤 Datos del cliente</h3>
+      <h3 class="det-card-title">
+        <i class="ti ti-user icon-base icon-text"></i>Datos del cliente
+      </h3>
       <dl class="det-dl">
         <div class="det-field">
           <dt>Nombre</dt>
@@ -28,7 +30,9 @@
         </div>
         <div class="det-field">
           <dt>Email</dt>
-          <dd><a [href]="'mailto:' + r.customer_email">{{ r.customer_email }}</a></dd>
+          <dd>
+            <a [href]="'mailto:' + r.customer_email">{{ r.customer_email }}</a>
+          </dd>
         </div>
         <div class="det-field">
           <dt>Teléfono</dt>
@@ -43,7 +47,7 @@
 
     <!-- Detalles del tour -->
     <div class="det-card">
-      <h3 class="det-card-title">🗺️ Detalles del tour</h3>
+      <h3 class="det-card-title">Detalles del tour</h3>
       <dl class="det-dl">
         <div class="det-field">
           <dt>Tour</dt>
@@ -68,16 +72,15 @@
         <div class="det-field">
           <dt>Adultos</dt>
           <dd>
-            {{ r.adults }} × {{ fmtUSD(r.tour.price) }}
-            = {{ fmtUSD(r.adults * r.tour.price) }}
+            {{ r.adults }} × {{ fmtUSD(r.tour.price) }} = {{ fmtUSD(r.adults * r.tour.price) }}
           </dd>
         </div>
         <div class="det-field">
           <dt>Niños</dt>
           <dd>
             @if (r.children > 0) {
-              {{ r.children }} × {{ fmtUSD(r.tour.price * 0.5) }}
-              = {{ fmtUSD(r.children * r.tour.price * 0.5) }}
+              {{ r.children }} × {{ fmtUSD(r.tour.price * 0.5) }} =
+              {{ fmtUSD(r.children * r.tour.price * 0.5) }}
             } @else {
               —
             }
@@ -89,12 +92,13 @@
         </div>
       </dl>
     </div>
-
   </div>
 
   @if (r.notes) {
     <div class="det-card det-notes">
-      <h3 class="det-card-title">📝 Notas del cliente</h3>
+      <h3 class="det-card-title">
+        <i class="ti ti-note icon-base icon-text"></i>Notas del cliente
+      </h3>
       <p>{{ r.notes }}</p>
     </div>
   }
@@ -102,7 +106,9 @@
   <!-- ACCIONES (solo si la reserva está pendiente) -->
   @if (r.status === 'pendiente') {
     <div class="det-card det-action-card">
-      <h3 class="det-card-title">⚡ Gestión de estado</h3>
+      <h3 class="det-card-title">
+        <i class="ti ti-bolt icon-base icon-alert"></i>Gestión de estado
+      </h3>
       <p class="det-action-hint">
         Puedes añadir una nota opcional que quedará registrada en el historial.
       </p>
@@ -120,7 +126,7 @@
           [disabled]="cargando()"
           type="button"
         >
-          ✓ Confirmar reserva
+          <i class="ti ti-circle-check icon-base icon-check"></i>Confirmar reserva
         </button>
         <button
           class="det-btn-reject"
@@ -128,7 +134,7 @@
           [disabled]="cargando()"
           type="button"
         >
-          ✗ Rechazar
+          <i class="ti ti-circle-x icon-base icon-x"></i>Rechazar
         </button>
       </div>
     </div>
@@ -136,7 +142,9 @@
 
   <!-- HISTORIAL DE CAMBIOS -->
   <div class="det-card">
-    <h3 class="det-card-title">🕒 Historial de cambios</h3>
+    <h3 class="det-card-title">
+      <i class="ti ti-history icon-base icon-text"></i>Historial de cambios
+    </h3>
     @if (r.historial.length === 0) {
       <p class="det-empty-hist">Sin eventos registrados.</p>
     } @else {
@@ -149,7 +157,9 @@
               aria-hidden="true"
             ></span>
             <div class="det-hist-body">
-              <span class="det-hist-texto">{{ h.accion | titlecase }} por {{ h.realizada_por_email }}</span>
+              <span class="det-hist-texto"
+                >{{ h.accion | titlecase }} por {{ h.realizada_por_email }}</span
+              >
               @if (h.nota) {
                 <span class="det-hist-nota">— {{ h.nota }}</span>
               }
@@ -165,32 +175,21 @@
 
   <!-- ZONA DE PELIGRO -->
   <div class="det-card det-danger-zone">
-    <h3 class="det-card-title det-danger-title">⚠️ Zona de peligro</h3>
+    <h3 class="det-card-title det-danger-title">
+      <i class="ti ti-alert-triangle icon-base icon-danger"></i>Zona de peligro
+    </h3>
     @if (!mostrarConfirmEliminar()) {
-      <button
-        class="det-btn-del"
-        (click)="mostrarConfirmEliminar.set(true)"
-        type="button"
-      >
-        🗑 Eliminar reserva permanentemente
+      <button class="det-btn-del" (click)="mostrarConfirmEliminar.set(true)" type="button">
+        <i class="ti ti-trash icon-base icon-danger"></i>Eliminar reserva permanentemente
       </button>
     } @else {
-      <p class="det-confirm-msg">
-        ¿Estás seguro? Esta acción no se puede deshacer.
-      </p>
+      <p class="det-confirm-msg">¿Estás seguro? Esta acción no se puede deshacer.</p>
       <div class="det-action-bar">
-        <button class="det-btn-del-confirm" (click)="eliminar()" type="button">
-          Sí, eliminar
-        </button>
-        <button
-          class="det-btn-cancel"
-          (click)="mostrarConfirmEliminar.set(false)"
-          type="button"
-        >
+        <button class="det-btn-del-confirm" (click)="eliminar()" type="button">Sí, eliminar</button>
+        <button class="det-btn-cancel" (click)="mostrarConfirmEliminar.set(false)" type="button">
           Cancelar
         </button>
       </div>
     }
   </div>
-
 }

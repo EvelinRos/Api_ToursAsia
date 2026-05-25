@@ -1,5 +1,4 @@
 <section class="rva-page">
-
   <!-- MÉTRICAS -->
   <div class="rva-metrics">
     <div class="rva-metric">
@@ -32,13 +31,16 @@
       />
     </div>
     <div class="rva-filters" role="group" aria-label="Filtros de estado">
-      @for (btn of [
-        { label: 'Todas',       value: '' },
-        { label: 'Pendientes',  value: 'pendiente' },
-        { label: 'Confirmadas', value: 'confirmada' },
-        { label: 'Rechazadas',  value: 'rechazada' },
-        { label: 'Canceladas',  value: 'cancelada' }
-      ]; track btn.value) {
+      @for (
+        btn of [
+          { label: 'Todas', value: '' },
+          { label: 'Pendientes', value: 'pendiente' },
+          { label: 'Confirmadas', value: 'confirmada' },
+          { label: 'Rechazadas', value: 'rechazada' },
+          { label: 'Canceladas', value: 'cancelada' },
+        ];
+        track btn.value
+      ) {
         <button
           class="rva-filter-btn"
           [class.active]="filtro() === btn.value"
@@ -78,17 +80,21 @@
             <tr
               class="rva-row"
               [routerLink]="['/admin/reservas', r.id]"
-              style="cursor: pointer;"
+              style="cursor: pointer"
               role="link"
               [attr.aria-label]="'Ver detalle reserva #' + r.id"
             >
               <td class="rva-id">#RVA-{{ r.id | number: '5.0-0' }}</td>
               <td>
-                <div class="rva-cliente-nombre">{{ r.customer_name }} {{ r.customer_lastname }}</div>
+                <div class="rva-cliente-nombre">
+                  {{ r.customer_name }} {{ r.customer_lastname }}
+                </div>
                 <div class="rva-cliente-email">{{ r.customer_email }}</div>
               </td>
               <td class="rva-tour-name">{{ r.tour.name }}</td>
-              <td>{{ r.date }}<br /><span class="rva-hora">{{ r.time_slot }}</span></td>
+              <td>
+                {{ r.date }}<br /><span class="rva-hora">{{ r.time_slot }}</span>
+              </td>
               <td>
                 {{ r.adults }}A{{ r.children > 0 ? ' · ' + r.children + 'N' : '' }}<br />
                 <span class="rva-total">{{ fmtUSD(r.total_amount) }}</span>
@@ -108,14 +114,18 @@
                       (click)="cambiarEstado(r.id, 'confirmada', $event)"
                       type="button"
                       aria-label="Confirmar reserva #{{ r.id }}"
-                    >✓</button>
+                    >
+                      <i class="ti ti-circle-check icon-base icon-check"></i>
+                    </button>
                     <button
                       class="rva-act-btn reject"
                       title="Rechazar reserva"
                       (click)="cambiarEstado(r.id, 'rechazada', $event)"
                       type="button"
                       aria-label="Rechazar reserva #{{ r.id }}"
-                    >✗</button>
+                    >
+                      <i class="ti ti-circle-x icon-base icon-x"></i>
+                    </button>
                   }
                   <button
                     class="rva-act-btn del"
@@ -123,7 +133,9 @@
                     (click)="eliminar(r.id, $event)"
                     type="button"
                     aria-label="Eliminar reserva #{{ r.id }}"
-                  >🗑</button>
+                  >
+                    <i class="ti ti-trash icon-base icon-trash"></i>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -132,5 +144,4 @@
       </table>
     </div>
   }
-
 </section>

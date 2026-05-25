@@ -160,6 +160,31 @@ body {
     font-weight: 500; 
 }
 
+/* Información del usuario en navbar */
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-user__avatar {
+  background-color: #e63946;
+  color: white;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.nav-user__email {
+  font-size: 0.9rem;
+  color: #333;
+}
+
 /* Alertas */
 .alert-error { 
     background: #fce4ec; 
@@ -262,26 +287,6 @@ body {
     border-radius: 20px; 
 }
 
-/* Hero */
-.hero { 
-    height: 500px; 
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    text-align: center; 
-}
-.hero h1 { 
-    font-size: 3rem; 
-    color: white; 
-    margin-bottom: 1rem; 
-}
-.hero p { 
-    color: rgba(255,255,255,.8); 
-    font-size: 1.2rem; 
-    margin-bottom: 2rem; 
-}
-
 /* Secciones */
 .section { 
     padding: 4rem 0; 
@@ -295,29 +300,84 @@ body {
     margin-bottom: 2rem; 
 }
 
-/* Destinos */
-.destino-card { 
-    display: block; 
-    border-radius: var(--radius-lg); 
-    overflow: hidden; 
-    position: relative; 
-    text-decoration: none; 
+/* Destinos mejorados */
+.destination-card {
+  cursor: pointer;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
 }
-.destino-img { 
-    height: 200px; 
-    background-size: cover; 
-    background-position: center; 
+
+.destination-card:hover {
+  transform: translateY(-4px);
 }
-.destino-info { 
-    padding: 1rem; 
-    background: white; 
-    border: 1px solid var(--border); 
-    border-top: none; 
+
+.destination-card__image-wrapper {
+  position: relative;
 }
-.destino-country { 
-    font-size: 11px; 
-    color: var(--gray); 
-    text-transform: uppercase; 
+
+.destination-card__image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.destination-card__country {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 0.7rem;
+  color: white;
+  letter-spacing: 1px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.destination-card__body {
+  padding: 12px 16px;
+  background: white;
+}
+
+.destination-card__name {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 0 0 6px;
+  color: #1a1a1a;
+}
+
+.destination-card__description {
+  font-size: 0.85rem;
+  color: #555;
+  margin: 0 0 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.destination-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.destination-card__tours-count {
+  font-size: 0.8rem;
+  color: #888;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.destination-card__link {
+  font-size: 0.85rem;
+  color: #e63946;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 /* Tour detail */
@@ -1843,4 +1903,162 @@ tr:last-child td {
     .adm-sidenav {
         width: 160px;
     }
+}
+
+/* ── Tabler Icons: alineación vertical inline ── */
+.ti {
+  vertical-align: -0.125em;
+  line-height: 1;
+}
+
+/* ── Auth logo con icono ── */
+.auth-logo .ti {
+  font-size: 3rem;
+  color: var(--color-brand, #185FA5);
+  display: block;
+  text-align: center;
+}
+
+/* ── Botón volver ── */
+.auth-back {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  text-decoration: none;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-back:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+/* ── Botón danger en reservas ── */
+.btn-danger {
+  background-color: #e53e3e;
+  color: #fff;
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #c53030;
+}
+
+/* ── Botones con icono: alinear icono y texto ── */
+.btn,
+.btn-primary,
+.btn-sm,
+.btn-outline-sm,
+.btn-primary-sm {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* ── Navbar brand con icono ── */
+.navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.navbar-brand .ti {
+  font-size: 1.3rem;
+}
+
+/* ── Navbar links con icono ── */
+.navbar-links a,
+.navbar-links button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* ── Empty state e iconos grandes ── */
+.empty-state .ti,
+.loading .ti,
+.error-message .ti {
+  font-size: 2.5rem;
+  display: block;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: #9ca3af;
+}
+
+/* ── Iconos en dl de reservas ── */
+.reserva-card-body dt .ti {
+  font-size: 0.9rem;
+  margin-right: 2px;
+  color: #6b7280;
+}
+
+/* ── Clases semánticas para iconos ── */
+.icon-base {
+  font-size: 1rem;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+.icon-check {
+  color: #2e7d32;
+}
+
+.icon-x {
+  color: #c62828;
+}
+
+.icon-pin {
+  color: #e63946;
+}
+
+.icon-star {
+  color: #f59e0b;
+}
+
+.icon-lock {
+  color: white;
+}
+
+.icon-hourglass {
+  color: #b45309;
+}
+
+.icon-check-lg {
+  font-size: 4rem;
+  color: #2e7d32;
+}
+
+.icon-alert {
+  color: #f59e0b;
+}
+
+.icon-star-empty {
+  color: #9ca3af;
+}
+
+.icon-trash {
+  color: #dc2626;
+}
+
+.icon-text {
+  color: #6b7280;
+}
+
+.icon-danger {
+  color: #dc2626;
+}
+
+.icon-stepper {
+  color: white;
+  margin-right: 0;
 }
