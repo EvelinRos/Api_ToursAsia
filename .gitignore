@@ -1,4 +1,4 @@
-# Python
+# ── Python ────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
@@ -23,45 +23,61 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Virtual Environment
+# ── Virtual Environment ───────────────────────────────
 venv/
 ENV/
 env/
 .venv
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-.DS_Store
-*.sublime-project
-*.sublime-workspace
-
-# Django
+# ── Django ────────────────────────────────────────────
 *.log
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
 /media/
 /staticfiles/
-/static/
 
-# Environment variables
+# ── Variables de entorno ──────────────────────────────
 .env
 .env.local
 
-# OS
+# ── Angular / Node ────────────────────────────────────
+tours-asia-frontend/node_modules/
+tours-asia-frontend/dist/
+tours-asia-frontend/.angular/
+tours-asia-frontend/out-tsc/
+tours-asia-frontend/bazel-out/
+tours-asia-frontend/npm-debug.log
+tours-asia-frontend/yarn-error.log
+tours-asia-frontend/coverage/
+tours-asia-frontend/connect.lock
+tours-asia-frontend/libpeerconnection.log
+tours-asia-frontend/testem.log
+tours-asia-frontend/.sass-cache/
+
+# ── IDE ───────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.history/
+
+# ── OS ────────────────────────────────────────────────
 .DS_Store
+.AppleDouble
+.LSOverride
 Thumbs.db
 
-# Testing
+# ── Testing ───────────────────────────────────────────
 .coverage
 htmlcov/
 .pytest_cache/
 .tox/
-
-# Mac
-.AppleDouble
-.LSOverride
+tours-asia-frontend/__screenshots__/
