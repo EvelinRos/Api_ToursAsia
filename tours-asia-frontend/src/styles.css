@@ -1,7 +1,3 @@
-/* ================================
-   GLOBAL (solo lo verdaderamente global)
-   ================================ */
-
 /* Reset */
 *, *::before, *::after {
   box-sizing: border-box;
