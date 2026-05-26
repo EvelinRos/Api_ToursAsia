@@ -1,68 +1,69 @@
-<section class="adm-section">
-  <div class="adm-section-header">
-    <h2 class="adm-section-title">Tours</h2>
-    <button class="adm-btn-primary" (click)="abrirCrear()" type="button">+ Nuevo tour</button>
+<section>
+  <!-- HEADER -->
+  <div class="tou-header">
+    <h2 class="tou-title">Tours</h2>
+    <button class="tou-btn-primary" (click)="abrirCrear()" type="button">+ Nuevo tour</button>
   </div>
 
   <!-- FORMULARIO CREAR / EDITAR -->
   @if (formulario()) {
-    <div class="adm-form-card">
-      <h3 class="adm-form-title">
+    <div class="tou-form-card">
+      <h3 class="tou-form-title">
         {{ modoEdicion() ? 'Editar tour: ' + modoEdicion()!.name : 'Nuevo tour' }}
       </h3>
 
-      <div class="adm-form-grid">
-        <div class="adm-field">
+      <div class="tou-form-grid">
+        <div class="tou-field">
           <label for="tour-name">Nombre *</label>
-          <input id="tour-name" type="text" [(ngModel)]="form.name" class="adm-input" required />
+          <input id="tour-name" type="text" [(ngModel)]="form.name" class="tou-input" required />
         </div>
-        <div class="adm-field">
+        <div class="tou-field">
           <label for="tour-destino">Destino *</label>
-          <select id="tour-destino" [(ngModel)]="form.destino" class="adm-input">
+          <select id="tour-destino" [(ngModel)]="form.destino" class="tou-input">
             <option [value]="0" disabled>Selecciona un destino</option>
             @for (d of destinos(); track d.id) {
               <option [value]="d.id">{{ d.name }}, {{ d.country }}</option>
             }
           </select>
         </div>
-        <div class="adm-field">
+        <div class="tou-field">
           <label for="tour-precio">Precio (USD) *</label>
           <input
             id="tour-precio"
             type="number"
             [(ngModel)]="form.price"
             min="1"
-            class="adm-input"
+            class="tou-input"
           />
         </div>
-        <div class="adm-field">
+        <div class="tou-field">
           <label for="tour-duracion">Duración (días) *</label>
           <input
             id="tour-duracion"
             type="number"
             [(ngModel)]="form.duration"
             min="1"
-            class="adm-input"
+            class="tou-input"
           />
         </div>
-        <div class="adm-field adm-field-full">
+        <div class="tou-field tou-field-full">
           <label for="tour-desc">Descripción</label>
           <textarea
             id="tour-desc"
             [(ngModel)]="form.description"
-            class="adm-input"
+            class="tou-input"
             rows="3"
           ></textarea>
         </div>
-        <div class="adm-field adm-field-full">
+        <div class="tou-field tou-field-full">
           <label for="tour-photo">URL de foto</label>
-          <input id="tour-photo" type="url" [(ngModel)]="form.photo_url" class="adm-input" />
+          <input id="tour-photo" type="url" [(ngModel)]="form.photo_url" class="tou-input" />
         </div>
-        <div class="adm-field adm-field-full">
+        <div class="tou-field tou-field-full">
           <label for="tour-meeting">Punto de encuentro</label>
-          <input id="tour-meeting" type="text" [(ngModel)]="form.meeting_point" class="adm-input" />
+          <input id="tour-meeting" type="text" [(ngModel)]="form.meeting_point" class="tou-input" />
         </div>
-        <div class="adm-field">
+        <div class="tou-field">
           <label for="tour-rating">Rating</label>
           <input
             id="tour-rating"
@@ -71,10 +72,10 @@
             min="1"
             max="5"
             step="0.1"
-            class="adm-input"
+            class="tou-input"
           />
         </div>
-        <div class="adm-field adm-field-checkbox">
+        <div class="tou-field tou-field-checkbox">
           <label>
             <input type="checkbox" [(ngModel)]="form.is_popular" />
             Marcar como popular
@@ -82,23 +83,23 @@
         </div>
       </div>
 
-      <div class="adm-form-actions">
-        <button class="adm-btn-primary" (click)="guardar()" [disabled]="cargando()" type="button">
+      <div class="tou-form-actions">
+        <button class="tou-btn-primary" (click)="guardar()" [disabled]="cargando()" type="button">
           {{ cargando() ? 'Guardando…' : modoEdicion() ? 'Actualizar' : 'Crear tour' }}
         </button>
-        <button class="adm-btn-secondary" (click)="cancelar()" type="button">Cancelar</button>
+        <button class="tou-btn-secondary" (click)="cancelar()" type="button">Cancelar</button>
       </div>
     </div>
   }
 
   <!-- TABLA -->
   @if (cargando() && !formulario()) {
-    <p class="adm-loading">Cargando tours…</p>
+    <p class="tou-loading">Cargando tours…</p>
   } @else if (tours().length === 0) {
-    <div class="adm-empty"><p>No hay tours registrados. Crea el primero.</p></div>
+    <div class="tou-empty"><p>No hay tours registrados. Crea el primero.</p></div>
   } @else {
-    <div class="adm-table-wrap">
-      <table class="adm-table">
+    <div class="tou-table-wrap">
+      <table class="tou-table">
         <thead>
           <tr>
             <th scope="col">Tour</th>
@@ -112,13 +113,13 @@
         <tbody>
           @for (tour of tours(); track tour.id) {
             <tr>
-              <td class="adm-td-name">{{ tour.name }}</td>
+              <td class="tou-td-name">{{ tour.name }}</td>
               <td>{{ tour.destino.name }}</td>
-              <td>USD {{ tour.price }}</td>
+              <td class="tou-td-price">USD {{ tour.price }}</td>
               <td>{{ tour.duration }} día{{ tour.duration !== 1 ? 's' : '' }}</td>
               <td>
                 <button
-                  class="adm-toggle"
+                  class="tou-toggle"
                   [class.on]="tour.is_popular"
                   (click)="togglePopular(tour)"
                   type="button"
@@ -132,11 +133,11 @@
                 </button>
               </td>
               <td>
-                <div class="adm-row-actions">
-                  <button class="adm-act-btn edit" (click)="abrirEditar(tour)" type="button">
+                <div class="tou-row-actions">
+                  <button class="tou-act-btn edit" (click)="abrirEditar(tour)" type="button">
                     Editar
                   </button>
-                  <button class="adm-act-btn del" (click)="eliminar(tour.id)" type="button">
+                  <button class="tou-act-btn del" (click)="eliminar(tour.id)" type="button">
                     Eliminar
                   </button>
                 </div>

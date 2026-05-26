@@ -73,7 +73,11 @@
         </div>
         <div class="modal-body">
           <div class="modal-hero">
-            <img class="modal-photo-img" src="{{ selectedReserva()!.tour.photo_url }}" alt="Foto tour" />
+            <img
+              class="modal-photo-img"
+              [src]="selectedReserva()!.tour.photo_url"
+              alt="Foto tour"
+            />
           </div>
           <div class="modal-details">
             <section class="section">
@@ -86,7 +90,10 @@
                 <dt>Hora:</dt>
                 <dd>{{ selectedReserva()!.time_slot }}</dd>
                 <dt>Personas:</dt>
-                <dd>{{ selectedReserva()!.adults }} adulto(s), {{ selectedReserva()!.children }} niño(s)</dd>
+                <dd>
+                  {{ selectedReserva()!.adults }} adulto(s),
+                  {{ selectedReserva()!.children }} niño(s)
+                </dd>
                 <dt>Idioma:</dt>
                 <dd>{{ selectedReserva()!.language }}</dd>
                 <dt>Punto de encuentro:</dt>
@@ -102,7 +109,9 @@
               <h3>Información del cliente</h3>
               <dl>
                 <dt>Nombre:</dt>
-                <dd>{{ selectedReserva()!.customer_name }} {{ selectedReserva()!.customer_lastname }}</dd>
+                <dd>
+                  {{ selectedReserva()!.customer_name }} {{ selectedReserva()!.customer_lastname }}
+                </dd>
                 <dt>Email:</dt>
                 <dd>{{ selectedReserva()!.customer_email }}</dd>
                 <dt>Teléfono:</dt>

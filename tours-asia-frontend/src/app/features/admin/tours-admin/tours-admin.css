@@ -1,1 +1,259 @@
-/* Styles are defined in global styles.css */
+/* Header */
+.tou-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.tou-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111;
+}
+
+.tou-btn-primary {
+    background: #e8500a;
+    color: #fff;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.tou-btn-primary:hover {
+    background: #c94200;
+}
+
+.tou-btn-primary:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.tou-btn-secondary {
+    background: #fff;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.tou-btn-secondary:hover {
+    background: #f5f5f5;
+}
+
+/* Formulario */
+.tou-form-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .04);
+}
+
+.tou-form-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.tou-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.tou-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.tou-field label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #444;
+}
+
+.tou-field-full {
+    grid-column: 1 / -1;
+}
+
+.tou-field-checkbox {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.tou-input {
+    padding: 9px 11px;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    font-size: 13px;
+    font-family: inherit;
+    background: #fff;
+    transition: border-color .15s, box-shadow .15s;
+}
+
+.tou-input:focus {
+    outline: none;
+    border-color: #e8500a;
+    box-shadow: 0 0 0 3px rgba(232, 80, 10, .1);
+}
+
+.tou-form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid #f0f0f0;
+}
+
+/* Tabla */
+.tou-table-wrap {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .04);
+}
+
+.tou-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tou-table thead {
+    background: #fafafa;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.tou-table th {
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    padding: 11px 16px;
+    text-align: left;
+}
+
+.tou-table td {
+    font-size: 13px;
+    color: #333;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f3f3f3;
+    vertical-align: middle;
+}
+
+.tou-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.tou-table tbody tr:hover td {
+    background: #fffaf7;
+}
+
+.tou-td-name {
+    font-weight: 500;
+    color: #111;
+    max-width: 240px;
+}
+
+.tou-td-price {
+    color: #e8500a;
+    font-weight: 500;
+}
+
+/* Toggle popular */
+.tou-toggle {
+    border: 1px solid #e0e0e0;
+    background: #f5f5f5;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .15s, border-color .15s;
+    white-space: nowrap;
+}
+
+.tou-toggle.on {
+    background: #fff3e0;
+    border-color: #e8500a;
+    color: #9a3500;
+    font-weight: 600;
+}
+
+/* Acciones*/
+.tou-row-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.tou-act-btn {
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .15s;
+}
+
+.tou-act-btn.edit {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.tou-act-btn.edit:hover {
+    background: #bbdefb;
+}
+
+.tou-act-btn.del {
+    background: #fce4ec;
+    color: #c0392b;
+}
+
+.tou-act-btn.del:hover {
+    background: #f8bbd0;
+}
+
+/* Estados vacío / cargando */
+.tou-empty {
+    text-align: center;
+    padding: 48px 20px;
+    color: #bbb;
+    font-size: 14px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+}
+
+.tou-loading {
+    padding: 20px;
+    color: #999;
+    font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .tou-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tou-field-full {
+        grid-column: 1;
+    }
+}

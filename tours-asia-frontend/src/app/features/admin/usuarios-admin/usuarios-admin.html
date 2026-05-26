@@ -1,16 +1,15 @@
 <section class="adm-section">
-
   <div class="adm-section-header">
     <h2 class="adm-section-title">Usuarios registrados</h2>
   </div>
 
-  <div class="rva-search rva-search--spaced">
+  <div class="usr-search">
     <input
       type="search"
       placeholder="Buscar por nombre o email…"
       [(ngModel)]="busqueda"
       (input)="buscar()"
-      class="rva-input"
+      class="usr-input"
       aria-label="Buscar usuarios"
     />
   </div>
@@ -42,12 +41,18 @@
               <td>{{ u.phone || '—' }}</td>
               <td>{{ u.reservas_count }}</td>
               <td>
-                <span class="rva-badge" [class]="u.is_staff ? 'rva-st-confirmada' : 'rva-st-pendiente'">
+                <span
+                  class="usr-badge"
+                  [class]="u.is_staff ? 'usr-badge-admin' : 'usr-badge-usuario'"
+                >
                   {{ u.is_staff ? 'Admin' : 'Usuario' }}
                 </span>
               </td>
               <td>
-                <span class="rva-badge" [class]="u.is_active ? 'rva-st-confirmada' : 'rva-st-rechazada'">
+                <span
+                  class="usr-badge"
+                  [class]="u.is_active ? 'usr-badge-activo' : 'usr-badge-inactivo'"
+                >
                   {{ u.is_active ? 'Activo' : 'Inactivo' }}
                 </span>
               </td>
@@ -57,5 +62,4 @@
       </table>
     </div>
   }
-
 </section>

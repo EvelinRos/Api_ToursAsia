@@ -1,1 +1,82 @@
-/* Styles are defined in global styles.css */
+/* usuarios-admin.css */
+
+/* Buscador */
+.usr-search {
+  margin-bottom: 16px;
+}
+
+.usr-input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.usr-input:focus {
+  outline: none;
+  border-color: #e8500a;
+  box-shadow: 0 0 0 2px rgba(232, 80, 10, 0.12);
+}
+
+/* Tabla */
+.adm-table thead {
+  background: #f5f5f5;
+}
+
+.adm-table th {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.adm-table td {
+  font-size: 13px;
+  color: #333;
+  padding: 11px 14px;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.adm-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.adm-table tbody tr:hover td {
+  background: #fffaf7;
+}
+
+/* Badges de estado propios */
+.usr-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.usr-badge-admin {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.usr-badge-usuario {
+  background: #fff3e0;
+  color: #9a3500;
+}
+
+.usr-badge-activo {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.usr-badge-inactivo {
+  background: #fce4ec;
+  color: #c0392b;
+}
