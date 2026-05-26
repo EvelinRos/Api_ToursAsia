@@ -8,6 +8,7 @@ import { ReservasService } from '../../../core/services/reservas.service';
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './admin-layout.html',
+  styleUrl: './admin-layout.css',
 })
 export class AdminLayoutComponent implements OnInit {
   pendientes = signal(0);

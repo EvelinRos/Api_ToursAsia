@@ -1,0 +1,303 @@
+.det-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.det-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.det-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.det-fecha-creacion {
+  font-size: 12px;
+  color: #888;
+}
+
+.det-btn-volver {
+  font-size: 13px;
+  color: #555;
+  text-decoration: none;
+  padding: 7px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.det-btn-volver:hover {
+  background: #f5f5f5;
+}
+
+.det-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.det-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.det-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: #333;
+}
+
+.det-dl {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.det-field {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: 13px;
+  align-items: start;
+}
+
+.det-field:last-child {
+  border-bottom: none;
+}
+
+.det-field dt {
+  color: #888;
+  font-weight: 400;
+}
+
+.det-field dd {
+  font-weight: 500;
+  margin: 0;
+  word-break: break-word;
+}
+
+.det-field dd a {
+  color: #1a73e8;
+  text-decoration: none;
+}
+
+.det-total dt,
+.det-total dd {
+  font-weight: 700;
+  font-size: 15px;
+  color: #e8500a;
+}
+
+.det-notes p {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.det-action-card {
+  border-color: #ffe0b2;
+}
+
+.det-action-hint {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.det-nota-input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  resize: vertical;
+  margin-bottom: 14px;
+}
+
+.det-nota-input:focus {
+  outline: none;
+  border-color: #e8500a;
+}
+
+.det-action-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.det-btn-confirm {
+  background: #2e7d32;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.det-btn-confirm:hover {
+  background: #1b5e20;
+}
+
+.det-btn-confirm:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.det-btn-reject {
+  background: #fff;
+  color: #c0392b;
+  border: 1px solid #e57373;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.det-btn-reject:hover {
+  background: #fce4ec;
+}
+
+.det-btn-reject:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.det-historial {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.det-hist-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 10px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.det-hist-item:last-child {
+  border-bottom: none;
+}
+
+.det-hist-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.det-hist-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.det-hist-texto {
+  font-size: 13px;
+  color: #333;
+}
+
+.det-hist-nota {
+  font-size: 12px;
+  color: #888;
+  font-style: italic;
+}
+
+.det-hist-time {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.det-empty-hist {
+  font-size: 13px;
+  color: #aaa;
+  padding: 8px 0;
+}
+
+.det-danger-zone {
+  border-color: #fecaca;
+}
+
+.det-danger-title {
+  color: #c0392b;
+}
+
+.det-btn-del {
+  background: none;
+  color: #c0392b;
+  border: 1px solid #e57373;
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.det-btn-del:hover {
+  background: #fce4ec;
+}
+
+.det-confirm-msg {
+  font-size: 13px;
+  color: #c0392b;
+  margin-bottom: 12px;
+}
+
+.det-btn-del-confirm {
+  background: #c0392b;
+  color: #fff;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.det-btn-del-confirm:hover {
+  background: #922b21;
+}
+
+.det-btn-cancel {
+  background: #fff;
+  color: #555;
+  border: 1px solid #ddd;
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+@media (max-width: 768px) {
+  .det-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-registro',
   imports: [FormsModule, RouterLink, CommonModule],
   templateUrl: './registro.html',
+  styleUrls: ['../auth.css'],
 })
 export class RegistroComponent {
   form = {
