@@ -6,8 +6,8 @@ from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from destinos.views import DestinoViewSet, TourViewSet, ReservaViewSet, UsuarioViewSet
-from usuarios.views import CustomTokenView, RegistroAPIView
+from destinos.views import DestinoViewSet, TourViewSet, ReservaViewSet
+from usuarios.views import CustomTokenView, RegistroAPIView, UsuarioViewSet
 
 router = DefaultRouter()
 router.register(r'destinos',  DestinoViewSet,  basename='destino')
