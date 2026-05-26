@@ -6,7 +6,7 @@
     <h1 class="auth-title">Crear cuenta</h1>
 
     @if (error()) {
-      <div class="alert-error">{{ error() }}</div>
+    <div class="alert-error">{{ error() }}</div>
     }
 
     <div class="form-row">
@@ -28,7 +28,7 @@
     <div class="form-row">
       <div class="form-group">
         <label>Teléfono</label>
-        <input type="text" [(ngModel)]="form.phone" class="input" placeholder="+57 300..." />
+        <input type="number" [(ngModel)]="form.phone" class="input" placeholder="+57 300..." />
       </div>
       <div class="form-group">
         <label>País</label>
@@ -47,9 +47,9 @@
 
     <button class="btn-primary" (click)="submit()" [disabled]="cargando()">
       @if (cargando()) {
-        <i class="ti ti-loader-2" aria-hidden="true"></i> Registrando...
+      <i class="ti ti-loader-2" aria-hidden="true"></i> Registrando...
       } @else {
-        <i class="ti ti-user-plus" aria-hidden="true"></i> Crear cuenta
+      <i class="ti ti-user-plus" aria-hidden="true"></i> Crear cuenta
       }
     </button>
 

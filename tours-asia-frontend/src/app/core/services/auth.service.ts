@@ -34,7 +34,17 @@ export class AuthService {
     email: string; password1: string; password2: string;
     phone: string; country: string;
   }) {
-    return this.http.post(`${this.API}/registro/`, datos);
+    const payload = {
+      email: datos.email,
+      username: datos.email,
+      first_name: datos.first_name,
+      last_name: datos.last_name,
+      password: datos.password1,
+      password_confirm: datos.password2,
+      phone: datos.phone,
+      country: datos.country,
+    };
+    return this.http.post(`${this.API}/registro/`, payload);
   }
 
   /**
