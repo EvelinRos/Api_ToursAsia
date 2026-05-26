@@ -11,6 +11,7 @@ import { Reserva } from '../../../core/models/models';
   standalone: true,
   imports: [RouterLink, CommonModule, FormsModule],
   templateUrl: './reserva-detalle.html',
+  styleUrl: './reserva-detalle.css',
 })
 export class ReservaDetalleComponent implements OnInit {
   reserva  = signal<Reserva | null>(null);

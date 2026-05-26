@@ -1,0 +1,124 @@
+.tour-detail-hero { 
+  height: 400px; 
+  background-size: cover; 
+  background-position: center; 
+}
+
+.tour-detail-overlay { 
+  height: 100%; 
+  background: rgba(0,0,0,.5); 
+  display: flex; 
+  align-items: flex-end; 
+  padding-bottom: 2rem; 
+}
+
+.tour-detail-overlay h1 { 
+  color: white; 
+  font-size: 2rem; 
+}
+
+.tour-hero-destino { 
+  color: rgba(255,255,255,.8); 
+  font-size: 14px; 
+  display: block; 
+  margin-bottom: .5rem; 
+}
+
+.tour-hero-meta { 
+  display: flex; 
+  gap: 1rem; 
+  color: rgba(255,255,255,.8); 
+  font-size: 14px; 
+  margin-top: .5rem; 
+}
+
+.tour-detail-container {
+  padding: 2rem 0;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 2rem;
+}
+
+.booking-times {
+  margin-top: 1rem;
+}
+
+.booking-cta {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.detail-section { 
+  margin-bottom: 2rem; 
+}
+
+.detail-section h2 { 
+  font-size: 18px; 
+  font-weight: 500;
+  margin-bottom: 1rem; 
+  border-bottom: 1px solid var(--border); 
+  padding-bottom: .5rem; 
+}
+
+.includes-list { 
+  list-style: none; 
+  padding: 0;
+  margin: 0;
+}
+
+.include-item { 
+  padding: .4rem 0; 
+  font-size: 14px; 
+}
+
+.booking-sidebar { 
+  position: sticky; 
+  top: 80px; 
+}
+
+.booking-card { 
+  background: white;
+  border: 1px solid var(--border); 
+  border-radius: var(--radius-lg); 
+  padding: 1.5rem; 
+}
+
+.booking-price { 
+  font-size: 24px; 
+  font-weight: 600; 
+  color: var(--primary); 
+}
+
+.booking-price span { 
+  font-size: 14px; 
+  color: var(--gray); 
+  font-weight: 400;
+}
+
+.booking-rating { 
+  font-size: 13px; 
+  color: var(--gray); 
+  margin-top: .3rem; 
+}
+
+.timeslots { 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: .5rem; 
+  margin-top: .5rem; 
+}
+
+.timeslot { 
+  background: var(--gray-light); 
+  padding: 4px 12px; 
+  border-radius: 20px; 
+  font-size: 13px; 
+}
+
+@media (max-width: 768px) {
+  .tour-detail-container {
+    grid-template-columns: 1fr;
+  }
+}
+

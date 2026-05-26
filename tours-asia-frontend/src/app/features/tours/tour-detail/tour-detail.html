@@ -4,7 +4,7 @@
   <div class="tour-detail-hero" [style.background-image]="'url(' + t.photo_url + ')'">
     <div class="tour-detail-overlay">
       <div class="container">
-        <span class="tour-destino">{{ t.destino.name }}, {{ t.destino.country }}</span>
+        <span class="tour-hero-destino">{{ t.destino.name }}, {{ t.destino.country }}</span>
         <h1>{{ t.name }}</h1>
         <div class="tour-hero-meta">
           <span
@@ -20,8 +20,7 @@
   </div>
 
   <div
-    class="container"
-    style="padding: 2rem 0; display: grid; grid-template-columns: 1fr 320px; gap: 2rem"
+    class="container tour-detail-container"
   >
     <div>
       <div class="detail-section">
@@ -70,7 +69,7 @@
           {{ t.reviews_count }} opiniones
         </div>
 
-        <div class="form-group" style="margin-top: 1rem">
+        <div class="form-group booking-times">
           <label>Horarios disponibles</label>
           <div class="timeslots">
             @for (slot of t.time_slots; track slot) {
@@ -82,16 +81,14 @@
         @if (auth.isLoggedIn()) {
           <a
             [routerLink]="['/reservar', t.id]"
-            class="btn-primary"
-            style="display: block; text-align: center; margin-top: 1rem"
+            class="btn-primary booking-cta"
           >
             Reservar ahora
           </a>
         } @else {
           <a
             routerLink="/login"
-            class="btn-primary"
-            style="display: block; text-align: center; margin-top: 1rem"
+            class="btn-primary booking-cta"
           >
             Inicia sesión para reservar
           </a>

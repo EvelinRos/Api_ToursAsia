@@ -14,6 +14,7 @@ import { FooterComponent } from '../../shared/components/footer/footer';
   standalone: true,
   imports: [FormsModule, CommonModule, NavbarComponent, FooterComponent, RouterLink],
   templateUrl: './reserva.html',
+  styleUrl: './reserva.css',
 })
 export class ReservaComponent implements OnInit {
   paso = signal(1);

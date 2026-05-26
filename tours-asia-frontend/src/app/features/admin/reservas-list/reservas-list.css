@@ -1,1 +1,289 @@
-/* Styles are defined in global styles.css */
+.rva-page {
+  max-width: 1100px;
+}
+
+.rva-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.rva-metric {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.rva-metric-label {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+.rva-metric-val {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111;
+}
+
+.rva-metric-val.amber {
+  color: #b45309;
+}
+
+.rva-metric-val.green {
+  color: #2e7d32;
+}
+
+.rva-metric-val.red {
+  color: #c0392b;
+}
+
+.rva-controls {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 20px;
+}
+
+.rva-search {
+  margin-bottom: 12px;
+}
+
+.rva-search--spaced {
+  margin-bottom: 16px;
+}
+
+.rva-input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.rva-input:focus {
+  outline: none;
+  border-color: #e8500a;
+}
+
+.rva-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rva-filter-btn {
+  padding: 6px 14px;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #555;
+  font-family: inherit;
+}
+
+.rva-filter-btn:hover {
+  border-color: #e8500a;
+  color: #e8500a;
+}
+
+.rva-filter-btn.active {
+  background: #fff3e0;
+  border-color: #e8500a;
+  color: #9a3500;
+  font-weight: 600;
+}
+
+.rva-table-wrap {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow-x: auto;
+}
+
+.rva-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 780px;
+}
+
+.rva-table thead {
+  background: #f5f5f5;
+}
+
+.rva-table th {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.rva-table td {
+  font-size: 13px;
+  color: #333;
+  padding: 11px 14px;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.rva-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.rva-row:hover td {
+  background: #fffaf7;
+}
+
+.rva-id {
+  font-weight: 600;
+  color: #e8500a;
+}
+
+.rva-cliente-nombre {
+  font-weight: 500;
+}
+
+.rva-cliente-email {
+  font-size: 12px;
+  color: #999;
+}
+
+.rva-tour-name {
+  font-size: 12px;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rva-hora {
+  font-size: 12px;
+  color: #888;
+}
+
+.rva-total {
+  font-weight: 500;
+  color: #e8500a;
+}
+
+.rva-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.rva-act-btn {
+  border: none;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1;
+}
+
+.rva-act-btn.confirm {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.rva-act-btn.confirm:hover {
+  background: #c8e6c9;
+}
+
+.rva-act-btn.reject {
+  background: #fce4ec;
+  color: #c0392b;
+}
+
+.rva-act-btn.reject:hover {
+  background: #f8bbd0;
+}
+
+.rva-act-btn.del {
+  background: none;
+  color: #c0392b;
+}
+
+.rva-act-btn.del:hover {
+  background: #fce4ec;
+}
+
+.rva-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #aaa;
+  font-size: 14px;
+}
+
+.rva-loading {
+  padding: 20px;
+  color: #888;
+  font-size: 14px;
+}
+
+/* Badges de estado (compartidos en toda la app admin) */
+.rva-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.rva-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.rva-st-pendiente {
+  background: #fff3e0;
+  color: #9a3500;
+}
+
+.rva-dot-pendiente {
+  background: #e8500a;
+}
+
+.rva-st-confirmada {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.rva-dot-confirmada {
+  background: #2e7d32;
+}
+
+.rva-st-rechazada {
+  background: #fce4ec;
+  color: #c0392b;
+}
+
+.rva-dot-rechazada {
+  background: #c0392b;
+}
+
+.rva-st-cancelada {
+  background: #f0f0f0;
+  color: #555;
+}
+
+.rva-dot-cancelada {
+  background: #888;
+}
+
+@media (max-width: 768px) {
+  .rva-metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+}

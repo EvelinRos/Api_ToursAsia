@@ -89,15 +89,15 @@
             </div>
 
             @if (errorFecha()) {
-              <div class="error-msg" style="color: red; margin-bottom: 10px">
+              <div class="reserva-error-msg">
                 {{ errorFecha() }}
               </div>
             }
             @if (errorHora()) {
-              <div class="error-msg" style="color: red; margin-bottom: 10px">{{ errorHora() }}</div>
+              <div class="reserva-error-msg">{{ errorHora() }}</div>
             }
             @if (errorPersonas()) {
-              <div class="error-msg" style="color: red; margin-bottom: 10px">
+              <div class="reserva-error-msg">
                 {{ errorPersonas() }}
               </div>
             }
@@ -162,7 +162,7 @@
             </div>
 
             @if (errorTerminos()) {
-              <div class="error-msg" style="color: red; margin-bottom: 10px">
+              <div class="reserva-error-msg">
                 {{ errorTerminos() }}
               </div>
             }
@@ -209,23 +209,20 @@
               <span>Email</span><strong>{{ datosPersonales.email }}</strong>
             </div>
             <div class="notice-bar">
-              <i
-                class="ti ti-alert-triangle"
-                style="color: #f59e0b; font-size: 1rem; vertical-align: middle; margin-right: 6px"
-              ></i
-              >Solo las personas incluidas en tu reserva podrán asistir al tour ({{
+              <i class="ti ti-alert-triangle notice-icon" aria-hidden="true"></i>
+              Solo las personas incluidas en tu reserva podrán asistir al tour ({{
                 totalPersonas
               }}
               persona{{ totalPersonas > 1 ? 's' : '' }})
             </div>
 
             @if (errorTerminos()) {
-              <div class="error-msg" style="color: red; margin-bottom: 10px">
+              <div class="reserva-error-msg">
                 {{ errorTerminos() }}
               </div>
             }
 
-            <div class="bottom-actions" style="margin-top: 1rem">
+            <div class="bottom-actions spaced">
               <button class="btn-secondary" (click)="paso.set(2)">← Volver</button>
               <button class="btn-primary" (click)="confirmar()" [disabled]="cargando()">
                 {{ cargando() ? 'Procesando...' : 'Confirmar reserva' }}
@@ -258,7 +255,7 @@
       <div class="checkout-sidebar">
         <div class="card">
           <h3 class="card-title">Resumen</h3>
-          <p style="font-weight: 500">{{ t.name }}</p>
+          <p class="reserva-summary-title">{{ t.name }}</p>
           <div class="price-row">
             <span>Precio base</span><span>USD {{ t.price }}</span>
           </div>

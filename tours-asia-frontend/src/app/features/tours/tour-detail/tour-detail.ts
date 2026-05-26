@@ -12,6 +12,7 @@ import { AuthService } from '../../../core/services/auth.service';
   standalone: true,
   imports: [RouterLink, CommonModule, NavbarComponent, FooterComponent],
   templateUrl: './tour-detail.html',
+  styleUrl: './tour-detail.css',
 })
 export class TourDetailComponent implements OnInit {
   tour = signal<Tour | null>(null);

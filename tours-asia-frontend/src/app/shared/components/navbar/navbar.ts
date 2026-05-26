@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-navbar',
   imports: [RouterLink, RouterLinkActive, CommonModule],
   templateUrl: './navbar.html',
+  styleUrl: './navbar.css',
 })
 export class NavbarComponent {
   constructor(public auth: AuthService) {}

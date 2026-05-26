@@ -1,6 +1,6 @@
 <app-navbar />
 
-<div class="container" style="padding-top: 2rem">
+<div class="container tour-list-container">
   <h1 class="page-title">Todos los tours</h1>
 
   <div class="filter-bar">
@@ -18,7 +18,7 @@
     }
   </div>
 
-  <div class="grid-3" style="margin-top: 2rem">
+  <div class="grid-3 tour-grid">
     @for (tour of tours(); track tour.id) {
       <div class="tour-card">
         <div class="tour-img" [style.background-image]="'url(' + tour.photo_url + ')'">
@@ -27,7 +27,7 @@
           }
         </div>
         <div class="tour-body">
-          <span class="tour-destino">{{ tour.destino.name }}, {{ tour.destino.country }}</span>
+          <span class="tour-card-destino">{{ tour.destino.name }}, {{ tour.destino.country }}</span>
           <h3 class="tour-name">{{ tour.name }}</h3>
           <div class="tour-meta">
             <span
@@ -45,7 +45,7 @@
         </div>
       </div>
     } @empty {
-      <p style="color: var(--gray); grid-column: 1/-1">No hay tours disponibles.</p>
+      <p class="tour-empty">No hay tours disponibles.</p>
     }
   </div>
 </div>

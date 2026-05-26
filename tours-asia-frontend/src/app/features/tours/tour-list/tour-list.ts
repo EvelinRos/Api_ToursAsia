@@ -12,6 +12,7 @@ import { FooterComponent } from '../../../shared/components/footer/footer';
   standalone: true,
   imports: [RouterLink, CommonModule, FormsModule, NavbarComponent, FooterComponent],
   templateUrl: './tour-list.html',
+  styleUrl: './tour-list.css',
 })
 export class TourListComponent implements OnInit {
   tours = signal<Tour[]>([]);

@@ -10,6 +10,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   standalone: true,
   imports: [FormsModule, RouterLink, CommonModule],
   templateUrl: './login.html',
+  styleUrls: ['../auth.css'],
 })
 export class LoginComponent {
   private readonly auth       = inject(AuthService);

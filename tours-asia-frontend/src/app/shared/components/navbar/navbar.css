@@ -1,0 +1,80 @@
+.navbar { 
+  background: white;
+  border-bottom: 1px solid var(--border); 
+  position: sticky; 
+  top: 0; 
+  z-index: 100; 
+}
+
+.navbar-inner { 
+  max-width: 1100px; 
+  margin: 0 auto; 
+  padding: 0 1.5rem; 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  height: 64px; 
+}
+
+.navbar-brand { 
+  font-size: 18px; 
+  font-weight: 600; 
+  text-decoration: none; 
+  color: #1a1a1a; 
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.navbar-brand .ti {
+  font-size: 1.3rem;
+}
+
+.navbar-links { 
+  display: flex; 
+  align-items: center; 
+  gap: 1.5rem; 
+}
+
+.navbar-links a { 
+  text-decoration: none; 
+  color: var(--gray); 
+  font-size: 14px; 
+}
+
+.navbar-links a.active { 
+  color: var(--primary); 
+  font-weight: 500; 
+}
+
+.navbar-links a,
+.navbar-links button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-user__avatar {
+  background-color: var(--primary);
+  color: white;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.nav-user__email {
+  font-size: 0.9rem;
+  color: #333;
+}
+
