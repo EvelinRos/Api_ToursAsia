@@ -1,0 +1,34 @@
+# Git
+.git
+.gitignore
+
+# Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+ENV/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Local databases
+db.sqlite3
+db.sqlite3-journal
+
+# Environment secrets
+.env
+
+# Frontend folders (handled in their own build context)
+tours-asia-frontend/node_modules/
+tours-asia-frontend/.angular/
+tours-asia-frontend/dist/
+
+# IDE/OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

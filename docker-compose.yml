@@ -1,0 +1,67 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: tours-asia-db
+    restart: always
+    environment:
+      POSTGRES_DB: tours_asia
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tours-asia-backend
+    restart: always
+    # Execute the custom Python entrypoint
+    command: python entrypoint.py python manage.py runserver 0.0.0.0:8000
+    # Best Practice: Mount only the necessary source code folders and files,
+    # ensuring that .env, .venv, local sqlite db, and git config are NEVER mounted in the container.
+    volumes:
+      - ./destinos:/app/destinos
+      - ./usuarios:/app/usuarios
+      - ./tours_asia:/app/tours_asia
+      - ./manage.py:/app/manage.py
+      - ./seed_data.py:/app/seed_data.py
+      - ./entrypoint.py:/app/entrypoint.py
+    ports:
+      - "8000:8000"
+    # Best Practice: Use env_file to load secrets from .env on the host into the container's environment,
+    # without copying or mounting the .env file itself into the container.
+    env_file:
+      - .env
+    environment:
+      - ALLOWED_HOSTS=localhost,127.0.0.1,backend
+      - DB_ENGINE=django.db.backends.postgresql
+      - DB_NAME=tours_asia
+      - DB_USER=postgres
+      - DB_PASSWORD=postgrespassword
+      - DB_HOST=db
+      - DB_PORT=5432
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./tours-asia-frontend
+      dockerfile: Dockerfile
+    container_name: tours-asia-frontend
+    restart: always
+    # Map the frontend files for live reloading, keeping node_modules isolated in a Docker volume
+    volumes:
+      - ./tours-asia-frontend:/app
+      - /app/node_modules
+    ports:
+      - "4200:4200"
+    environment:
+      - NG_CLI_ANALYTICS=false
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
