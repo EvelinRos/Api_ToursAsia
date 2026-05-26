@@ -5,13 +5,14 @@ from django.http import JsonResponse
 from django.views import View
 import json
 
-from .forms import RegistroClienteForm
 from .models import Usuario
+from .serializers import UsuarioRegistrationSerializer
 from destinos.models import Destino, Tour, Reserva
+from destinos.serializers import UsuarioAdminSerializer
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -43,11 +44,11 @@ class RegistroAPIView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        form = RegistroClienteForm(request.data)
-        if form.is_valid():
-            form.save()
+        serializer = UsuarioRegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
             return Response({'mensaje': 'Usuario creado correctamente.'}, status=status.HTTP_201_CREATED)
-        return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # --- DASHBOARD VISTAS (Django Admin Web) ---
@@ -168,3 +169,21 @@ class TogglePopularTourView(StaffRequiredMixin, View):
             return JsonResponse({'success': True, 'is_popular': tour.is_popular})
         except Tour.DoesNotExist:
             return JsonResponse({'success': False})
+
+
+class UsuarioViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Solo lectura. Solo accesible por staff.
+    Lista usuarios no-staff con conteo de reservas.
+    """
+    permission_classes = [IsAdminUser]
+    serializer_class   = UsuarioAdminSerializer
+    search_fields      = ['email', 'first_name', 'last_name']
+
+    def get_queryset(self):
+        return (
+            Usuario.objects
+            .filter(is_superuser=False)
+            .prefetch_related('reservas')
+            .order_by('-date_joined')
+        )

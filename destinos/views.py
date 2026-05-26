@@ -13,7 +13,6 @@ from .serializers import (
     DestinoSerializer,
     TourReadSerializer, TourWriteSerializer,
     ReservaReadSerializer, ReservaWriteSerializer, ReservaStatusSerializer,
-    UsuarioAdminSerializer,
 )
 
 Usuario = get_user_model()
@@ -126,21 +125,3 @@ class ReservaViewSet(viewsets.ModelViewSet):
         )
 
         return Response(ReservaReadSerializer(reserva).data)
-
-
-class UsuarioViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    Solo lectura. Solo accesible por staff.
-    Lista usuarios no-staff con conteo de reservas.
-    """
-    permission_classes = [IsAdminUser]
-    serializer_class   = UsuarioAdminSerializer
-    search_fields      = ['email', 'first_name', 'last_name']
-
-    def get_queryset(self):
-        return (
-            Usuario.objects
-            .filter(is_superuser=False)
-            .prefetch_related('reservas')
-            .order_by('-date_joined')
-        )
