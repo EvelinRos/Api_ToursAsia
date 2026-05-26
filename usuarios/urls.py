@@ -8,7 +8,7 @@ from .views import (
 )
 
 urlpatterns = [
-    # Dashboard web (Admin Django - solo para staff)
+    # Dashboard web
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
     path('dashboard/destinos/', DashboardDestinosView.as_view(), name='dashboard-destinos'),
     path('dashboard/destinos/nuevo/', DashboardDestinoCreateView.as_view(), name='dashboard-destino-create'),
