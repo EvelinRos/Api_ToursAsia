@@ -1,0 +1,100 @@
+<div class="chat-widget" [class.chat-widget--open]="isOpen()">
+  @if (isOpen()) {
+    <section class="chat-panel" role="dialog" aria-label="Asistente virtual Tours Asia">
+      <header class="chat-panel__header">
+        <div class="chat-panel__title">
+          <i class="ti ti-message-chatbot" aria-hidden="true"></i>
+          <div>
+            <strong>Asistente Tours Asia</strong>
+            <span>Preguntas frecuentes</span>
+          </div>
+        </div>
+        <div class="chat-panel__actions">
+          <button
+            type="button"
+            class="chat-panel__icon-btn"
+            title="Borrar historial"
+            (click)="clearChat()"
+            aria-label="Borrar historial"
+          >
+            <i class="ti ti-trash" aria-hidden="true"></i>
+          </button>
+          <button
+            type="button"
+            class="chat-panel__icon-btn"
+            (click)="toggle()"
+            aria-label="Cerrar asistente"
+          >
+            <i class="ti ti-x" aria-hidden="true"></i>
+          </button>
+        </div>
+      </header>
+
+      <div class="chat-panel__messages" #messagesEl>
+        @for (msg of chat.messages(); track msg.id) {
+          <div
+            class="chat-bubble"
+            [class.chat-bubble--user]="msg.role === 'user'"
+            [class.chat-bubble--bot]="msg.role === 'assistant'"
+          >
+            @if (msg.role === 'assistant') {
+              <span class="chat-bubble__avatar" aria-hidden="true">
+                <i class="ti ti-robot"></i>
+              </span>
+            }
+            @if (msg.role === 'assistant') {
+              <div
+                class="chat-bubble__body"
+                [innerHTML]="formatContent(msg.content)"
+              ></div>
+            } @else {
+              <div class="chat-bubble__body">{{ msg.content }}</div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="chat-panel__suggestions">
+        @for (s of suggestions.slice(0, 4); track s.id) {
+          <button type="button" class="chat-chip" (click)="pickSuggestion(s.id)">
+            {{ s.label }}
+          </button>
+        }
+      </div>
+
+      <footer class="chat-panel__footer">
+        <textarea
+          class="chat-panel__input"
+          [(ngModel)]="draft"
+          (keydown)="onKeydown($event)"
+          rows="1"
+          placeholder="Escribe tu pregunta..."
+          aria-label="Mensaje para el asistente"
+        ></textarea>
+        <button
+          type="button"
+          class="chat-panel__send"
+          (click)="send()"
+          [disabled]="!draft.trim()"
+          aria-label="Enviar mensaje"
+        >
+          <i class="ti ti-send" aria-hidden="true"></i>
+        </button>
+      </footer>
+    </section>
+  }
+
+  <button
+    type="button"
+    class="chat-fab"
+    (click)="toggle()"
+    [attr.aria-expanded]="isOpen()"
+    aria-label="Abrir asistente virtual"
+  >
+    @if (isOpen()) {
+      <i class="ti ti-chevron-down" aria-hidden="true"></i>
+    } @else {
+      <i class="ti ti-message-circle" aria-hidden="true"></i>
+    }
+  </button>
+</div>
