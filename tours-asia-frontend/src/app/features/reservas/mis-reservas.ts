@@ -27,6 +27,8 @@ export class MisReservasComponent implements OnInit {
   readonly reservas = signal<Reserva[]>([]);
   readonly cargando = signal(true);
   readonly error    = signal('');
+  readonly selectedReserva = signal<Reserva | null>(null);
+  readonly modalVisible = signal(false);
 
   ngOnInit(): void {
     if (!this.authService.isLoggedIn()) {
@@ -60,6 +62,29 @@ export class MisReservasComponent implements OnInit {
 
   verDetalles(id: number): void {
     this.router.navigate(['/reservas', id]);
+  }
+
+  abrirDetalles(id: number): void {
+    this.selectedReserva.set(null);
+    this.modalVisible.set(true); // show loader/modal
+
+    this.reservasService
+      .getReserva(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res: Reserva) => {
+          this.selectedReserva.set(res);
+        },
+        error: () => {
+          this.notif.error('No se pudo cargar la reserva.');
+          this.modalVisible.set(false);
+        },
+      });
+  }
+
+  cerrarModal(): void {
+    this.modalVisible.set(false);
+    this.selectedReserva.set(null);
   }
 
   eliminar(id: number): void {

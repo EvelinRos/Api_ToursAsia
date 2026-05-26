@@ -49,7 +49,7 @@
             </dl>
           </div>
           <div class="reserva-card-footer">
-            <button class="btn btn-sm" (click)="verDetalles(reserva.id)">
+            <button class="btn btn-sm" (click)="abrirDetalles(reserva.id)">
               <i class="ti ti-eye" aria-hidden="true"></i> Ver detalles
             </button>
             <button class="btn btn-sm btn-danger" (click)="eliminar(reserva.id)">
@@ -61,5 +61,86 @@
     </div>
   }
 </div>
+
+@if (modalVisible()) {
+  <div class="modal-backdrop" (click)="cerrarModal()"></div>
+  <div class="modal-dialog" role="dialog" aria-modal="true">
+    @if (selectedReserva()) {
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>{{ selectedReserva()!.tour.name }}</h2>
+          <button class="modal-close" (click)="cerrarModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-hero">
+            <img class="modal-photo-img" src="{{ selectedReserva()!.tour.photo_url }}" alt="Foto tour" />
+          </div>
+          <div class="modal-details">
+            <section class="section">
+              <h3>Detalles de la reserva</h3>
+              <dl>
+                <dt>Estado:</dt>
+                <dd>{{ selectedReserva()!.status }}</dd>
+                <dt>Fecha:</dt>
+                <dd>{{ selectedReserva()!.date }}</dd>
+                <dt>Hora:</dt>
+                <dd>{{ selectedReserva()!.time_slot }}</dd>
+                <dt>Personas:</dt>
+                <dd>{{ selectedReserva()!.adults }} adulto(s), {{ selectedReserva()!.children }} niño(s)</dd>
+                <dt>Idioma:</dt>
+                <dd>{{ selectedReserva()!.language }}</dd>
+                <dt>Punto de encuentro:</dt>
+                <dd>{{ selectedReserva()!.tour.meeting_point || 'No especificado' }}</dd>
+                <dt>Total:</dt>
+                <dd>${{ selectedReserva()!.total_amount }}</dd>
+                <dt>Notas:</dt>
+                <dd>{{ selectedReserva()!.notes || '—' }}</dd>
+              </dl>
+            </section>
+
+            <section class="section">
+              <h3>Información del cliente</h3>
+              <dl>
+                <dt>Nombre:</dt>
+                <dd>{{ selectedReserva()!.customer_name }} {{ selectedReserva()!.customer_lastname }}</dd>
+                <dt>Email:</dt>
+                <dd>{{ selectedReserva()!.customer_email }}</dd>
+                <dt>Teléfono:</dt>
+                <dd>{{ selectedReserva()!.customer_phone || '—' }}</dd>
+                <dt>País:</dt>
+                <dd>{{ selectedReserva()!.customer_country || '—' }}</dd>
+              </dl>
+            </section>
+
+            <section class="section">
+              <h3>Historial</h3>
+              @if (selectedReserva()!.historial && selectedReserva()!.historial.length > 0) {
+                <ul class="historial-list">
+                  @for (h of selectedReserva()!.historial; track h.created_at) {
+                    <li>
+                      <strong>{{ h.accion }}</strong> — {{ h.realizada_por_email }}<br />
+                      <small>{{ h.created_at }} — {{ h.nota || 'Sin nota' }}</small>
+                    </li>
+                  }
+                </ul>
+              } @else {
+                <p>No hay historial para esta reserva.</p>
+              }
+            </section>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" (click)="cerrarModal()">Cerrar</button>
+        </div>
+      </div>
+    } @else {
+      <div class="modal-content modal-loading">
+        <div class="modal-body">
+          <p>Cargando detalles...</p>
+        </div>
+      </div>
+    }
+  </div>
+}
 
 <app-footer />
